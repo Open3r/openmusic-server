@@ -17,7 +17,7 @@ class UserController {
     @GetMapping("/me")
     fun getMe(): UserResponse {
         return UserResponse(
-            "Joe da bovo",
+            "Avatar",
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5ay_I4fQMfRIknHYt_iva3_-Hmat46b0Fh1HvUOXlNw&s"
         )
     }
