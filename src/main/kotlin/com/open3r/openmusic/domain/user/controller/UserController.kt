@@ -8,6 +8,11 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/users")
 class UserController {
+    @GetMapping
+    fun getUsers(): List<UserResponse> {
+        return emptyList()
+    }
+
     @GetMapping("/me")
     fun getMe(): UserResponse {
         return UserResponse(
