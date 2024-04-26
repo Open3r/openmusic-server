@@ -13,6 +13,6 @@ class IndexController {
 
     @GetMapping("/index")
     fun getIndex(): String {
-        return index
+        return index + "!"
     }
 }
