@@ -31,7 +31,7 @@ jobs:
 
     - name: Build with Gradle
       run: |
-        chmod *x ./gradlew
+        chmod +x ./gradlew
         ./gradlew clean bootJar -x test
 
     - name: Docker build & push
