@@ -1,5 +1,6 @@
 package com.open3r.openmusic.domain.user.domain
 
+import com.open3r.openmusic.global.common.BaseEntity
 import jakarta.persistence.*
 
 @Entity
@@ -12,4 +13,4 @@ class User(
 
     @Enumerated(EnumType.STRING)
     val role: UserRole
-)
+): BaseEntity()
