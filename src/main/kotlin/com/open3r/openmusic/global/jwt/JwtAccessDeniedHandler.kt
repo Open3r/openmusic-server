@@ -1,4 +1,4 @@
-package com.open3r.openmusic.global.security.jwt
+package com.open3r.openmusic.global.jwt
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -13,6 +13,6 @@ class JwtAccessDeniedHandler : AccessDeniedHandler {
         response: HttpServletResponse,
         exception: AccessDeniedException
     ) {
-        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden")
+        response.sendError(HttpServletResponse.SC_FORBIDDEN)
     }
 }

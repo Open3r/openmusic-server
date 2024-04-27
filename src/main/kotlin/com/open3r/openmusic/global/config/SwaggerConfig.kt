@@ -14,23 +14,37 @@ import org.springframework.http.HttpHeaders
 @Configuration
 class SwaggerConfig {
     @Bean
-    fun api(): OpenAPI = OpenAPI()
-        .info(
-            Info().title("OpenMusic").description("OpenMusic API Documentation").version("v1.0")
-                .contact(Contact().name("오프너").url("https://open3r.com").email("contact@open3r.com")).license(
-                    License().name("MIT License").url("https://open3r.com")
-                ).termsOfService("terms")
-        )
-        .addSecurityItem(SecurityRequirement().addList("Authorization"))
-        .components(
-            Components()
-                .addSecuritySchemes(
-                    "Authorization", SecurityScheme()
-                        .type(SecurityScheme.Type.HTTP)
-                        .scheme("bearer")
-                        .bearerFormat("Authorization")
-                        .`in`(SecurityScheme.In.HEADER)
-                        .name(HttpHeaders.AUTHORIZATION)
-                )
-        )
+    fun api(): OpenAPI {
+        return OpenAPI()
+            .info(
+                Info()
+                    .title("OpenBook")
+                    .description("OpenBook API Documentation")
+                    .version("v1.0")
+                    .contact(
+                        Contact()
+                            .name("오프너")
+                            .url("https://openbook.com")
+                            .email("contact@openbook.com")
+                    )
+                    .license(
+                        License()
+                            .name("MIT License")
+                            .url("https://openbook.com")
+                    )
+                    .termsOfService("terms")
+            )
+            .addSecurityItem(SecurityRequirement().addList("Authorization"))
+            .components(
+                Components()
+                    .addSecuritySchemes(
+                        "Authorization", SecurityScheme()
+                            .type(SecurityScheme.Type.HTTP)
+                            .scheme("bearer")
+                            .bearerFormat("Authorization")
+                            .`in`(SecurityScheme.In.HEADER)
+                            .name(HttpHeaders.AUTHORIZATION)
+                    )
+            )
+    }
 }

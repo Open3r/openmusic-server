@@ -12,9 +12,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 
 @Configuration
 @EnableRedisRepositories
-class RedisConfig(
-    private val redisProperties: RedisProperties
-) {
+class RedisConfig(private val redisProperties: RedisProperties) {
     @Bean
     fun redisConnectionFactory(): RedisConnectionFactory {
         val configuration = RedisStandaloneConfiguration()

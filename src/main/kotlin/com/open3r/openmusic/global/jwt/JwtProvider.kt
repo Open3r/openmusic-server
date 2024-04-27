@@ -1,11 +1,8 @@
-package com.open3r.openmusic.global.security.jwt
+package com.open3r.openmusic.global.jwt
 
 import com.open3r.openmusic.domain.user.repository.UserRepository
 import com.open3r.openmusic.global.security.CustomUserDetails
-import io.jsonwebtoken.Claims
-import io.jsonwebtoken.ExpiredJwtException
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import jakarta.servlet.http.HttpServletRequest
@@ -23,22 +20,22 @@ class JwtProvider(
     private val key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.secret))
 
     fun createToken(authentication: Authentication): Jwt {
-        val authorities = authentication.authorities.joinToString(",") { it.authority }
+        val authorities = authentication.authorities.joinToString("") { it.authority }
         val now = Date()
-        val accessExpiration = Date(now.time + jwtProperties.accessExpiration)
-        val refreshExpiration = Date(now.time + jwtProperties.refreshExpiration)
+        val accessTokenExpiration = Date(now.time + jwtProperties.accessTokenExpiration)
+        val refreshTokenExpiration = Date(now.time + jwtProperties.refreshTokenExpiration)
 
         val accessToken = Jwts.builder()
             .setSubject(authentication.name)
             .claim("auth", authorities)
             .setIssuedAt(now)
-            .setExpiration(accessExpiration)
+            .setExpiration(accessTokenExpiration)
             .signWith(key, SignatureAlgorithm.HS256)
             .compact()
 
         val refreshToken = Jwts.builder()
             .setIssuedAt(now)
-            .setExpiration(refreshExpiration)
+            .setExpiration(refreshTokenExpiration)
             .signWith(key, SignatureAlgorithm.HS256)
             .compact()
 
@@ -56,26 +53,23 @@ class JwtProvider(
     fun resolveToken(request: HttpServletRequest): String? {
         val token = request.getHeader("Authorization")
 
-        return if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
-            token.substring(7)
-        } else {
-            null
+        if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+            return token.substring(7)
         }
+
+        return null
     }
 
-    fun validateToken(accessToken: String) {
-        Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).body
+    @Throws(JwtException::class)
+    fun validateToken(token: String) {
+        Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).body
     }
 
     private fun parseClaims(accessToken: String): Claims {
         return try {
-            Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(accessToken)
-                .body
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).body
         } catch (e: ExpiredJwtException) {
-            return e.claims
+            e.claims
         }
     }
 }

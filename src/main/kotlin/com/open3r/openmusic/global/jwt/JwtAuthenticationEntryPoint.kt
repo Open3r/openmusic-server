@@ -1,4 +1,4 @@
-package com.open3r.openmusic.global.security.jwt
+package com.open3r.openmusic.global.jwt
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -13,7 +13,6 @@ class JwtAuthenticationEntryPoint : AuthenticationEntryPoint {
         response: HttpServletResponse,
         exception: AuthenticationException
     ) {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED)
     }
-
 }

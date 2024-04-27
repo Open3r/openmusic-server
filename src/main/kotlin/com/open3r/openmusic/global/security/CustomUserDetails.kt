@@ -5,12 +5,13 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
-class CustomUserDetails(
-    val user: User
-) : UserDetails {
-    override fun getAuthorities(): List<GrantedAuthority> = listOf(SimpleGrantedAuthority("ROLE_${user.role.name}"))
-    override fun getPassword() = user.password
-    override fun getUsername() = user.username
+class CustomUserDetails(val user: User) : UserDetails {
+    override fun getAuthorities(): List<GrantedAuthority> {
+        return listOf(SimpleGrantedAuthority("ROLE_${user.role.name}"))
+    }
+
+    override fun getPassword(): String = user.password
+    override fun getUsername(): String = user.username
     override fun isAccountNonExpired() = true
     override fun isAccountNonLocked() = true
     override fun isCredentialsNonExpired() = true

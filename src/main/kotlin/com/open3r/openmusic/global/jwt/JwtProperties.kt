@@ -1,10 +1,10 @@
-package com.open3r.openmusic.global.security.jwt
+package com.open3r.openmusic.global.jwt
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "jwt")
 class JwtProperties(
     val secret: String,
-    val accessExpiration: Long,
-    val refreshExpiration: Long,
+    val accessTokenExpiration: Long,
+    val refreshTokenExpiration: Long
 )
