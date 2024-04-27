@@ -22,8 +22,8 @@ class JwtProvider(
     fun createToken(authentication: Authentication): Jwt {
         val authorities = authentication.authorities.joinToString("") { it.authority }
         val now = Date()
-        val accessTokenExpiration = Date(now.time + jwtProperties.accessTokenExpiration)
-        val refreshTokenExpiration = Date(now.time + jwtProperties.refreshTokenExpiration)
+        val accessTokenExpiration = Date(now.time + jwtProperties.accessExpiration)
+        val refreshTokenExpiration = Date(now.time + jwtProperties.refreshExpiration)
 
         val accessToken = Jwts.builder()
             .setSubject(authentication.name)
@@ -60,7 +60,6 @@ class JwtProvider(
         return null
     }
 
-    @Throws(JwtException::class)
     fun validateToken(token: String) {
         Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).body
     }

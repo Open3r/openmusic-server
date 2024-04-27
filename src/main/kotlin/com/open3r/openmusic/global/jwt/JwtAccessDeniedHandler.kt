@@ -13,6 +13,6 @@ class JwtAccessDeniedHandler : AccessDeniedHandler {
         response: HttpServletResponse,
         exception: AccessDeniedException
     ) {
-        response.sendError(HttpServletResponse.SC_FORBIDDEN)
+        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied")
     }
 }

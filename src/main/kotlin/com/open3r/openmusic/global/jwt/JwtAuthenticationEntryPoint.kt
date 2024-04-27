@@ -13,6 +13,6 @@ class JwtAuthenticationEntryPoint : AuthenticationEntryPoint {
         response: HttpServletResponse,
         exception: AuthenticationException
     ) {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED)
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
     }
 }

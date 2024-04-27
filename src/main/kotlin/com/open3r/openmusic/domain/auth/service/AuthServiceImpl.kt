@@ -64,7 +64,7 @@ class AuthServiceImpl(
         refreshTokenRepository.save(
             authentication.name,
             token.refreshToken,
-            jwtProperties.refreshTokenExpiration,
+            jwtProperties.refreshExpiration,
             TimeUnit.MILLISECONDS
         )
 
