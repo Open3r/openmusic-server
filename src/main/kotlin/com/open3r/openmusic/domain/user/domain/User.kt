@@ -13,4 +13,4 @@ class User(
 
     @Enumerated(EnumType.STRING)
     val role: UserRole
-): BaseEntity()
+) : BaseEntity()

@@ -7,6 +7,8 @@ import com.open3r.openmusic.domain.auth.repository.RefreshTokenRepository
 import com.open3r.openmusic.domain.user.domain.User
 import com.open3r.openmusic.domain.user.domain.UserRole
 import com.open3r.openmusic.domain.user.repository.UserRepository
+import com.open3r.openmusic.global.exception.CustomException
+import com.open3r.openmusic.global.exception.ErrorCode
 import com.open3r.openmusic.global.jwt.Jwt
 import com.open3r.openmusic.global.jwt.JwtProperties
 import com.open3r.openmusic.global.jwt.JwtProvider
@@ -36,7 +38,7 @@ class AuthServiceImpl(
         val password = request.password
         val exists = userRepository.existsByUsername(username)
 
-        if (exists) throw RuntimeException("User already exists")
+        if (exists) throw CustomException(ErrorCode.USER_ALREADY_EXISTS)
 
         val entity = User(
             username = username,
@@ -49,13 +51,13 @@ class AuthServiceImpl(
 
     @Transactional
     override fun login(request: AuthLoginRequest): Jwt {
-        val user = userRepository.findByUsername(request.username) ?: throw RuntimeException("User not found")
+        val user = userRepository.findByUsername(request.username) ?: throw CustomException(ErrorCode.USER_NOT_FOUND)
 
         if (!passwordEncoder.matches(
                 request.password,
                 user.password
             )
-        ) throw RuntimeException("Password is incorrect")
+        ) throw CustomException(ErrorCode.PASSWORD_NOT_MATCH)
 
         val authenticationToken = UsernamePasswordAuthenticationToken(request.username, request.password)
         val authentication = authenticationManagerBuilder.`object`.authenticate(authenticationToken)
@@ -76,15 +78,15 @@ class AuthServiceImpl(
         try {
             jwtProvider.validateToken(request.refreshToken)
         } catch (e: ExpiredJwtException) {
-            throw RuntimeException("Expired refresh token")
+            throw CustomException(ErrorCode.EXPIRED_REFRESH_TOKEN)
         } catch (e: UnsupportedJwtException) {
-            throw RuntimeException("Unsupported refresh token")
+            throw CustomException(ErrorCode.UNSUPPORTED_REFRESH_TOKEN)
         }
 
         val authentication = jwtProvider.getAuthentication(request.accessToken)
         val refreshToken = redisTemplate.opsForValue().get(authentication.name)
 
-        if (refreshToken != request.refreshToken) throw RuntimeException("Invalid refresh token")
+        if (refreshToken != request.refreshToken) throw CustomException(ErrorCode.INVALID_REFRESH_TOKEN)
 
         val token = jwtProvider.createToken(authentication)
 
