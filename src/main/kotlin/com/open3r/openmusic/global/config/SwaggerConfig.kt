@@ -18,21 +18,21 @@ class SwaggerConfig {
         return OpenAPI()
             .info(
                 Info()
-                    .title("OpenBook")
-                    .description("OpenBook API Documentation")
+                    .title("OpenMusic")
+                    .description("OpenMusic API Documentation")
                     .version("v1.0")
                     .contact(
                         Contact()
                             .name("오프너")
-                            .url("https://openbook.com")
-                            .email("contact@openbook.com")
+                            .url("https://open3r.com")
+                            .email("contact@open3r.com")
                     )
                     .license(
                         License()
                             .name("MIT License")
-                            .url("https://openbook.com")
+                            .url("https://open3r.com/license")
                     )
-                    .termsOfService("terms")
+                    .termsOfService("https://open3r.com/terms")
             )
             .addSecurityItem(SecurityRequirement().addList("Authorization"))
             .components(
