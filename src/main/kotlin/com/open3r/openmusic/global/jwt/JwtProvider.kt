@@ -4,6 +4,7 @@ import com.open3r.openmusic.domain.user.repository.UserRepository
 import com.open3r.openmusic.global.security.CustomUserDetails
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
+import io.jsonwebtoken.Header
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders
@@ -29,6 +30,7 @@ class JwtProvider(
         val refreshTokenExpiration = Date(now.time + jwtProperties.refreshExpiration)
 
         val accessToken = Jwts.builder()
+            .setHeaderParam(Header.JWT_TYPE, JwtType.ACCESS)
             .setSubject(authentication.name)
             .claim("auth", authorities)
             .setIssuedAt(now)
@@ -37,6 +39,7 @@ class JwtProvider(
             .compact()
 
         val refreshToken = Jwts.builder()
+            .setHeaderParam(Header.JWT_TYPE, JwtType.REFRESH)
             .setIssuedAt(now)
             .setExpiration(refreshTokenExpiration)
             .signWith(key, SignatureAlgorithm.HS256)
