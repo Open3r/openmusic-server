@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 class PlaylistServiceImpl(
     private val playlistRepository: PlaylistRepository,
     private val userSecurity: UserSecurity
-): PlaylistService {
+) : PlaylistService {
     @Transactional(readOnly = true)
     override fun getPlaylists(): List<PlaylistResponse> {
         val playlists = playlistRepository.findAll()
@@ -26,7 +26,8 @@ class PlaylistServiceImpl(
 
     @Transactional(readOnly = true)
     override fun getPlaylist(playlistId: Long): PlaylistResponse {
-        val playlist = playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
+        val playlist =
+            playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
 
         return PlaylistResponse.of(playlist)
     }
@@ -47,7 +48,8 @@ class PlaylistServiceImpl(
 
     @Transactional
     override fun updatePlaylist(playlistId: Long, request: PlaylistUpdateRequest): PlaylistResponse {
-        val playlist = playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
+        val playlist =
+            playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
 
         playlist.title = request.title ?: playlist.title
         playlist.description = request.description ?: playlist.description
@@ -59,7 +61,8 @@ class PlaylistServiceImpl(
 
     @Transactional
     override fun deletePlaylist(playlistId: Long): PlaylistResponse {
-        val playlist = playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
+        val playlist =
+            playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
 
         playlistRepository.delete(playlist)
 

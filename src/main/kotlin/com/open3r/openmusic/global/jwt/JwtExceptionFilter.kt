@@ -26,12 +26,15 @@ class JwtExceptionFilter : OncePerRequestFilter() {
                 is ExpiredJwtException -> {
                     setErrorResponse(response, CustomException(ErrorCode.EXPIRED_ACCESS_TOKEN))
                 }
+
                 is UnsupportedJwtException -> {
                     setErrorResponse(response, CustomException(ErrorCode.UNSUPPORTED_ACCESS_TOKEN))
                 }
+
                 is SecurityException, is MalformedJwtException -> {
                     setErrorResponse(response, CustomException(ErrorCode.INVALID_ACCESS_TOKEN))
                 }
+
                 else -> {
                     setErrorResponse(response, e)
                 }

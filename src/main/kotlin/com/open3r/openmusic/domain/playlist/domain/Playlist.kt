@@ -27,4 +27,4 @@ class Playlist(
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     val user: User,
-): BaseEntity()
+) : BaseEntity()

@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 class UserServiceImpl(
     private val userRepository: UserRepository,
     private val userSecurity: UserSecurity
-): UserService {
+) : UserService {
     @Transactional(readOnly = true)
     override fun getUsers(): List<UserResponse> {
         val users = userRepository.findAll()
@@ -30,7 +30,8 @@ class UserServiceImpl(
 
     @Transactional
     override fun deleteUser(): UserResponse {
-        val user = userRepository.findByIdOrNull(userSecurity.user.id) ?: throw CustomException(ErrorCode.USER_NOT_FOUND)
+        val user =
+            userRepository.findByIdOrNull(userSecurity.user.id) ?: throw CustomException(ErrorCode.USER_NOT_FOUND)
 
         userRepository.delete(user)
 

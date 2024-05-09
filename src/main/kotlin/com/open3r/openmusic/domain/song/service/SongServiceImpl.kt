@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 class SongServiceImpl(
     private val songRepository: SongRepository,
     private val userSecurity: UserSecurity
-): SongService {
+) : SongService {
     @Transactional(readOnly = true)
     override fun getSongs(): List<SongResponse> {
         val songs = songRepository.findAll()

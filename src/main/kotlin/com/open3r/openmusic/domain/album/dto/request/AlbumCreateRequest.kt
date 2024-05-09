@@ -10,5 +10,5 @@ data class AlbumCreateRequest(
         title = title,
         description = description,
 
-    )
+        )
 }

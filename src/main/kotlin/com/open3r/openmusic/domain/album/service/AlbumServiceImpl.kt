@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class AlbumServiceImpl(
     private val albumRepository: AlbumRepository,
-): AlbumService {
+) : AlbumService {
     @Transactional(readOnly = true)
     override fun getAlbums(): List<AlbumResponse> {
         val albums = albumRepository.findAll()

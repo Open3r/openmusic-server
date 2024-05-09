@@ -15,4 +15,4 @@ class Album(
 
     @OneToMany(mappedBy = "album", fetch = FetchType.LAZY)
     val songs: MutableList<Song> = mutableListOf(),
-): BaseEntity()
+) : BaseEntity()
