@@ -1,8 +1,8 @@
 package com.open3r.openmusic.global.jwt
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.open3r.openmusic.global.exception.CustomException
-import com.open3r.openmusic.global.exception.ErrorCode
+import com.open3r.openmusic.global.error.CustomException
+import com.open3r.openmusic.global.error.ErrorCode
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.UnsupportedJwtException

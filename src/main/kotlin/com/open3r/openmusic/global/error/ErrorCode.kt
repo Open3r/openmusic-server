@@ -1,4 +1,4 @@
-package com.open3r.openmusic.global.exception
+package com.open3r.openmusic.global.error
 
 import org.springframework.http.HttpStatus
 
@@ -17,4 +17,14 @@ enum class ErrorCode(
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 리프레시 토큰입니다."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 리프레시 토큰입니다."),
     UNSUPPORTED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "지원하지 않는 리프레시 토큰입니다."),
+
+    // Album
+    ALBUM_NOT_FOUND(HttpStatus.NOT_FOUND, "앨범을 찾을 수 없습니다."),
+
+    // Song
+    SONG_NOT_FOUND(HttpStatus.NOT_FOUND, "노래를 찾을 수 없습니다."),
+
+    // Playlist
+    PLAYLIST_NOT_FOUND(HttpStatus.NOT_FOUND, "플레이리스트를 찾을 수 없습니다."),
+
 }

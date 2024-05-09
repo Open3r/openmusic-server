@@ -7,8 +7,8 @@ import com.open3r.openmusic.domain.auth.repository.RefreshTokenRepository
 import com.open3r.openmusic.domain.user.domain.User
 import com.open3r.openmusic.domain.user.domain.UserRole
 import com.open3r.openmusic.domain.user.repository.UserRepository
-import com.open3r.openmusic.global.exception.CustomException
-import com.open3r.openmusic.global.exception.ErrorCode
+import com.open3r.openmusic.global.error.CustomException
+import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.jwt.Jwt
 import com.open3r.openmusic.global.jwt.JwtProperties
 import com.open3r.openmusic.global.jwt.JwtProvider

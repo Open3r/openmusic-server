@@ -1,4 +1,4 @@
-package com.open3r.openmusic.global.exception
+package com.open3r.openmusic.global.error
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
