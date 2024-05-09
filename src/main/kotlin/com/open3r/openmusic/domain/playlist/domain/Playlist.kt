@@ -20,7 +20,7 @@ class Playlist(
     @Column(nullable = false)
     var description: String,
 
-    @OneToMany(mappedBy = "playlist", fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     val songs: MutableList<Song> = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)

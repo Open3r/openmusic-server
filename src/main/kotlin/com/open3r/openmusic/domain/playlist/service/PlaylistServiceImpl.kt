@@ -5,6 +5,7 @@ import com.open3r.openmusic.domain.playlist.dto.request.PlaylistCreateRequest
 import com.open3r.openmusic.domain.playlist.dto.request.PlaylistUpdateRequest
 import com.open3r.openmusic.domain.playlist.dto.response.PlaylistResponse
 import com.open3r.openmusic.domain.playlist.repository.PlaylistRepository
+import com.open3r.openmusic.domain.user.domain.UserRole
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
@@ -63,6 +64,9 @@ class PlaylistServiceImpl(
     override fun deletePlaylist(playlistId: Long): PlaylistResponse {
         val playlist =
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
+        val user = userSecurity.user
+
+        if (playlist.user.id != user.id && user.role != UserRole.ADMIN) throw CustomException(ErrorCode.PLAYLIST_NOT_DELETABLE)
 
         playlistRepository.delete(playlist)
 

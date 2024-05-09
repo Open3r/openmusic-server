@@ -8,6 +8,7 @@ import com.open3r.openmusic.global.common.BaseResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 @Tag(name = "플레이리스트", description = "Playlist")
@@ -30,12 +31,14 @@ class PlaylistController(
 
     @Operation(summary = "플레이리스트 생성")
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     fun createPlaylist(@RequestBody request: PlaylistCreateRequest): ResponseEntity<BaseResponse<PlaylistResponse>> {
         return BaseResponse(playlistService.createPlaylist(request), 201).toEntity()
     }
 
     @Operation(summary = "플레이리스트 수정")
     @PatchMapping("/{playlistId}")
+    @PreAuthorize("isAuthenticated()")
     fun updatePlaylist(
         @PathVariable playlistId: Long,
         @RequestBody request: PlaylistUpdateRequest
@@ -45,6 +48,7 @@ class PlaylistController(
 
     @Operation(summary = "플레이리스트 삭제")
     @DeleteMapping("/{playlistId}")
+    @PreAuthorize("isAuthenticated()")
     fun deletePlaylist(@PathVariable playlistId: Long): ResponseEntity<BaseResponse<PlaylistResponse>> {
         return BaseResponse(playlistService.deletePlaylist(playlistId), 200).toEntity()
     }

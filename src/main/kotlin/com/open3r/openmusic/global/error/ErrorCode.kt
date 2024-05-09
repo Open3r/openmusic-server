@@ -20,11 +20,14 @@ enum class ErrorCode(
 
     // Album
     ALBUM_NOT_FOUND(HttpStatus.NOT_FOUND, "앨범을 찾을 수 없습니다."),
+    ALBUM_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "삭제할 수 없는 앨범입니다."),
 
     // Song
     SONG_NOT_FOUND(HttpStatus.NOT_FOUND, "노래를 찾을 수 없습니다."),
+    SONG_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "삭제할 수 없는 노래입니다."),
 
     // Playlist
     PLAYLIST_NOT_FOUND(HttpStatus.NOT_FOUND, "플레이리스트를 찾을 수 없습니다."),
+    PLAYLIST_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "삭제할 수 없는 플레이리스트입니다."),
 
 }

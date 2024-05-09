@@ -7,6 +7,7 @@ import com.open3r.openmusic.global.common.BaseResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 @Tag(name = "노래", description = "Song")
@@ -29,12 +30,14 @@ class SongController(
 
     @Operation(summary = "노래 생성")
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     fun createSong(@RequestBody request: SongCreateRequest): ResponseEntity<BaseResponse<SongResponse>> {
         return BaseResponse(songService.createSong(request), 201).toEntity()
     }
 
     @Operation(summary = "노래 삭제")
     @DeleteMapping("/{songId}")
+    @PreAuthorize("isAuthenticated()")
     fun deleteSong(@PathVariable songId: Long): ResponseEntity<BaseResponse<SongResponse>> {
         return BaseResponse(songService.deleteSong(songId), 200).toEntity()
     }
