@@ -8,11 +8,11 @@ data class ErrorResponse(
     val message: String
 ) {
     companion object {
-        fun toResponseEntity(errorCode: ErrorCode) = ResponseEntity.status(errorCode.status).body(
+        fun toEntity(code: ErrorCode) = ResponseEntity.status(code.status).body(
             ErrorResponse(
-                errorCode.status.value(),
-                errorCode.name,
-                errorCode.message
+                code.status.value(),
+                code.name,
+                code.message
             )
         )
     }

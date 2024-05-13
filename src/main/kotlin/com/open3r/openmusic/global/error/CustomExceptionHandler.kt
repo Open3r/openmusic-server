@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 class CustomExceptionHandler {
     @ExceptionHandler(CustomException::class)
     fun handleCustomException(e: CustomException): ResponseEntity<ErrorResponse> {
-        return ErrorResponse.toResponseEntity(e.code)
+        return ErrorResponse.toEntity(e.code)
     }
 }
