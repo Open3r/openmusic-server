@@ -29,8 +29,6 @@ jobs:
         echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
       shell: bash
 
-    - name: Create application-
-
     - name: Build with Gradle
       run: |
         chmod +x ./gradlew

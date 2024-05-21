@@ -39,10 +39,6 @@ out/
 ### Kotlin ###
 .kotlin
 
-application-aws.yml
-application-database.yml
+application.yml
 application-local.yml
-application-database.yml
-application-discord.yml
-application-jwt.yml
-application-multipart.yml
+application-prod.yml
