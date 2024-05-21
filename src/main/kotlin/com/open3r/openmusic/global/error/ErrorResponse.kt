@@ -3,17 +3,11 @@ package com.open3r.openmusic.global.error
 import org.springframework.http.ResponseEntity
 
 data class ErrorResponse(
-    val status: Int,
-    val code: String,
-    val message: String
+    private val error: ErrorCode,
 ) {
-    companion object {
-        fun toEntity(code: ErrorCode) = ResponseEntity.status(code.status).body(
-            ErrorResponse(
-                code.status.value(),
-                code.name,
-                code.message
-            )
-        )
-    }
+    val status = error.status.value()
+    val code = error.name
+    val message = error.message
+
+    fun toEntity() = ResponseEntity.status(status).body(this)
 }

@@ -1,4 +1,4 @@
-name: CI/CD
+name: CI
 
 on:
   push:
@@ -16,18 +16,20 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup JDK 17
+    - name: Setup Java
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: 'temurin'
 
-    - name: Make application.yml
+    - name: Create application.yml
       run: |
         cd ./src/main/resources
         touch ./application.yml
         echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
       shell: bash
+
+    - name: Create application-
 
     - name: Build with Gradle
       run: |

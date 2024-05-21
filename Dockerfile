@@ -1,5 +1,5 @@
-FROM openjdk:17
+FROM openjdk:21
 ARG JAR_FILE=./build/libs/*-SNAPSHOT.jar
-COPY ${JAR_FILE} app.jar
+COPY ${JAR_FILE} server.jar
 ENV TZ=Asia/Seoul
-ENTRYPOINT ["java", "-jar", "/app.jar", ">", "app.log"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]

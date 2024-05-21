@@ -1,5 +1,6 @@
 package com.open3r.openmusic
 
+import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
@@ -13,3 +14,5 @@ class OpenMusicApplication
 fun main(args: Array<String>) {
     runApplication<OpenMusicApplication>(*args)
 }
+
+inline fun <reified T> T.logger() = LoggerFactory.getLogger(T::class.java)
