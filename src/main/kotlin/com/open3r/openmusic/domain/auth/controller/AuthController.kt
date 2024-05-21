@@ -4,6 +4,7 @@ import com.open3r.openmusic.domain.auth.dto.request.AuthLoginRequest
 import com.open3r.openmusic.domain.auth.dto.request.AuthReissueRequest
 import com.open3r.openmusic.domain.auth.dto.request.AuthSignUpRequest
 import com.open3r.openmusic.domain.auth.service.AuthService
+import com.open3r.openmusic.domain.user.dto.response.UserResponse
 import com.open3r.openmusic.global.common.BaseResponse
 import com.open3r.openmusic.global.security.jwt.Jwt
 import io.swagger.v3.oas.annotations.Operation
@@ -37,7 +38,7 @@ class AuthController(
     }
 
     @GetMapping("/me")
-    fun getMe(): ResponseEntity<BaseResponse<Unit>> {
-        return BaseResponse(Unit, 200).toEntity()
+    fun getMe(): ResponseEntity<BaseResponse<UserResponse>> {
+        return BaseResponse(authService.getMe(), 200).toEntity()
     }
 }
