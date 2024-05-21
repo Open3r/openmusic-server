@@ -6,6 +6,7 @@ import com.open3r.openmusic.domain.song.dto.request.SongCreateRequest
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
 import com.open3r.openmusic.domain.song.dto.response.SongUploadResponse
 import com.open3r.openmusic.domain.song.repository.SongRepository
+import com.open3r.openmusic.domain.user.domain.UserRole
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
@@ -60,6 +61,9 @@ class SongServiceImpl(
     @Transactional
     override fun deleteSong(songId: Long) {
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
+        val user = userSecurity.user
+
+        if (song.artist.id != user.id && user.role != UserRole.ADMIN) throw CustomException(ErrorCode.SONG_NOT_DELETABLE)
 
         songRepository.delete(song)
     }

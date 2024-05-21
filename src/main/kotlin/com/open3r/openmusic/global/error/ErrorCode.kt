@@ -26,14 +26,22 @@ enum class ErrorCode(
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "Invalid password"),
     AUTHENTICATION_FAILED(HttpStatus.BAD_REQUEST, "Authentication failed"),
 
+    // Playlist
+    PLAYLIST_NOT_FOUND(HttpStatus.NOT_FOUND, "Playlist not found"),
+    PLAYLIST_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "Playlist is not deletable"),
+    PLAYLIST_NOT_UPDATABLE(HttpStatus.BAD_REQUEST, "Playlist is not updatable"),
+    PLAYLIST_SONG_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "Playlist song already exists"),
+    PLAYLIST_SONG_NOT_FOUND(HttpStatus.NOT_FOUND, "Playlist song not found"),
+
     // Song
     SONG_NOT_FOUND(HttpStatus.NOT_FOUND, "Song not found"),
     SONG_EMPTY(HttpStatus.BAD_REQUEST, "Song is empty"),
+    SONG_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "Song is not deletable"),
 
     // User
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
     USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "User already exists"),
-
+    USER_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "User is not deletable"),
 
     // Else
     MAX_UPLOAD_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "Max upload size exceeded")

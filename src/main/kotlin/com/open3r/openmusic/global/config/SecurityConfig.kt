@@ -8,6 +8,7 @@ import com.open3r.openmusic.global.security.oauth.CustomOAuth2UserService
 import com.open3r.openmusic.global.security.oauth.OAuth2SuccessHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -31,11 +32,17 @@ class SecurityConfig(
     fun passwordEncoder() = BCryptPasswordEncoder()
 
     @Bean
+    fun roleHierarchy() = RoleHierarchyImpl().apply {
+        setHierarchy("ROLE_ADMIN > ROLE_USER")
+    }
+
+    @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain = http
         .csrf { it.disable() }
         .cors { it.disable() }
         .httpBasic { it.disable() }
         .formLogin { it.disable() }
+        .rememberMe { it.disable() }
         .logout { it.disable() }
         .oauth2Login {
             it
