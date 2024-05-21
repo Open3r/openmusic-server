@@ -36,14 +36,12 @@ class SecurityConfig(
         .cors { it.disable() }
         .httpBasic { it.disable() }
         .formLogin { it.disable() }
-        .rememberMe { it.disable() }
         .logout { it.disable() }
         .oauth2Login {
             it
                 .userInfoEndpoint {
                     it.userService(customOAuth2DetailsService)
                 }
-//            .loginPage("/login")
                 .successHandler(oAuth2SuccessHandler)
         }
         .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }

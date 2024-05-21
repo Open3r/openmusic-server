@@ -30,17 +30,19 @@ spring:
             scope:
               - email
               - profile
-            redirect-uri: "http://localhost:8080/login/oauth2/code/google"
+            redirect-uri: "http://openmusic.kro.kr:8080/login/oauth2/code/google"
           facebook:
             client-id: 474896098301878
             client-secret: 5a9eb893012c9677f16f7f3e57fc5f41
+            redirect-uri: "http://openmusic.kro.kr:8080/login/oauth2/code/facebook"
+            client-name: Facebook
           kakao:
             client-name: Kakao
             client-id: f36c345821a073e7c992ae5c4ee1dfb8
             client-secret: 0FsGlyhONEcAMxsbmn5C77ud4kZQBzXQ
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
-            redirect-uri: "http://localhost:8080/login/oauth2/code/kakao"
+            redirect-uri: "http://openmusic.kro.kr:8080/login/oauth2/code/kakao"
             scope:
               - profile_nickname
               - profile_image
@@ -54,8 +56,7 @@ spring:
   servlet:
     multipart:
       enabled: true
-      location: /Users/dgsw52/Projects/openmusic/files
-
+      location: /files
 cloud:
   aws:
     region:

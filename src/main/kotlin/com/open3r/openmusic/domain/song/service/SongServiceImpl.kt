@@ -8,6 +8,7 @@ import com.open3r.openmusic.domain.song.dto.response.SongUploadResponse
 import com.open3r.openmusic.domain.song.repository.SongRepository
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
+import com.open3r.openmusic.global.security.UserSecurity
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -18,6 +19,7 @@ import java.util.*
 @Service
 class SongServiceImpl(
     private val songRepository: SongRepository,
+    private val userSecurity: UserSecurity,
     private val amazonS3Client: AmazonS3Client
 ) : SongService {
     @Value("\${cloud.aws.s3.bucket}")
@@ -49,7 +51,10 @@ class SongServiceImpl(
 
     @Transactional
     override fun createSong(request: SongCreateRequest): SongResponse {
-        TODO()
+        val user = userSecurity.user
+        val song = songRepository.save(request.toEntity(user))
+
+        return SongResponse.of(song)
     }
 
     @Transactional
