@@ -54,4 +54,28 @@ class SongServiceImpl(
 
         songRepository.delete(song)
     }
+
+    @Transactional
+    override fun createSongLike(songId: Long) {
+        val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
+        val user = userSecurity.user
+
+        if (song.likes.any { it.id == user.id }) throw CustomException(ErrorCode.SONG_LIKE_ALREADY_EXISTS)
+
+        song.likes.add(user)
+
+        songRepository.save(song)
+    }
+
+    @Transactional
+    override fun deleteSongLike(songId: Long) {
+        val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
+        val user = userSecurity.user
+
+        if (song.likes.none { it.id == user.id }) throw CustomException(ErrorCode.SONG_LIKE_NOT_FOUND)
+
+        song.likes.removeIf { it.id == user.id }
+
+        songRepository.save(song)
+    }
 }

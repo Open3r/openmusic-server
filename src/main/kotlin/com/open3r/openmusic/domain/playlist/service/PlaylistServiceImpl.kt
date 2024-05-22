@@ -78,7 +78,6 @@ class PlaylistServiceImpl(
         val user = userSecurity.user
 
         if (playlist.user.id != user.id) throw CustomException(ErrorCode.PLAYLIST_NOT_UPDATABLE)
-
         if (playlist.songs.any { it.id == songId }) throw CustomException(ErrorCode.PLAYLIST_SONG_ALREADY_EXISTS)
 
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
@@ -95,7 +94,6 @@ class PlaylistServiceImpl(
         val user = userSecurity.user
 
         if (playlist.user.id != user.id) throw CustomException(ErrorCode.PLAYLIST_NOT_UPDATABLE)
-
         if (playlist.songs.none { it.id == songId }) throw CustomException(ErrorCode.PLAYLIST_SONG_NOT_FOUND)
 
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)

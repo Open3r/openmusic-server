@@ -9,4 +9,6 @@ interface SongService {
     fun searchSong(query: String): List<SongResponse>
     fun createSong(request: SongCreateRequest)
     fun deleteSong(songId: Long)
+    fun createSongLike(songId: Long)
+    fun deleteSongLike(songId: Long)
 }

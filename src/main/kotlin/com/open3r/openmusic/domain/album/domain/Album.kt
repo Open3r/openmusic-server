@@ -17,6 +17,9 @@ class Album(
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val songs: MutableList<Song> = mutableListOf(),
 
+    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    val likes: MutableList<User> = mutableListOf(),
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     val user: User
