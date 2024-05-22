@@ -1,8 +1,6 @@
 package com.open3r.openmusic.domain.playlist.service
 
 import com.open3r.openmusic.domain.playlist.dto.request.PlaylistCreateRequest
-import com.open3r.openmusic.domain.playlist.dto.request.PlaylistSongCreateRequest
-import com.open3r.openmusic.domain.playlist.dto.request.PlaylistSongDeleteRequest
 import com.open3r.openmusic.domain.playlist.dto.response.PlaylistResponse
 import com.open3r.openmusic.domain.playlist.repository.PlaylistRepository
 import com.open3r.openmusic.domain.song.repository.SongRepository
@@ -33,12 +31,19 @@ class PlaylistServiceImpl(
         return PlaylistResponse.of(playlist)
     }
 
-    @Transactional
-    override fun createPlaylist(request: PlaylistCreateRequest): PlaylistResponse {
-        val user = userSecurity.user
-        val playlist = playlistRepository.save(request.toEntity(user))
+    @Transactional(readOnly = true)
+    override fun searchPlaylist(query: String): List<PlaylistResponse> {
+        val playlists = playlistRepository.findAllByTitleContainingIgnoreCase(query)
 
-        return PlaylistResponse.of(playlist)
+        return playlists.map { PlaylistResponse.of(it) }
+    }
+
+    @Transactional
+    override fun createPlaylist(request: PlaylistCreateRequest) {
+        val user = userSecurity.user
+        val playlist = request.toEntity(user)
+
+        playlistRepository.save(playlist)
     }
 
     @Transactional
@@ -53,16 +58,16 @@ class PlaylistServiceImpl(
     }
 
     @Transactional
-    override fun createPlaylistSong(playlistId: Long, request: PlaylistSongCreateRequest) {
+    override fun createPlaylistSong(playlistId: Long, songId: Long) {
         val playlist =
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
         val user = userSecurity.user
 
         if (playlist.user.id != user.id) throw CustomException(ErrorCode.PLAYLIST_NOT_UPDATABLE)
 
-        if (playlist.songs.any { it.id == request.songId }) throw CustomException(ErrorCode.PLAYLIST_SONG_ALREADY_EXISTS)
+        if (playlist.songs.any { it.id == songId }) throw CustomException(ErrorCode.PLAYLIST_SONG_ALREADY_EXISTS)
 
-        val song = songRepository.findByIdOrNull(request.songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
+        val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
 
         playlist.songs.add(song)
 
@@ -70,18 +75,44 @@ class PlaylistServiceImpl(
     }
 
     @Transactional
-    override fun deletePlaylistSong(playlistId: Long, request: PlaylistSongDeleteRequest) {
+    override fun deletePlaylistSong(playlistId: Long, songId: Long) {
         val playlist =
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
         val user = userSecurity.user
 
         if (playlist.user.id != user.id) throw CustomException(ErrorCode.PLAYLIST_NOT_UPDATABLE)
 
-        if (playlist.songs.none { it.id == request.songId }) throw CustomException(ErrorCode.PLAYLIST_SONG_NOT_FOUND)
+        if (playlist.songs.none { it.id == songId }) throw CustomException(ErrorCode.PLAYLIST_SONG_NOT_FOUND)
 
-        val song = songRepository.findByIdOrNull(request.songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
+        val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
 
-        playlist.songs.remove(song)
+        playlist.songs.removeIf { it.id == song.id }
+
+        playlistRepository.save(playlist)
+    }
+
+    @Transactional
+    override fun createPlaylistLike(playlistId: Long) {
+        val playlist =
+            playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
+        val user = userSecurity.user
+
+        if (playlist.likes.any { it.id == user.id }) throw CustomException(ErrorCode.PLAYLIST_LIKE_ALREADY_EXISTS)
+
+        playlist.likes.add(user)
+
+        playlistRepository.save(playlist)
+    }
+
+    @Transactional
+    override fun deletePlaylistLike(playlistId: Long) {
+        val playlist =
+            playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
+        val user = userSecurity.user
+
+        if (playlist.likes.none { it.id == user.id }) throw CustomException(ErrorCode.PLAYLIST_LIKE_NOT_FOUND)
+
+        playlist.likes.removeIf { it.id == user.id }
 
         playlistRepository.save(playlist)
     }

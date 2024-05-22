@@ -26,22 +26,35 @@ enum class ErrorCode(
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "Invalid password"),
     AUTHENTICATION_FAILED(HttpStatus.BAD_REQUEST, "Authentication failed"),
 
+
+    // Album
+    ALBUM_NOT_FOUND(HttpStatus.NOT_FOUND, "Album not found"),
+    ALBUM_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "Album is not deletable"),
+    ALBUM_NOT_UPDATABLE(HttpStatus.BAD_REQUEST, "Album is not updatable"),
+
     // Playlist
     PLAYLIST_NOT_FOUND(HttpStatus.NOT_FOUND, "Playlist not found"),
     PLAYLIST_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "Playlist is not deletable"),
     PLAYLIST_NOT_UPDATABLE(HttpStatus.BAD_REQUEST, "Playlist is not updatable"),
+
+    // Playlist Song
     PLAYLIST_SONG_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "Playlist song already exists"),
     PLAYLIST_SONG_NOT_FOUND(HttpStatus.NOT_FOUND, "Playlist song not found"),
 
+    // Playlist Like
+    PLAYLIST_LIKE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "Playlist like already exists"),
+    PLAYLIST_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "Playlist like not found"),
+
     // Song
     SONG_NOT_FOUND(HttpStatus.NOT_FOUND, "Song not found"),
-    SONG_EMPTY(HttpStatus.BAD_REQUEST, "Song is empty"),
+    SONG_INVALID_FILE(HttpStatus.BAD_REQUEST, "Song file is invalid"),
     SONG_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "Song is not deletable"),
 
     // User
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
     USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "User already exists"),
     USER_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "User is not deletable"),
+
 
     // Else
     MAX_UPLOAD_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "Max upload size exceeded")

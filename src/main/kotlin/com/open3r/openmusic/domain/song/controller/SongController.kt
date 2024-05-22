@@ -5,10 +5,8 @@ import com.open3r.openmusic.domain.song.service.SongService
 import com.open3r.openmusic.global.common.BaseResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
 
 @Tag(name = "음악", description = "Song")
 @RestController
@@ -38,9 +36,4 @@ class SongController(
     @DeleteMapping("/{songId}")
     @PreAuthorize("isAuthenticated()")
     fun deleteSong(@PathVariable songId: Long) = BaseResponse(songService.deleteSong(songId), 204).toEntity()
-
-    @Operation(summary = "음악 업로드")
-    @PostMapping("/upload", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    @PreAuthorize("isAuthenticated()")
-    fun uploadSong(@RequestPart file: MultipartFile) = BaseResponse(songService.uploadSong(file), 201).toEntity()
 }

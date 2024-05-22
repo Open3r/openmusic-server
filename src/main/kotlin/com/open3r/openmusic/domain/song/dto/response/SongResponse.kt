@@ -7,6 +7,7 @@ data class SongResponse(
     val title: String,
     val description: String,
     val url: String,
+    val likes: List<Long>,
     val artistId: Long
 ) {
     companion object {
@@ -15,6 +16,7 @@ data class SongResponse(
             title = song.title,
             description = song.description,
             url = song.url,
+            likes = song.likes.map { it.id!! },
             artistId = song.artist.id!!
         )
     }

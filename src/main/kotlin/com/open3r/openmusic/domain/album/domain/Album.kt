@@ -1,12 +1,12 @@
-package com.open3r.openmusic.domain.playlist.domain
+package com.open3r.openmusic.domain.album.domain
 
 import com.open3r.openmusic.domain.song.domain.Song
 import com.open3r.openmusic.domain.user.domain.User
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "playlists")
-class Playlist(
+@Table(name = "albums")
+class Album(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -14,11 +14,8 @@ class Playlist(
     @Column(name = "title", nullable = false)
     val title: String,
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val songs: MutableList<Song> = mutableListOf(),
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
-    val likes: MutableList<User> = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
