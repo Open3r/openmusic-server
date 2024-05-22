@@ -1,6 +1,7 @@
 package com.open3r.openmusic.domain.album.service
 
 import com.open3r.openmusic.domain.album.dto.request.AlbumCreateRequest
+import com.open3r.openmusic.domain.album.dto.request.AlbumUpdateRequest
 import com.open3r.openmusic.domain.album.dto.response.AlbumResponse
 import com.open3r.openmusic.domain.album.repository.AlbumRepository
 import com.open3r.openmusic.global.error.CustomException
@@ -45,8 +46,15 @@ class AlbumServiceImpl(
     }
 
     @Transactional
-    override fun updateAlbum(albumId: Long, request: AlbumCreateRequest) {
-        TODO()
+    override fun updateAlbum(albumId: Long, request: AlbumUpdateRequest) {
+        val album = albumRepository.findByIdOrNull(albumId) ?: throw CustomException(ErrorCode.ALBUM_NOT_FOUND)
+        val user = userSecurity.user
+
+        if (album.user.id != user.id) throw CustomException(ErrorCode.ALBUM_NOT_UPDATABLE)
+
+        album.title = request.title ?: album.title
+
+        albumRepository.save(album)
     }
 
     @Transactional
@@ -54,7 +62,7 @@ class AlbumServiceImpl(
         val album = albumRepository.findByIdOrNull(albumId) ?: throw CustomException(ErrorCode.ALBUM_NOT_FOUND)
         val user = userSecurity.user
 
-//        if (album.artist.id != user.id) throw CustomException(ErrorCode.ALBUM_NOT_DELETABLE)
+        if (album.user.id != user.id) throw CustomException(ErrorCode.ALBUM_NOT_DELETABLE)
 
         albumRepository.delete(album)
     }

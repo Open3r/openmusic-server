@@ -1,6 +1,7 @@
 package com.open3r.openmusic.domain.playlist.controller
 
 import com.open3r.openmusic.domain.playlist.dto.request.PlaylistCreateRequest
+import com.open3r.openmusic.domain.playlist.dto.request.PlaylistUpdateRequest
 import com.open3r.openmusic.domain.playlist.service.PlaylistService
 import com.open3r.openmusic.global.common.BaseResponse
 import io.swagger.v3.oas.annotations.Operation
@@ -33,6 +34,12 @@ class PlaylistController(
     @PreAuthorize("isAuthenticated()")
     fun createPlaylist(@RequestBody request: PlaylistCreateRequest) =
         BaseResponse(playlistService.createPlaylist(request), 201).toEntity()
+
+    @Operation(summary = "플레이리스트 수정")
+    @PatchMapping("/{playlistId}")
+    @PreAuthorize("isAuthenticated()")
+    fun updatePlaylist(@PathVariable playlistId: Long, @RequestBody request: PlaylistUpdateRequest) =
+        BaseResponse(playlistService.updatePlaylist(playlistId, request), 200).toEntity()
 
     @Operation(summary = "플레이리스트 삭제")
     @DeleteMapping("/{playlistId}")

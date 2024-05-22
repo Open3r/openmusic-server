@@ -11,8 +11,8 @@ class Album(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(name = "title", nullable = false)
-    val title: String,
+    @Column(name = "title", nullable = true)
+    var title: String,
 
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val songs: MutableList<Song> = mutableListOf(),

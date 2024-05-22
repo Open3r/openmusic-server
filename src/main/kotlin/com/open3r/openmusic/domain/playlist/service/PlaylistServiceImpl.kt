@@ -1,6 +1,7 @@
 package com.open3r.openmusic.domain.playlist.service
 
 import com.open3r.openmusic.domain.playlist.dto.request.PlaylistCreateRequest
+import com.open3r.openmusic.domain.playlist.dto.request.PlaylistUpdateRequest
 import com.open3r.openmusic.domain.playlist.dto.response.PlaylistResponse
 import com.open3r.openmusic.domain.playlist.repository.PlaylistRepository
 import com.open3r.openmusic.domain.song.repository.SongRepository
@@ -42,6 +43,19 @@ class PlaylistServiceImpl(
     override fun createPlaylist(request: PlaylistCreateRequest) {
         val user = userSecurity.user
         val playlist = request.toEntity(user)
+
+        playlistRepository.save(playlist)
+    }
+
+    @Transactional
+    override fun updatePlaylist(playlistId: Long, request: PlaylistUpdateRequest) {
+        val playlist =
+            playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
+        val user = userSecurity.user
+
+        if (playlist.user.id != user.id) throw CustomException(ErrorCode.PLAYLIST_NOT_UPDATABLE)
+
+        playlist.title = request.title ?: playlist.title
 
         playlistRepository.save(playlist)
     }

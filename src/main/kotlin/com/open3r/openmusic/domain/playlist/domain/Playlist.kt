@@ -11,8 +11,8 @@ class Playlist(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(name = "title", nullable = false)
-    val title: String,
+    @Column(name = "title", nullable = true)
+    var title: String,
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     val songs: MutableList<Song> = mutableListOf(),

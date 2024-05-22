@@ -1,6 +1,7 @@
 package com.open3r.openmusic.domain.album.controller
 
 import com.open3r.openmusic.domain.album.dto.request.AlbumCreateRequest
+import com.open3r.openmusic.domain.album.dto.request.AlbumUpdateRequest
 import com.open3r.openmusic.domain.album.service.AlbumService
 import com.open3r.openmusic.global.common.BaseResponse
 import io.swagger.v3.oas.annotations.Operation
@@ -31,6 +32,12 @@ class AlbumController(
     @PreAuthorize("isAuthenticated()")
     fun createAlbum(@RequestBody request: AlbumCreateRequest) =
         BaseResponse(albumService.createAlbum(request), 201).toEntity()
+
+    @Operation(summary = "앨범 수정")
+    @PatchMapping("/{albumId}")
+    @PreAuthorize("isAuthenticated()")
+    fun updateAlbum(@PathVariable albumId: Long, @RequestBody request: AlbumUpdateRequest) =
+        BaseResponse(albumService.updateAlbum(albumId, request), 200).toEntity()
 
     @Operation(summary = "앨범 삭제")
     @DeleteMapping("/{albumId}")
