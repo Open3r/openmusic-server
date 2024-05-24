@@ -20,6 +20,7 @@ import com.open3r.openmusic.global.security.UserSecurity
 import com.open3r.openmusic.global.security.jwt.Jwt
 import com.open3r.openmusic.global.security.jwt.JwtProvider
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -38,7 +39,7 @@ class AuthServiceImpl(
     private val refreshTokenRepository: RefreshTokenRepository,
     private val userSecurity: UserSecurity,
     private val verifyCodeRepository: VerifyCodeRepository,
-    private val mailSender: JavaMailSenderImpl
+    private val mailSender: JavaMailSender
 ) : AuthService {
     @Transactional
     override fun signup(request: AuthSignUpRequest) {
