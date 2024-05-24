@@ -22,9 +22,10 @@ enum class ErrorCode(
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid refresh token"),
 
     // Auth
-    INVALID_EMAIL(HttpStatus.BAD_REQUEST, "Invalid email"),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "Invalid password"),
-    AUTHENTICATION_FAILED(HttpStatus.BAD_REQUEST, "Authentication failed"),
+
+    CERTIFICATION_NUMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "Certification number not found"),
+    CERTIFICATION_NUMBER_NOT_MATCH(HttpStatus.BAD_REQUEST, "Certification number not match"),
 
 
     // Album
@@ -35,6 +36,9 @@ enum class ErrorCode(
     ALBUM_SONG_NOT_FOUND(HttpStatus.NOT_FOUND, "Album song not found"),
     ALBUM_LIKE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "Album like already exists"),
     ALBUM_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "Album like not found"),
+
+    // Mail
+    MAIL_SEND_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Mail send error"),
 
     // Playlist
     PLAYLIST_NOT_FOUND(HttpStatus.NOT_FOUND, "Playlist not found"),
@@ -55,8 +59,10 @@ enum class ErrorCode(
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
     USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "User already exists"),
     USER_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "User is not deletable"),
-
+    USER_ALREADY_VERIFIED(HttpStatus.BAD_REQUEST, "User already verified"),
+    USER_NOT_VERIFIED(HttpStatus.BAD_REQUEST, "User not verified"),
 
     // Else
     MAX_UPLOAD_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "Max upload size exceeded")
+
 }

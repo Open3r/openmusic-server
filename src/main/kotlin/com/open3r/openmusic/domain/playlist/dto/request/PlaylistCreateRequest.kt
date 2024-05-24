@@ -8,6 +8,6 @@ data class PlaylistCreateRequest(
 ) {
     fun toEntity(user: User) = Playlist(
         title = title,
-        user = user
+        artist = user
     )
 }

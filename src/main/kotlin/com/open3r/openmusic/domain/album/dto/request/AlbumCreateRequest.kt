@@ -8,6 +8,6 @@ data class AlbumCreateRequest(
 ) {
     fun toEntity(user: User) = Album(
         title = title,
-        user = user
+        artist = user
     )
 }

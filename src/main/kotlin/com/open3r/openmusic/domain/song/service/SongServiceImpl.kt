@@ -1,5 +1,6 @@
 package com.open3r.openmusic.domain.song.service
 
+import com.open3r.openmusic.domain.album.repository.AlbumRepository
 import com.open3r.openmusic.domain.song.dto.request.SongCreateRequest
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
 import com.open3r.openmusic.domain.song.repository.SongRepository
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class SongServiceImpl(
     private val songRepository: SongRepository,
+    private val albumRepository: AlbumRepository,
     private val userSecurity: UserSecurity,
 ) : SongService {
     @Transactional(readOnly = true)
@@ -39,8 +41,9 @@ class SongServiceImpl(
 
     @Transactional
     override fun createSong(request: SongCreateRequest) {
-        val user = userSecurity.user
-        val song = request.toEntity(user)
+        val album = albumRepository.findByIdOrNull(request.albumId) ?: throw CustomException(ErrorCode.ALBUM_NOT_FOUND)
+        val artist = userSecurity.user
+        val song = request.toEntity(album, artist)
 
         songRepository.save(song)
     }

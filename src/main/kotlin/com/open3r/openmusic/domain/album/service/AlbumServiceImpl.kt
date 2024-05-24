@@ -52,7 +52,7 @@ class AlbumServiceImpl(
         val album = albumRepository.findByIdOrNull(albumId) ?: throw CustomException(ErrorCode.ALBUM_NOT_FOUND)
         val user = userSecurity.user
 
-        if (album.user.id != user.id) throw CustomException(ErrorCode.ALBUM_NOT_UPDATABLE)
+        if (album.artist.id != user.id) throw CustomException(ErrorCode.ALBUM_NOT_UPDATABLE)
 
         album.title = request.title ?: album.title
 
@@ -64,7 +64,7 @@ class AlbumServiceImpl(
         val album = albumRepository.findByIdOrNull(albumId) ?: throw CustomException(ErrorCode.ALBUM_NOT_FOUND)
         val user = userSecurity.user
 
-        if (album.user.id != user.id) throw CustomException(ErrorCode.ALBUM_NOT_DELETABLE)
+        if (album.artist.id != user.id) throw CustomException(ErrorCode.ALBUM_NOT_DELETABLE)
 
         albumRepository.delete(album)
     }
@@ -75,7 +75,7 @@ class AlbumServiceImpl(
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
         val user = userSecurity.user
 
-        if (album.user.id != user.id) throw CustomException(ErrorCode.ALBUM_NOT_UPDATABLE)
+        if (album.artist.id != user.id) throw CustomException(ErrorCode.ALBUM_NOT_UPDATABLE)
         if (album.songs.any { it.id == song.id }) throw CustomException(ErrorCode.ALBUM_SONG_ALREADY_EXISTS)
 
         album.songs.add(song)
@@ -89,7 +89,7 @@ class AlbumServiceImpl(
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
         val user = userSecurity.user
 
-        if (album.user.id != user.id) throw CustomException(ErrorCode.ALBUM_NOT_UPDATABLE)
+        if (album.artist.id != user.id) throw CustomException(ErrorCode.ALBUM_NOT_UPDATABLE)
         if (album.songs.none { it.id == song.id }) throw CustomException(ErrorCode.ALBUM_SONG_NOT_FOUND)
 
         album.songs.removeIf { it.id == song.id }

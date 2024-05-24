@@ -27,6 +27,6 @@ class OAuth2SuccessHandler(private val jwtProvider: JwtProvider) : SimpleUrlAuth
     }
 
     companion object {
-        const val REDIRECT_URI = "https://openmusic.com/oauth2/redirect"
+        const val REDIRECT_URI = "https://openmusic.com/"
     }
 }

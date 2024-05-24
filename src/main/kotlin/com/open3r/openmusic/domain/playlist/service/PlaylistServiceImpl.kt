@@ -53,7 +53,7 @@ class PlaylistServiceImpl(
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
         val user = userSecurity.user
 
-        if (playlist.user.id != user.id) throw CustomException(ErrorCode.PLAYLIST_NOT_UPDATABLE)
+        if (playlist.artist.id != user.id) throw CustomException(ErrorCode.PLAYLIST_NOT_UPDATABLE)
 
         playlist.title = request.title ?: playlist.title
 
@@ -66,7 +66,7 @@ class PlaylistServiceImpl(
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
         val user = userSecurity.user
 
-        if (playlist.user.id != user.id && user.role != UserRole.ADMIN) throw CustomException(ErrorCode.PLAYLIST_NOT_DELETABLE)
+        if (playlist.artist.id != user.id && user.role != UserRole.ADMIN) throw CustomException(ErrorCode.PLAYLIST_NOT_DELETABLE)
 
         playlistRepository.delete(playlist)
     }
@@ -77,7 +77,7 @@ class PlaylistServiceImpl(
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
         val user = userSecurity.user
 
-        if (playlist.user.id != user.id) throw CustomException(ErrorCode.PLAYLIST_NOT_UPDATABLE)
+        if (playlist.artist.id != user.id) throw CustomException(ErrorCode.PLAYLIST_NOT_UPDATABLE)
         if (playlist.songs.any { it.id == songId }) throw CustomException(ErrorCode.PLAYLIST_SONG_ALREADY_EXISTS)
 
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
@@ -93,7 +93,7 @@ class PlaylistServiceImpl(
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
         val user = userSecurity.user
 
-        if (playlist.user.id != user.id) throw CustomException(ErrorCode.PLAYLIST_NOT_UPDATABLE)
+        if (playlist.artist.id != user.id) throw CustomException(ErrorCode.PLAYLIST_NOT_UPDATABLE)
         if (playlist.songs.none { it.id == songId }) throw CustomException(ErrorCode.PLAYLIST_SONG_NOT_FOUND)
 
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)

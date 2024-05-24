@@ -2,15 +2,14 @@ package com.open3r.openmusic.domain.auth.controller
 
 import com.open3r.openmusic.domain.auth.dto.request.AuthLoginRequest
 import com.open3r.openmusic.domain.auth.dto.request.AuthReissueRequest
+import com.open3r.openmusic.domain.auth.dto.request.AuthSignOutRequest
 import com.open3r.openmusic.domain.auth.dto.request.AuthSignUpRequest
 import com.open3r.openmusic.domain.auth.service.AuthService
-import com.open3r.openmusic.domain.user.dto.response.UserResponse
 import com.open3r.openmusic.global.common.BaseResponse
-import com.open3r.openmusic.global.security.jwt.Jwt
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
-import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 @Tag(name = "인증", description = "Auth")
@@ -21,24 +20,33 @@ class AuthController(
 ) {
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
-    fun signup(@Valid @RequestBody request: AuthSignUpRequest): ResponseEntity<BaseResponse<Unit>> {
-        return BaseResponse(authService.signup(request), 201).toEntity()
-    }
+    fun signup(@Valid @RequestBody request: AuthSignUpRequest) =
+        BaseResponse(authService.signup(request), 201).toEntity()
 
     @Operation(summary = "로그인")
     @PostMapping("/login")
-    fun login(@Valid @RequestBody request: AuthLoginRequest): ResponseEntity<BaseResponse<Jwt>> {
-        return BaseResponse(authService.login(request), 200).toEntity()
-    }
+    fun login(@Valid @RequestBody request: AuthLoginRequest) = BaseResponse(authService.login(request), 200).toEntity()
 
     @Operation(summary = "토큰 재발급")
     @PostMapping("/reissue")
-    fun reissue(@RequestBody request: AuthReissueRequest): ResponseEntity<BaseResponse<Jwt>> {
-        return BaseResponse(authService.reissue(request), 200).toEntity()
-    }
+    fun reissue(@RequestBody request: AuthReissueRequest) = BaseResponse(authService.reissue(request), 200).toEntity()
+
+    @Operation(summary = "회원 탈퇴")
+    @DeleteMapping("/signout")
+    @PreAuthorize("isAuthenticated()")
+    fun signout(@RequestBody request: AuthSignOutRequest) = BaseResponse(authService.signout(request), 204).toEntity()
+
+    @Operation(summary = "이메일 인증")
+    @PostMapping("/verify")
+    @PreAuthorize("isAuthenticated()")
+    fun verifyEmail() = BaseResponse(authService.verifyEmail(), 201).toEntity()
+
+    @Operation(summary = "이메일 인증 번호 확인")
+    @PostMapping("/verify/{code}")
+    @PreAuthorize("isAuthenticated()")
+    fun verifyEmailNumber(@PathVariable code: String) =
+        BaseResponse(authService.verifyEmailNumber(code), 200).toEntity()
 
     @GetMapping("/me")
-    fun getMe(): ResponseEntity<BaseResponse<UserResponse>> {
-        return BaseResponse(authService.getMe(), 200).toEntity()
-    }
+    fun getMe() = BaseResponse(authService.getMe(), 200).toEntity()
 }

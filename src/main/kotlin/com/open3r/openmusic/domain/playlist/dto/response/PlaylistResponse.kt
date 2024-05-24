@@ -17,7 +17,7 @@ data class PlaylistResponse(
 
             songs = playlist.songs.map { it.id!! },
             likes = playlist.likes.map { it.id!! },
-            userId = playlist.user.id!!
+            userId = playlist.artist.id!!
         )
     }
 }

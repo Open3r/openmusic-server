@@ -15,7 +15,7 @@ data class AlbumResponse(
             title = album.title,
             songs = album.songs.map { it.id!! },
             likes = album.likes.map { it.id!! },
-            userId = album.user.id!!
+            userId = album.artist.id!!
         )
     }
 }

@@ -1,5 +1,6 @@
 package com.open3r.openmusic.domain.song.domain
 
+import com.open3r.openmusic.domain.album.domain.Album
 import com.open3r.openmusic.domain.user.domain.User
 import com.open3r.openmusic.global.common.BaseEntity
 import jakarta.persistence.*
@@ -24,6 +25,11 @@ class Song(
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     val likes: MutableList<User> = mutableListOf(),
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "album_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    val album: Album,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id", nullable = false)

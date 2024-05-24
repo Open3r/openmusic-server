@@ -17,7 +17,7 @@ class User(
     val email: String,
 
     @Column(name = "password", nullable = false)
-    val password: String,
+    var password: String,
 
     @Column(name = "profile_url", nullable = false)
     val profileUrl: String,
@@ -29,7 +29,14 @@ class User(
     @Column(name = "provider_id", nullable = false, updatable = false)
     val providerId: String,
 
+    @Column(name = "verified", nullable = false)
+    var verified: Boolean = false,
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    val role: UserRole,
+    var role: UserRole,
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    var status: UserStatus = UserStatus.ACTIVE
 ) : BaseEntity()
