@@ -10,6 +10,9 @@ enum class ErrorCode(
     UNKNOWN(HttpStatus.INTERNAL_SERVER_ERROR, "Unknown"),
     NOT_FOUND(HttpStatus.NOT_FOUND, "Not found"),
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "Method not allowed"),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "Unauthorized"),
+    FORBIDDEN(HttpStatus.FORBIDDEN, "Forbidden"),
+
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "Invalid input value"),
     UNSUPPORTED_REGISTRATION_ID(HttpStatus.BAD_REQUEST, "Unsupported registration id"),
 

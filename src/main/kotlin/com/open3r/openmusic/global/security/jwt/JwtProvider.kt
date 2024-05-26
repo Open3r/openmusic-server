@@ -3,12 +3,14 @@ package com.open3r.openmusic.global.security.jwt
 import com.open3r.openmusic.domain.user.repository.UserRepository
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
+import com.open3r.openmusic.global.properties.DiscordProperties
 import com.open3r.openmusic.global.security.CustomUserDetails
 import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import io.jsonwebtoken.security.SecurityException
 import jakarta.servlet.http.HttpServletRequest
+import net.dv8tion.jda.api.JDA
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
@@ -18,7 +20,9 @@ import java.util.*
 @Component
 class JwtProvider(
     private val jwtProperties: JwtProperties,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val jda: JDA,
+    private val discordProperties: DiscordProperties
 ) {
     private val key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.secretKey))
 
@@ -39,6 +43,7 @@ class JwtProvider(
 
         val refreshToken = Jwts.builder()
             .setHeaderParam(Header.JWT_TYPE, JwtType.REFRESH)
+            .setSubject(authentication.name)
             .setIssuedAt(now)
             .setExpiration(refreshExpiration)
             .signWith(key, SignatureAlgorithm.HS256)
@@ -56,19 +61,7 @@ class JwtProvider(
     }
 
     fun validateToken(token: String) {
-        try {
-            parseClaims(token)
-        } catch (e: ExpiredJwtException) {
-            throw CustomException(ErrorCode.EXPIRED_ACCESS_TOKEN)
-        } catch (e: UnsupportedJwtException) {
-            throw CustomException(ErrorCode.UNSUPPORTED_ACCESS_TOKEN)
-        } catch (e: MalformedJwtException) {
-            throw CustomException(ErrorCode.INVALID_ACCESS_TOKEN)
-        } catch (e: SecurityException) {
-            throw CustomException(ErrorCode.INVALID_ACCESS_TOKEN)
-        } catch (e: IllegalArgumentException) {
-            throw CustomException(ErrorCode.INVALID_ACCESS_TOKEN)
-        }
+        parseClaims(token)
     }
 
     fun resolveToken(request: HttpServletRequest): String? {
@@ -94,19 +87,16 @@ class JwtProvider(
                 .build()
                 .parseClaimsJws(accessToken)
                 .body
-        } catch (e: Exception) {
-            when (e) {
-                is ExpiredJwtException -> throw CustomException(ErrorCode.EXPIRED_ACCESS_TOKEN)
-                is UnsupportedJwtException -> throw CustomException(ErrorCode.UNSUPPORTED_ACCESS_TOKEN)
-                is MalformedJwtException, is SecurityException, is IllegalArgumentException -> throw CustomException(
-                    ErrorCode.INVALID_ACCESS_TOKEN
-                )
-
-                else -> {
-                    e.printStackTrace()
-                    throw CustomException(ErrorCode.UNKNOWN)
-                }
-            }
+        } catch (e: ExpiredJwtException) {
+            throw CustomException(ErrorCode.EXPIRED_ACCESS_TOKEN)
+        } catch (e: UnsupportedJwtException) {
+            throw CustomException(ErrorCode.UNSUPPORTED_ACCESS_TOKEN)
+        } catch (e: MalformedJwtException) {
+            throw CustomException(ErrorCode.INVALID_ACCESS_TOKEN)
+        } catch (e: SecurityException) {
+            throw CustomException(ErrorCode.INVALID_ACCESS_TOKEN)
+        } catch (e: IllegalArgumentException) {
+            throw CustomException(ErrorCode.INVALID_ACCESS_TOKEN)
         }
     }
 }

@@ -20,15 +20,18 @@ class AuthController(
 ) {
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
+    @PreAuthorize("isAnonymous()")
     fun signup(@Valid @RequestBody request: AuthSignUpRequest) =
         BaseResponse(authService.signup(request), 201).toEntity()
 
     @Operation(summary = "로그인")
     @PostMapping("/login")
+    @PreAuthorize("isAnonymous()")
     fun login(@Valid @RequestBody request: AuthLoginRequest) = BaseResponse(authService.login(request), 200).toEntity()
 
     @Operation(summary = "토큰 재발급")
     @PostMapping("/reissue")
+    @PreAuthorize("isAnonymous()")
     fun reissue(@RequestBody request: AuthReissueRequest) = BaseResponse(authService.reissue(request), 200).toEntity()
 
     @Operation(summary = "회원 탈퇴")
@@ -48,5 +51,6 @@ class AuthController(
         BaseResponse(authService.verifyEmailNumber(code), 200).toEntity()
 
     @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
     fun getMe() = BaseResponse(authService.getMe(), 200).toEntity()
 }

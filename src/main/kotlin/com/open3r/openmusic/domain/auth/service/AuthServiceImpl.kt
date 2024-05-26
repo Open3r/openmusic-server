@@ -19,9 +19,9 @@ import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
 import com.open3r.openmusic.global.security.jwt.Jwt
 import com.open3r.openmusic.global.security.jwt.JwtProvider
+import com.open3r.openmusic.global.security.jwt.JwtType
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.mail.javamail.JavaMailSender
-import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -81,7 +81,9 @@ class AuthServiceImpl(
     override fun reissue(request: AuthReissueRequest): Jwt {
         jwtProvider.validateToken(request.refreshToken)
 
-        val authentication = jwtProvider.getAuthentication(request.accessToken)
+        if (jwtProvider.getType(request.refreshToken) != JwtType.REFRESH) throw CustomException(ErrorCode.INVALID_REFRESH_TOKEN)
+
+        val authentication = jwtProvider.getAuthentication(request.refreshToken)
         val user = userRepository.findByEmail(authentication.name) ?: throw CustomException(ErrorCode.USER_NOT_FOUND)
         val refreshToken =
             refreshTokenRepository.findByUserId(user.id!!) ?: throw CustomException(ErrorCode.INVALID_REFRESH_TOKEN)

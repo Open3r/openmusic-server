@@ -2,8 +2,11 @@ package com.open3r.openmusic.global.error
 
 import com.open3r.openmusic.global.properties.DiscordProperties
 import com.open3r.openmusic.global.util.DiscordUtil
+import io.jsonwebtoken.ExpiredJwtException
+import io.jsonwebtoken.UnsupportedJwtException
 import net.dv8tion.jda.api.JDA
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -39,6 +42,21 @@ class GlobalExceptionHandler(
     @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
     fun handleHttpRequestMethodNotSupportedException(e: HttpRequestMethodNotSupportedException): ResponseEntity<ErrorResponse> {
         return ErrorResponse(ErrorCode.METHOD_NOT_ALLOWED).toEntity()
+    }
+
+    @ExceptionHandler(AccessDeniedException::class)
+    fun handleAccessDeniedException(e: AccessDeniedException): ResponseEntity<ErrorResponse> {
+        return ErrorResponse(ErrorCode.FORBIDDEN).toEntity()
+    }
+
+    @ExceptionHandler(ExpiredJwtException::class)
+    fun handleExpiredJwtException(e: ExpiredJwtException): ResponseEntity<ErrorResponse> {
+        return ErrorResponse(ErrorCode.EXPIRED_ACCESS_TOKEN).toEntity()
+    }
+
+    @ExceptionHandler(UnsupportedJwtException::class)
+    fun handleUnsupportedJwtException(e: UnsupportedJwtException): ResponseEntity<ErrorResponse> {
+        return ErrorResponse(ErrorCode.UNSUPPORTED_ACCESS_TOKEN).toEntity()
     }
 
     @ExceptionHandler(Exception::class)

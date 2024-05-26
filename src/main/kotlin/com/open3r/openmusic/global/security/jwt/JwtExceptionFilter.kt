@@ -28,11 +28,16 @@ class JwtExceptionFilter(
             filterChain.doFilter(request, response)
         } catch (e: Exception) {
             when (e) {
-                is ExpiredJwtException -> setErrorResponse(response, CustomException(ErrorCode.EXPIRED_ACCESS_TOKEN))
-                is UnsupportedJwtException -> setErrorResponse(
-                    response,
-                    CustomException(ErrorCode.UNSUPPORTED_ACCESS_TOKEN)
-                )
+                is ExpiredJwtException -> {
+                    setErrorResponse(response, CustomException(ErrorCode.EXPIRED_ACCESS_TOKEN))
+                }
+
+                is UnsupportedJwtException -> {
+                    setErrorResponse(
+                        response,
+                        CustomException(ErrorCode.UNSUPPORTED_ACCESS_TOKEN)
+                    )
+                }
 
                 else -> {
                     setErrorResponse(response, CustomException(ErrorCode.UNKNOWN))
