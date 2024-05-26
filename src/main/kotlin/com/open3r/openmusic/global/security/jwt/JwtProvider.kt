@@ -52,8 +52,8 @@ class JwtProvider(
         return Jwt(accessToken, refreshToken)
     }
 
-    fun getAuthentication(accessToken: String): Authentication {
-        val claims = parseClaims(accessToken)
+    fun getAuthentication(token: String): Authentication {
+        val claims = parseClaims(token)
         val user = userRepository.findByEmail(claims.subject) ?: throw CustomException(ErrorCode.USER_NOT_FOUND)
         val details = CustomUserDetails(user)
 
@@ -75,17 +75,15 @@ class JwtProvider(
     }
 
     fun getType(token: String): JwtType {
-        val claims = parseClaims(token)
-
-        return JwtType.valueOf(claims[Header.JWT_TYPE] as String)
+        return JwtType.valueOf(Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).header[Header.JWT_TYPE] as String)
     }
 
-    private fun parseClaims(accessToken: String): Claims {
+    private fun parseClaims(token: String): Claims {
         return try {
             Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(accessToken)
+                .parseClaimsJws(token)
                 .body
         } catch (e: ExpiredJwtException) {
             throw CustomException(ErrorCode.EXPIRED_ACCESS_TOKEN)
