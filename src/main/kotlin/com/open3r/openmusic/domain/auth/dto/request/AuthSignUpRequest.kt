@@ -12,5 +12,5 @@ data class AuthSignUpRequest(
     val email: String,
     @field:NotBlank
     @field:Size(min = 8)
-    val password: String
+    val password: String,
 )

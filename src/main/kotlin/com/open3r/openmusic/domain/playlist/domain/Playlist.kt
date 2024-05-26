@@ -16,6 +16,9 @@ class Playlist(
     @Column(name = "title", nullable = true)
     var title: String,
 
+    @Column(name = "cover_url", nullable = true)
+    var coverUrl: String,
+
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     val songs: MutableList<Song> = mutableListOf(),
 

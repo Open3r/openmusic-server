@@ -1,6 +1,7 @@
 package com.open3r.openmusic.domain.song.service
 
 import com.open3r.openmusic.domain.song.dto.request.SongCreateRequest
+import com.open3r.openmusic.domain.song.dto.request.SongUpdateRequest
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
 
 interface SongService {
@@ -8,6 +9,7 @@ interface SongService {
     fun getSong(songId: Long): SongResponse
     fun searchSong(query: String): List<SongResponse>
     fun createSong(request: SongCreateRequest)
+    fun updateSong(songId: Long, request: SongUpdateRequest)
     fun deleteSong(songId: Long)
     fun createSongLike(songId: Long)
     fun deleteSongLike(songId: Long)

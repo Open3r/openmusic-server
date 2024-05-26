@@ -10,8 +10,8 @@ class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(name = "name", nullable = false)
-    val name: String,
+    @Column(name = "nickname", nullable = false)
+    var nickname: String,
 
     @Column(name = "email", nullable = false, unique = true)
     val email: String,
@@ -19,8 +19,8 @@ class User(
     @Column(name = "password", nullable = false)
     var password: String,
 
-    @Column(name = "profile_url", nullable = false)
-    val profileUrl: String,
+    @Column(name = "avatar_url", nullable = false)
+    var avatarUrl: String,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "provider", nullable = false, updatable = false)

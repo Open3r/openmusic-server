@@ -21,7 +21,9 @@ import com.open3r.openmusic.global.security.jwt.Jwt
 import com.open3r.openmusic.global.security.jwt.JwtProvider
 import com.open3r.openmusic.global.security.jwt.JwtType
 import io.jsonwebtoken.ExpiredJwtException
+import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.UnsupportedJwtException
+import io.jsonwebtoken.security.SecurityException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
@@ -48,13 +50,13 @@ class AuthServiceImpl(
         if (userRepository.existsByEmail(request.email)) throw CustomException(ErrorCode.USER_ALREADY_EXISTS)
 
         val user = User(
-            name = request.name,
+            nickname = request.name,
             email = request.email,
             password = passwordEncoder.encode(request.password),
             role = UserRole.USER,
             provider = UserProvider.DEFAULT,
-            providerId = "",
-            profileUrl = ""
+            providerId = "-1",
+            avatarUrl = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.youtube.com%2F%40TeamAvatar&psig=AOvVaw3EcZDNXj1d0bVuDq3OlPbZ&ust=1716791569621000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCPiQyJHZqoYDFQAAAAAdAAAAABAE"
         )
 
         userRepository.save(user)
@@ -87,6 +89,8 @@ class AuthServiceImpl(
             throw CustomException(ErrorCode.EXPIRED_REFRESH_TOKEN)
         } catch (e: UnsupportedJwtException) {
             throw CustomException(ErrorCode.UNSUPPORTED_REFRESH_TOKEN)
+        } catch (e: MalformedJwtException) {
+            throw CustomException(ErrorCode.INVALID_REFRESH_TOKEN)
         } catch (e: SecurityException) {
             throw CustomException(ErrorCode.INVALID_REFRESH_TOKEN)
         } catch (e: IllegalArgumentException) {

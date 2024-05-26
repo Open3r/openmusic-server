@@ -15,13 +15,16 @@ class Song(
     val id: Long? = null,
 
     @Column(name = "title", nullable = false)
-    val title: String,
+    var title: String,
 
     @Column(name = "description", nullable = false)
-    val description: String,
+    var description: String,
 
     @Column(name = "url", nullable = false)
-    val url: String,
+    var url: String,
+
+    @Column(name = "cover_url", nullable = false)
+    var coverUrl: String,
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     val likes: MutableList<User> = mutableListOf(),

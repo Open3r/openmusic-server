@@ -12,6 +12,9 @@ data class SongCreateRequest(
     val title: String,
     @field:NotBlank
     val description: String,
+    @field:NotBlank
+    @field:URL
+    val coverUrl: String,
     @field:URL
     val url: String,
     @field:Positive
@@ -21,6 +24,7 @@ data class SongCreateRequest(
     fun toEntity(album: Album, artist: User) = Song(
         title = title,
         description = description,
+        coverUrl = coverUrl,
         url = url,
         album = album,
         artist = artist

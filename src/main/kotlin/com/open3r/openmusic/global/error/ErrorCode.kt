@@ -56,6 +56,7 @@ enum class ErrorCode(
     SONG_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "Song is not deletable"),
     SONG_LIKE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "Song like already exists"),
     SONG_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "Song like not found"),
+    SONG_NOT_UPDATABLE(HttpStatus.BAD_REQUEST, "Song is not updatable"),
 
     // User
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),

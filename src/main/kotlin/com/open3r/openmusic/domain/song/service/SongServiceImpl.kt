@@ -2,6 +2,7 @@ package com.open3r.openmusic.domain.song.service
 
 import com.open3r.openmusic.domain.album.repository.AlbumRepository
 import com.open3r.openmusic.domain.song.dto.request.SongCreateRequest
+import com.open3r.openmusic.domain.song.dto.request.SongUpdateRequest
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
 import com.open3r.openmusic.domain.song.repository.SongRepository
 import com.open3r.openmusic.domain.user.domain.UserRole
@@ -44,6 +45,21 @@ class SongServiceImpl(
         val album = albumRepository.findByIdOrNull(request.albumId) ?: throw CustomException(ErrorCode.ALBUM_NOT_FOUND)
         val artist = userSecurity.user
         val song = request.toEntity(album, artist)
+
+        songRepository.save(song)
+    }
+
+    @Transactional
+    override fun updateSong(songId: Long, request: SongUpdateRequest) {
+        val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
+        val user = userSecurity.user
+
+        if (song.artist.id != user.id && user.role != UserRole.ADMIN) throw CustomException(ErrorCode.SONG_NOT_UPDATABLE)
+
+        song.title = request.title ?: song.title
+        song.description = request.description ?: song.description
+        song.coverUrl = request.coverUrl ?: song.coverUrl
+        song.url = request.url ?: song.url
 
         songRepository.save(song)
     }

@@ -56,6 +56,7 @@ class PlaylistServiceImpl(
         if (playlist.artist.id != user.id) throw CustomException(ErrorCode.PLAYLIST_NOT_UPDATABLE)
 
         playlist.title = request.title ?: playlist.title
+        playlist.coverUrl = request.coverUrl ?: playlist.coverUrl
 
         playlistRepository.save(playlist)
     }

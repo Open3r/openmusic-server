@@ -1,6 +1,7 @@
 package com.open3r.openmusic.domain.user.service
 
 import com.open3r.openmusic.domain.user.domain.UserRole
+import com.open3r.openmusic.domain.user.dto.request.UserUpdateRequest
 import com.open3r.openmusic.domain.user.dto.response.UserResponse
 import com.open3r.openmusic.domain.user.repository.UserRepository
 import com.open3r.openmusic.global.error.CustomException
@@ -20,6 +21,16 @@ class UserServiceImpl(
         val users = userRepository.findAll()
 
         return users.map { UserResponse.of(it) }
+    }
+
+    @Transactional
+    override fun updateMe(request: UserUpdateRequest) {
+        val user = userSecurity.user
+
+        user.nickname = request.nickname ?: user.nickname
+        user.avatarUrl = request.avatarUrl ?: user.avatarUrl
+
+        userRepository.save(user)
     }
 
     @Transactional(readOnly = true)

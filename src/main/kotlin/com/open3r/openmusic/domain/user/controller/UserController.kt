@@ -1,5 +1,6 @@
 package com.open3r.openmusic.domain.user.controller
 
+import com.open3r.openmusic.domain.user.dto.request.UserUpdateRequest
 import com.open3r.openmusic.domain.user.service.UserService
 import com.open3r.openmusic.global.common.BaseResponse
 import io.swagger.v3.oas.annotations.Operation
@@ -15,6 +16,10 @@ class UserController(
     @Operation(summary = "유저 목록 조회")
     @GetMapping
     fun getUsers() = BaseResponse(userService.getUsers(), 200).toEntity()
+
+    @Operation(summary = "나 수정")
+    @PatchMapping("/me")
+    fun updateMe(@RequestBody request: UserUpdateRequest) = BaseResponse(userService.updateMe(request), 200).toEntity()
 
     @Operation(summary = "유저 조회")
     @GetMapping("/{userId}")

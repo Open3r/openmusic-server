@@ -55,6 +55,7 @@ class AlbumServiceImpl(
         if (album.artist.id != user.id) throw CustomException(ErrorCode.ALBUM_NOT_UPDATABLE)
 
         album.title = request.title ?: album.title
+        album.coverUrl = request.coverUrl ?: album.coverUrl
 
         albumRepository.save(album)
     }

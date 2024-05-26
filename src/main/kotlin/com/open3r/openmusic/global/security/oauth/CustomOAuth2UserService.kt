@@ -24,13 +24,14 @@ class CustomOAuth2UserService(
 
         val user = userRepository.findByEmailAndProvider(info.email, provider) ?: userRepository.save(
             User(
-                name = info.name,
+                nickname = info.name,
                 email = info.email,
                 password = "",
                 provider = provider,
                 providerId = "${attributes[userNameAttributeName]}",
-                profileUrl = info.profile,
-                role = UserRole.USER
+                avatarUrl = info.profile,
+                role = UserRole.USER,
+                verified = true,
             )
         )
 

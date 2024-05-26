@@ -5,7 +5,7 @@ import com.open3r.openmusic.domain.playlist.domain.Playlist
 data class PlaylistResponse(
     val id: Long,
     val title: String,
-
+    val coverUrl: String,
     val songs: List<Long>,
     val likes: List<Long>,
     val userId: Long
@@ -14,7 +14,7 @@ data class PlaylistResponse(
         fun of(playlist: Playlist) = PlaylistResponse(
             id = playlist.id!!,
             title = playlist.title,
-
+            coverUrl = playlist.coverUrl,
             songs = playlist.songs.map { it.id!! },
             likes = playlist.likes.map { it.id!! },
             userId = playlist.artist.id!!

@@ -3,14 +3,12 @@ package com.open3r.openmusic.global.security.jwt
 import com.open3r.openmusic.domain.user.repository.UserRepository
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
-import com.open3r.openmusic.global.properties.DiscordProperties
 import com.open3r.openmusic.global.security.CustomUserDetails
 import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import io.jsonwebtoken.security.SecurityException
 import jakarta.servlet.http.HttpServletRequest
-import net.dv8tion.jda.api.JDA
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
@@ -21,8 +19,6 @@ import java.util.*
 class JwtProvider(
     private val jwtProperties: JwtProperties,
     private val userRepository: UserRepository,
-    private val jda: JDA,
-    private val discordProperties: DiscordProperties
 ) {
     private val key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.secretKey))
 
@@ -88,15 +84,15 @@ class JwtProvider(
                 .parseClaimsJws(token)
                 .body
         } catch (e: ExpiredJwtException) {
-            throw CustomException(ErrorCode.EXPIRED_ACCESS_TOKEN)
+            throw CustomException(ErrorCode.EXPIRED_REFRESH_TOKEN)
         } catch (e: UnsupportedJwtException) {
-            throw CustomException(ErrorCode.UNSUPPORTED_ACCESS_TOKEN)
+            throw CustomException(ErrorCode.UNSUPPORTED_REFRESH_TOKEN)
         } catch (e: MalformedJwtException) {
-            throw CustomException(ErrorCode.INVALID_ACCESS_TOKEN)
+            throw CustomException(ErrorCode.INVALID_REFRESH_TOKEN)
         } catch (e: SecurityException) {
-            throw CustomException(ErrorCode.INVALID_ACCESS_TOKEN)
+            throw CustomException(ErrorCode.INVALID_REFRESH_TOKEN)
         } catch (e: IllegalArgumentException) {
-            throw CustomException(ErrorCode.INVALID_ACCESS_TOKEN)
+            throw CustomException(ErrorCode.INVALID_REFRESH_TOKEN)
         }
     }
 }

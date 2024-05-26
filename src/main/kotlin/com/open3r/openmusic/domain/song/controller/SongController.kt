@@ -1,6 +1,7 @@
 package com.open3r.openmusic.domain.song.controller
 
 import com.open3r.openmusic.domain.song.dto.request.SongCreateRequest
+import com.open3r.openmusic.domain.song.dto.request.SongUpdateRequest
 import com.open3r.openmusic.domain.song.service.SongService
 import com.open3r.openmusic.global.common.BaseResponse
 import io.swagger.v3.oas.annotations.Operation
@@ -31,6 +32,12 @@ class SongController(
     @PreAuthorize("isAuthenticated()")
     fun createSong(@RequestBody request: SongCreateRequest) =
         BaseResponse(songService.createSong(request), 201).toEntity()
+
+    @Operation(summary = "음악 수정")
+    @PatchMapping("/{songId}")
+    @PreAuthorize("isAuthenticated()")
+    fun updateSong(@PathVariable songId: Long, @RequestBody request: SongUpdateRequest) =
+        BaseResponse(songService.updateSong(songId, request), 200).toEntity()
 
     @Operation(summary = "음악 삭제")
     @DeleteMapping("/{songId}")
