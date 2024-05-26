@@ -84,16 +84,23 @@ class AuthServiceImpl(
         try {
             jwtProvider.validateToken(request.refreshToken)
         } catch (e: ExpiredJwtException) {
+            println("Expired Jwt Exception")
             throw CustomException(ErrorCode.EXPIRED_REFRESH_TOKEN)
         } catch (e: UnsupportedJwtException) {
+            println("Unsupported Jwt Exception")
             throw CustomException(ErrorCode.UNSUPPORTED_REFRESH_TOKEN)
         } catch (e: SecurityException) {
+            println("Security Exception")
             throw CustomException(ErrorCode.INVALID_REFRESH_TOKEN)
         } catch (e: IllegalArgumentException) {
+            println("Illegal Argument Exception")
             throw CustomException(ErrorCode.INVALID_REFRESH_TOKEN)
         }
 
-        if (jwtProvider.getType(request.refreshToken) != JwtType.REFRESH) throw CustomException(ErrorCode.INVALID_REFRESH_TOKEN)
+        if (jwtProvider.getType(request.refreshToken) != JwtType.REFRESH) {
+            println("Not Refresh Token")
+            throw CustomException(ErrorCode.INVALID_REFRESH_TOKEN)
+        }
 
         val authentication = jwtProvider.getAuthentication(request.refreshToken)
         val user = userRepository.findByEmail(authentication.name) ?: throw CustomException(ErrorCode.USER_NOT_FOUND)
