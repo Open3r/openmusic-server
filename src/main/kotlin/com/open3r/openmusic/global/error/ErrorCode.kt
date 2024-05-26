@@ -23,10 +23,9 @@ enum class ErrorCode(
 
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "Expired refresh token"),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid refresh token"),
+    UNSUPPORTED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "Unsupported refresh token"),
 
     // Auth
-    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "Invalid password"),
-
     CERTIFICATION_NUMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "Certification number not found"),
     CERTIFICATION_NUMBER_NOT_MATCH(HttpStatus.BAD_REQUEST, "Certification number not match"),
 
@@ -63,6 +62,7 @@ enum class ErrorCode(
     USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "User already exists"),
     USER_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "User is not deletable"),
     USER_ALREADY_VERIFIED(HttpStatus.BAD_REQUEST, "User already verified"),
+    USER_PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "User password not match"),
     USER_NOT_VERIFIED(HttpStatus.BAD_REQUEST, "User not verified"),
 
     // Else

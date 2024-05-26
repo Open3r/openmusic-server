@@ -20,6 +20,8 @@ import com.open3r.openmusic.global.security.UserSecurity
 import com.open3r.openmusic.global.security.jwt.Jwt
 import com.open3r.openmusic.global.security.jwt.JwtProvider
 import com.open3r.openmusic.global.security.jwt.JwtType
+import io.jsonwebtoken.ExpiredJwtException
+import io.jsonwebtoken.UnsupportedJwtException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
@@ -65,7 +67,7 @@ class AuthServiceImpl(
         )
 
         if (!passwordEncoder.matches(request.password, user.password))
-            throw CustomException(ErrorCode.INVALID_PASSWORD)
+            throw CustomException(ErrorCode.USER_PASSWORD_NOT_MATCH)
 
 
         val authenticationToken = UsernamePasswordAuthenticationToken(request.email, request.password)
@@ -79,7 +81,17 @@ class AuthServiceImpl(
 
     @Transactional
     override fun reissue(request: AuthReissueRequest): Jwt {
-        jwtProvider.validateToken(request.refreshToken)
+        try {
+            jwtProvider.validateToken(request.refreshToken)
+        } catch (e: ExpiredJwtException) {
+            throw CustomException(ErrorCode.EXPIRED_REFRESH_TOKEN)
+        } catch (e: UnsupportedJwtException) {
+            throw CustomException(ErrorCode.UNSUPPORTED_REFRESH_TOKEN)
+        } catch (e: SecurityException) {
+            throw CustomException(ErrorCode.INVALID_REFRESH_TOKEN)
+        } catch (e: IllegalArgumentException) {
+            throw CustomException(ErrorCode.INVALID_REFRESH_TOKEN)
+        }
 
         if (jwtProvider.getType(request.refreshToken) != JwtType.REFRESH) throw CustomException(ErrorCode.INVALID_REFRESH_TOKEN)
 
@@ -102,7 +114,11 @@ class AuthServiceImpl(
         val user = userSecurity.user
         val u = userRepository.findByIdOrNull(user.id!!) ?: throw CustomException(ErrorCode.USER_NOT_FOUND)
 
-        if (passwordEncoder.matches(request.password, u.password)) throw CustomException(ErrorCode.INVALID_PASSWORD)
+        if (passwordEncoder.matches(
+                request.password,
+                u.password
+            )
+        ) throw CustomException(ErrorCode.USER_PASSWORD_NOT_MATCH)
 
         u.status = UserStatus.DELETED
 

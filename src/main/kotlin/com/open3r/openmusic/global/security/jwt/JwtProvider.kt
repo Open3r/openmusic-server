@@ -61,7 +61,7 @@ class JwtProvider(
     }
 
     fun validateToken(token: String) {
-        parseClaims(token)
+        Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).body
     }
 
     fun resolveToken(request: HttpServletRequest): String? {
@@ -75,7 +75,9 @@ class JwtProvider(
     }
 
     fun getType(token: String): JwtType {
-        return JwtType.valueOf(Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).header[Header.JWT_TYPE] as String)
+        return JwtType.valueOf(
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).header[Header.JWT_TYPE] as String
+        )
     }
 
     private fun parseClaims(token: String): Claims {

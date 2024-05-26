@@ -26,25 +26,18 @@ class JwtExceptionFilter(
     ) {
         try {
             filterChain.doFilter(request, response)
+        } catch (e: ExpiredJwtException) {
+            setErrorResponse(response, CustomException(ErrorCode.EXPIRED_ACCESS_TOKEN))
+        } catch (e: UnsupportedJwtException) {
+            setErrorResponse(response, CustomException(ErrorCode.UNSUPPORTED_ACCESS_TOKEN))
+        } catch (e: SecurityException) {
+            setErrorResponse(response, CustomException(ErrorCode.INVALID_ACCESS_TOKEN))
+        } catch (e: IllegalArgumentException) {
+            setErrorResponse(response, CustomException(ErrorCode.INVALID_ACCESS_TOKEN))
         } catch (e: Exception) {
-            when (e) {
-                is ExpiredJwtException -> {
-                    setErrorResponse(response, CustomException(ErrorCode.EXPIRED_ACCESS_TOKEN))
-                }
+            setErrorResponse(response, CustomException(ErrorCode.UNKNOWN))
 
-                is UnsupportedJwtException -> {
-                    setErrorResponse(
-                        response,
-                        CustomException(ErrorCode.UNSUPPORTED_ACCESS_TOKEN)
-                    )
-                }
-
-                else -> {
-                    setErrorResponse(response, CustomException(ErrorCode.UNKNOWN))
-
-                    DiscordUtil.sendException(jda.getTextChannelById(discordProperties.channelId)!!, e)
-                }
-            }
+            DiscordUtil.sendException(jda.getTextChannelById(discordProperties.channelId)!!, e)
         }
     }
 
