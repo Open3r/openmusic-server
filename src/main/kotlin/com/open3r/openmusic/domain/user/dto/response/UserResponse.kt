@@ -11,7 +11,6 @@ data class UserResponse(
     val email: String,
     val provider: UserProvider,
     val avatarUrl: String,
-    val verified: Boolean,
     val role: UserRole,
     val status: UserStatus
 ) {
@@ -22,7 +21,6 @@ data class UserResponse(
             nickname = user.nickname,
             provider = user.provider,
             avatarUrl = user.avatarUrl,
-            verified = user.verified,
             role = user.role,
             status = user.status,
         )

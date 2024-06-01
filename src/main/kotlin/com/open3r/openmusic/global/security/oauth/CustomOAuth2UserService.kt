@@ -31,7 +31,6 @@ class CustomOAuth2UserService(
                 providerId = "${attributes[userNameAttributeName]}",
                 avatarUrl = info.profile,
                 role = UserRole.USER,
-                verified = true,
             )
         )
 

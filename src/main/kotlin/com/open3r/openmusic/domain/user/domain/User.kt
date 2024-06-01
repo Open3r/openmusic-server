@@ -29,9 +29,6 @@ class User(
     @Column(name = "provider_id", nullable = false, updatable = false)
     val providerId: String,
 
-    @Column(name = "verified", nullable = false)
-    var verified: Boolean = false,
-
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     var role: UserRole,

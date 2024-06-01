@@ -26,8 +26,9 @@ enum class ErrorCode(
     UNSUPPORTED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "Unsupported refresh token"),
 
     // Auth
-    CERTIFICATION_NUMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "Certification number not found"),
-    CERTIFICATION_NUMBER_NOT_MATCH(HttpStatus.BAD_REQUEST, "Certification number not match"),
+    INVALID_EMAIL(HttpStatus.BAD_REQUEST, "Invalid email"),
+    INVALID_EMAIL_CODE(HttpStatus.BAD_REQUEST, "Invalid email code"),
+    EMAIL_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "Email code not found"),
 
 
     // Album
@@ -38,9 +39,6 @@ enum class ErrorCode(
     ALBUM_SONG_NOT_FOUND(HttpStatus.NOT_FOUND, "Album song not found"),
     ALBUM_LIKE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "Album like already exists"),
     ALBUM_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "Album like not found"),
-
-    // Mail
-    MAIL_SEND_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Mail send error"),
 
     // Playlist
     PLAYLIST_NOT_FOUND(HttpStatus.NOT_FOUND, "Playlist not found"),

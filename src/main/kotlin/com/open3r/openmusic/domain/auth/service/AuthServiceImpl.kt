@@ -1,13 +1,9 @@
 package com.open3r.openmusic.domain.auth.service
 
-import com.open3r.openmusic.domain.auth.dto.request.AuthLoginRequest
-import com.open3r.openmusic.domain.auth.dto.request.AuthReissueRequest
-import com.open3r.openmusic.domain.auth.dto.request.AuthSignOutRequest
-import com.open3r.openmusic.domain.auth.dto.request.AuthSignUpRequest
-import com.open3r.openmusic.domain.auth.dto.response.AuthVerifyEmailNumberResponse
-import com.open3r.openmusic.domain.auth.dto.response.AuthVerifyEmailResponse
+import com.open3r.openmusic.domain.auth.dto.request.*
+import com.open3r.openmusic.domain.auth.dto.response.AuthSendEmailResponse
+import com.open3r.openmusic.domain.auth.repository.EmailCodeRepository
 import com.open3r.openmusic.domain.auth.repository.RefreshTokenRepository
-import com.open3r.openmusic.domain.auth.repository.VerifyCodeRepository
 import com.open3r.openmusic.domain.user.domain.User
 import com.open3r.openmusic.domain.user.domain.UserProvider
 import com.open3r.openmusic.domain.user.domain.UserRole
@@ -42,12 +38,14 @@ class AuthServiceImpl(
     private val passwordEncoder: PasswordEncoder,
     private val refreshTokenRepository: RefreshTokenRepository,
     private val userSecurity: UserSecurity,
-    private val verifyCodeRepository: VerifyCodeRepository,
+    private val emailCodeRepository: EmailCodeRepository,
     private val mailSender: JavaMailSender
 ) : AuthService {
     @Transactional
     override fun signup(request: AuthSignUpRequest) {
         if (userRepository.existsByEmail(request.email)) throw CustomException(ErrorCode.USER_ALREADY_EXISTS)
+        if (!emailCodeRepository.existsByEmail(request.email)) throw CustomException(ErrorCode.INVALID_EMAIL)
+        if (emailCodeRepository.findByEmail(request.email) != request.emailCode) throw CustomException(ErrorCode.INVALID_EMAIL_CODE)
 
         val user = User(
             nickname = request.name,
@@ -136,18 +134,20 @@ class AuthServiceImpl(
         return UserResponse.of(user)
     }
 
-    override fun verifyEmail(): AuthVerifyEmailResponse {
-        val email = userSecurity.user.email
+    override fun sendEmail(request: AuthSendEmailRequest): AuthSendEmailResponse {
+        val email = request.email
 
-        if (!userRepository.existsByEmail(email)) throw CustomException(ErrorCode.USER_NOT_FOUND)
+        if (userRepository.existsByEmail(email)) throw CustomException(ErrorCode.USER_ALREADY_EXISTS)
+        if (emailCodeRepository.existsByEmail(email)) {
+            val code = emailCodeRepository.findByEmail(email) ?: throw CustomException(ErrorCode.EMAIL_CODE_NOT_FOUND)
+            emailCodeRepository.save(email, code)
 
-        val user = userRepository.findByEmail(email) ?: throw CustomException(ErrorCode.USER_NOT_FOUND)
+            return AuthSendEmailResponse(email = email)
+        }
 
-        if (user.verified) throw CustomException(ErrorCode.USER_ALREADY_VERIFIED)
+        val code = String.format("%06d", SecureRandom.getInstanceStrong().nextInt(999999))
 
-        val code = createCode()
-
-        verifyCodeRepository.save(email, code)
+        emailCodeRepository.save(email, code)
 
         val message = mailSender.createMimeMessage()
 
@@ -159,24 +159,6 @@ class AuthServiceImpl(
 
         mailSender.send(message)
 
-        return AuthVerifyEmailResponse(true)
-    }
-
-    override fun verifyEmailNumber(code: String): AuthVerifyEmailNumberResponse {
-        val email = userSecurity.user.email
-        if (!userRepository.existsByEmail(email)) throw CustomException(ErrorCode.USER_NOT_FOUND)
-        if (!verifyCodeRepository.existsByEmail(email)) throw CustomException(ErrorCode.CERTIFICATION_NUMBER_NOT_FOUND)
-        if (verifyCodeRepository.findByEmail(email) != code) throw CustomException(ErrorCode.CERTIFICATION_NUMBER_NOT_MATCH)
-
-        val user = userRepository.findByEmail(email) ?: throw CustomException(ErrorCode.USER_NOT_FOUND)
-        user.verified = true
-
-        verifyCodeRepository.deleteByEmail(email)
-
-        return AuthVerifyEmailNumberResponse(true)
-    }
-
-    private fun createCode(): String {
-        return String.format("%06d", SecureRandom.getInstanceStrong().nextInt(999999))
+        return AuthSendEmailResponse(email = email)
     }
 }

@@ -19,10 +19,10 @@ class Playlist(
     @Column(name = "cover_url", nullable = true)
     var coverUrl: String,
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val songs: MutableList<Song> = mutableListOf(),
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val likes: MutableList<User> = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)
