@@ -10,7 +10,6 @@ enum class ErrorCode(
     UNKNOWN(HttpStatus.INTERNAL_SERVER_ERROR, "Unknown"),
     NOT_FOUND(HttpStatus.NOT_FOUND, "Not found"),
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "Method not allowed"),
-    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "Unauthorized"),
     FORBIDDEN(HttpStatus.FORBIDDEN, "Forbidden"),
 
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "Invalid input value"),
@@ -60,9 +59,7 @@ enum class ErrorCode(
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
     USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "User already exists"),
     USER_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "User is not deletable"),
-    USER_ALREADY_VERIFIED(HttpStatus.BAD_REQUEST, "User already verified"),
     USER_PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "User password not match"),
-    USER_NOT_VERIFIED(HttpStatus.BAD_REQUEST, "User not verified"),
 
     // Else
     MAX_UPLOAD_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "Max upload size exceeded")

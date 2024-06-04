@@ -46,8 +46,8 @@ class SecurityConfig(
         .logout { it.disable() }
         .oauth2Login {
             it
-                .userInfoEndpoint {
-                    it.userService(customOAuth2DetailsService)
+                .userInfoEndpoint { endpoint ->
+                    endpoint.userService(customOAuth2DetailsService)
                 }
                 .successHandler(oAuth2SuccessHandler)
         }
