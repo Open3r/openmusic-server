@@ -18,7 +18,7 @@ class RedisConfig(
 ) {
     @PostConstruct
     fun init() {
-        redisTemplate().keys("*").forEach { redisTemplate().delete(it) }
+        redisTemplate().connectionFactory?.connection?.commands()?.flushAll()
     }
 
     @Bean
