@@ -2,13 +2,14 @@ package com.open3r.openmusic.domain.auth.repository
 
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Repository
+import java.util.concurrent.TimeUnit
 
 @Repository
 class EmailTokenRepositoryImpl(
     private val redisTemplate: RedisTemplate<String, String>
 ) : EmailTokenRepository {
     override fun save(email: String, token: String) {
-        redisTemplate.opsForValue().set("emailToken:$email", token)
+        redisTemplate.opsForValue().set("emailToken:$email", token, 3, TimeUnit.MINUTES)
     }
 
     override fun findByEmail(email: String): String? {
