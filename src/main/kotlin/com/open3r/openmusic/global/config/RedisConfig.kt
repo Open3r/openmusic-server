@@ -1,6 +1,7 @@
 package com.open3r.openmusic.global.config
 
 import com.open3r.openmusic.global.properties.RedisProperties
+import jakarta.annotation.PostConstruct
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisPassword
@@ -15,6 +16,11 @@ import org.springframework.data.redis.serializer.StringRedisSerializer
 class RedisConfig(
     private val redisProperties: RedisProperties
 ) {
+    @PostConstruct
+    fun init() {
+        redisTemplate().keys("*").forEach { redisTemplate().delete(it) }
+    }
+
     @Bean
     fun redisConnectionFactory() = LettuceConnectionFactory(RedisStandaloneConfiguration().apply {
         hostName = redisProperties.host

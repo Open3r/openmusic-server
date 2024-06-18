@@ -4,8 +4,6 @@ import com.open3r.openmusic.global.security.jwt.JwtAccessDeniedHandler
 import com.open3r.openmusic.global.security.jwt.JwtAuthenticationEntryPoint
 import com.open3r.openmusic.global.security.jwt.JwtAuthenticationFilter
 import com.open3r.openmusic.global.security.jwt.JwtExceptionFilter
-import com.open3r.openmusic.global.security.oauth.CustomOAuth2UserService
-import com.open3r.openmusic.global.security.oauth.OAuth2SuccessHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
@@ -25,8 +23,6 @@ class SecurityConfig(
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
     private val jwtAuthenticationFilter: JwtAuthenticationFilter,
     private val jwtExceptionFilter: JwtExceptionFilter,
-    private val customOAuth2DetailsService: CustomOAuth2UserService,
-    private val oAuth2SuccessHandler: OAuth2SuccessHandler
 ) {
     @Bean
     fun passwordEncoder() = BCryptPasswordEncoder()
@@ -44,13 +40,6 @@ class SecurityConfig(
         .formLogin { it.disable() }
         .rememberMe { it.disable() }
         .logout { it.disable() }
-        .oauth2Login {
-            it
-                .userInfoEndpoint { endpoint ->
-                    endpoint.userService(customOAuth2DetailsService)
-                }
-                .successHandler(oAuth2SuccessHandler)
-        }
         .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
         .exceptionHandling {
             it.accessDeniedHandler(jwtAccessDeniedHandler)

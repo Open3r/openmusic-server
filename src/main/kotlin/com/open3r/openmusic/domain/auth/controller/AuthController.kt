@@ -45,4 +45,8 @@ class AuthController(
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
     fun getMe() = BaseResponse(authService.getMe(), 200).toEntity()
+
+    @PostMapping("/google")
+    @PreAuthorize("isAnonymous()")
+    fun googleLogin(@RequestBody request: AuthGoogleLoginRequest): String = TODO()
 }
