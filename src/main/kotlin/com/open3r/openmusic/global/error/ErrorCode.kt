@@ -16,6 +16,7 @@ enum class ErrorCode(
     UNSUPPORTED_REGISTRATION_ID(HttpStatus.BAD_REQUEST, "Unsupported registration id"),
 
     // Jwt
+    INVALID_GOOGLE_CODE(HttpStatus.BAD_REQUEST, "Invalid google code"),
     EXPIRED_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "Expired access token"),
     INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid access token"),
     UNSUPPORTED_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "Unsupported access token"),

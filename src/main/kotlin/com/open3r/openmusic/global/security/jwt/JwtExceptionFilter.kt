@@ -6,6 +6,7 @@ import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.properties.DiscordProperties
 import com.open3r.openmusic.global.util.DiscordUtil
 import io.jsonwebtoken.ExpiredJwtException
+import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.UnsupportedJwtException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -30,6 +31,8 @@ class JwtExceptionFilter(
             setErrorResponse(response, CustomException(ErrorCode.EXPIRED_ACCESS_TOKEN))
         } catch (e: UnsupportedJwtException) {
             setErrorResponse(response, CustomException(ErrorCode.UNSUPPORTED_ACCESS_TOKEN))
+        } catch (e: MalformedJwtException) {
+            setErrorResponse(response, CustomException(ErrorCode.INVALID_ACCESS_TOKEN))
         } catch (e: SecurityException) {
             setErrorResponse(response, CustomException(ErrorCode.INVALID_ACCESS_TOKEN))
         } catch (e: IllegalArgumentException) {

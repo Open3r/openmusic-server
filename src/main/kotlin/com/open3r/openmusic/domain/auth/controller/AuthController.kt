@@ -2,7 +2,10 @@ package com.open3r.openmusic.domain.auth.controller
 
 import com.open3r.openmusic.domain.auth.dto.request.*
 import com.open3r.openmusic.domain.auth.service.AuthService
+import com.open3r.openmusic.domain.auth.service.GoogleService
 import com.open3r.openmusic.global.common.BaseResponse
+import com.open3r.openmusic.global.error.CustomException
+import com.open3r.openmusic.global.error.ErrorCode
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
@@ -13,7 +16,8 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/auth")
 class AuthController(
-    private val authService: AuthService
+    private val authService: AuthService,
+    private val googleService: GoogleService
 ) {
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
@@ -46,7 +50,11 @@ class AuthController(
     @PreAuthorize("isAuthenticated()")
     fun getMe() = BaseResponse(authService.getMe(), 200).toEntity()
 
-    @PostMapping("/google")
+    @GetMapping("/google")
     @PreAuthorize("isAnonymous()")
-    fun googleLogin(@RequestBody request: AuthGoogleLoginRequest): String = TODO()
+    fun google(@RequestParam code: String): String {
+        val accessToken = googleService.getAccessToken(code) ?: throw CustomException(ErrorCode.INVALID_GOOGLE_CODE)
+
+        return googleService.getUserInfo(accessToken) ?: throw CustomException(ErrorCode.INVALID_GOOGLE_CODE)
+    }
 }
