@@ -1,3 +1,3 @@
 package com.open3r.openmusic.global.error
 
-class CustomException(val error: ErrorCode) : RuntimeException()
+class CustomException(val error: ErrorCode) : RuntimeException(error.message)

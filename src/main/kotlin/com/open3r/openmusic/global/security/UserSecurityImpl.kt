@@ -1,14 +1,20 @@
 package com.open3r.openmusic.global.security
 
 import com.open3r.openmusic.domain.user.domain.User
+import com.open3r.openmusic.domain.user.repository.UserRepository
+import com.open3r.openmusic.global.error.CustomException
+import com.open3r.openmusic.global.error.ErrorCode
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 
 @Component
-class UserSecurityImpl : UserSecurity {
+class UserSecurityImpl(
+    private val userRepository: UserRepository
+) : UserSecurity {
     override val user: User
         get() {
+            val email = SecurityContextHolder.getContext().authentication.name
 
-            return (SecurityContextHolder.getContext().authentication.principal as CustomUserDetails).user
+            return userRepository.findByEmail(email) ?: throw CustomException(ErrorCode.USER_NOT_FOUND)
         }
 }

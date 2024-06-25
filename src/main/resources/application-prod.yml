@@ -32,42 +32,6 @@ spring:
           timeout: 5000
           connectiontimeout: 5000
           writetimeout: 5000
-  security:
-    oauth2:
-      client:
-        registration:
-          github:
-            client-id: Ov23li5KLxmSHjHiXXVI
-            client-secret: 409a2f5d8f6c0c95d66b7d9c8468a878bcc6342a
-          google:
-            client-id: 342167564331-qlspdv2hpb2oki66htkc5sov3jt481jo.apps.googleusercontent.com
-            client-secret: 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
-            scope:
-              - email
-              - profile
-            redirect-uri: "http://openmusic.kro.kr:8080/login/oauth2/code/google"
-          facebook:
-            client-id: 474896098301878
-            client-secret: 5a9eb893012c9677f16f7f3e57fc5f41
-            redirect-uri: "http://openmusic.kro.kr:8080/login/oauth2/code/facebook"
-            client-name: Facebook
-          kakao:
-            client-name: Kakao
-            client-id: f36c345821a073e7c992ae5c4ee1dfb8
-            client-secret: 0FsGlyhONEcAMxsbmn5C77ud4kZQBzXQ
-            client-authentication-method: client_secret_post
-            authorization-grant-type: authorization_code
-            redirect-uri: "http://openmusic.kro.kr:8080/login/oauth2/code/kakao"
-            scope:
-              - profile_nickname
-              - profile_image
-              - account_email
-        provider:
-          kakao:
-            authorization-uri: https://kauth.kakao.com/oauth/authorize
-            token-uri: https://kauth.kakao.com/oauth/token
-            user-info-uri: https://kapi.kakao.com/v2/user/me
-            user-name-attribute: id
   servlet:
     multipart:
       enabled: true
@@ -93,9 +57,14 @@ springdoc:
 
 jwt:
   secret-key: Ndjkqoi123nNasji1230SNjn124jKm1nmnMSJjk1ijifnjASJfnjno12n3injJASDjjkhb12j3bjnNJSdnjnjnjoajofnjb
-  access-token-expiration: 3600000
+  access-token-expiration: 180000
   refresh-token-expiration: 86400000
 
 discord:
   token: MTI0MjA2NzgzNDM3MzQwNjc5MQ.GIByS2.xTPEZRsaG3zJy3sWolVN6ZJWrtZlQ2CZfc5_68
   channel-id: 1242070161318482031
+
+  google:
+    client-id: 1
+    client-secret: 1
+    redirect-uri: 1
