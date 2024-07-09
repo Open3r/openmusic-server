@@ -13,27 +13,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-      REDIS_HOST: ${{ secrets.REDIS_HOST }}
-      REDIS_PORT: ${{ secrets.REDIS_PORT }}
-      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
-      MAIL_HOST: ${{ secrets.MAIL_HOST }}
-      MAIL_PORT: ${{ secrets.MAIL_PORT }}
-      MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-      AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-      JWT_ACCESS_TOKEN_EXPIRATION: ${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION }}
-      JWT_REFRESH_TOKEN_EXPIRATION: ${{ secrets.JWT_REFRESH_TOKEN_EXPIRATION }}
-      DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
-      DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
-
     steps:
       - uses: actions/checkout@v4
 
