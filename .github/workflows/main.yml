@@ -43,13 +43,6 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Create application.yml
-        run: |
-          cd ./src/main/resources
-          touch ./application.yml
-          echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
-        shell: bash
-
       - name: Build with Gradle
         run: |
           chmod +x ./gradlew
