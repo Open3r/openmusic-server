@@ -36,8 +36,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-batch")
     implementation("org.springframework.boot:spring-boot-starter-mail")
-    implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("org.springframework.cloud:spring-cloud-starter-feign:1.4.7.RELEASE")
     implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
+    implementation("io.micrometer:micrometer-registry-prometheus")
 
     implementation("net.dv8tion:JDA:5.0.0-beta.24")
 
