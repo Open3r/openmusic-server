@@ -1,8 +1,8 @@
 package com.open3r.openmusic.domain.song.repository
 
-import com.open3r.openmusic.domain.song.domain.Song
+import com.open3r.openmusic.domain.song.domain.entity.SongEntity
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface SongRepository : JpaRepository<Song, Long> {
-    fun findAllByTitleContainingIgnoreCase(title: String): List<Song>
+interface SongRepository : JpaRepository<SongEntity, Long> {
+    fun findAllByTitleContainingIgnoreCase(title: String): List<SongEntity>
 }

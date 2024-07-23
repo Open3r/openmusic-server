@@ -11,8 +11,6 @@ interface AlbumService {
     fun createAlbum(request: AlbumCreateRequest)
     fun updateAlbum(albumId: Long, request: AlbumUpdateRequest)
     fun deleteAlbum(albumId: Long)
-    fun createAlbumSong(albumId: Long, songId: Long)
-    fun deleteAlbumSong(albumId: Long, songId: Long)
-    fun createAlbumLike(albumId: Long)
-    fun deleteAlbumLike(albumId: Long)
+    fun addAlbumLike(albumId: Long)
+    fun removeAlbumLike(albumId: Long)
 }

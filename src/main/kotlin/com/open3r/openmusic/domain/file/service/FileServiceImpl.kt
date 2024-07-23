@@ -18,17 +18,19 @@ class FileServiceImpl(
     @Value("\${cloud.aws.region.static}")
     private lateinit var region: String
 
-    override fun uploadFile(file: MultipartFile): FileUploadResponse {
-        val name = "${UUID.randomUUID()}_${file.originalFilename}"
-        val metadata = ObjectMetadata().apply {
-            contentType = file.contentType
-            contentLength = file.size
+    override fun uploadFiles(files: List<MultipartFile>): List<FileUploadResponse> {
+        return files.map {
+            val name = "${UUID.randomUUID()}_${it.originalFilename}"
+            val metadata = ObjectMetadata().apply {
+                contentType = it.contentType
+                contentLength = it.size
+            }
+
+            amazonS3Client.putObject(bucket, name, it.inputStream, metadata)
+
+            val url = "https://$bucket.s3.$region.amazonaws.com/$name"
+
+            FileUploadResponse(name = name, url = url)
         }
-
-        amazonS3Client.putObject(bucket, name, file.inputStream, metadata)
-
-        val url = "https://$bucket.s3.$region.amazonaws.com/$name"
-
-        return FileUploadResponse(name = name, url = url)
     }
 }

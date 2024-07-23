@@ -1,12 +1,14 @@
-package com.open3r.openmusic.domain.album.domain
+package com.open3r.openmusic.domain.album.domain.entity
 
-import com.open3r.openmusic.domain.song.domain.Song
+import com.open3r.openmusic.domain.album.domain.enums.AlbumGenre
+import com.open3r.openmusic.domain.album.domain.enums.AlbumScope
+import com.open3r.openmusic.domain.song.domain.entity.SongEntity
 import com.open3r.openmusic.domain.user.domain.User
 import jakarta.persistence.*
 
 @Entity
 @Table(name = "albums")
-class Album(
+class AlbumEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -17,13 +19,18 @@ class Album(
     @Column(name = "cover_url", nullable = true)
     var coverUrl: String,
 
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val songs: MutableList<Song> = mutableListOf(),
+    @Enumerated(EnumType.STRING)
+    @Column(name = "scope", nullable = true)
+    var scope: AlbumScope,
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "genre", nullable = true)
+    var genre: AlbumGenre,
 
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val likes: MutableList<User> = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id", nullable = false)
-    val artist: User
+    val artist: User,
 )

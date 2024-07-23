@@ -1,6 +1,6 @@
 package com.open3r.openmusic.domain.playlist.domain
 
-import com.open3r.openmusic.domain.song.domain.Song
+import com.open3r.openmusic.domain.song.domain.entity.SongEntity
 import com.open3r.openmusic.domain.user.domain.User
 import jakarta.persistence.*
 import org.hibernate.annotations.OnDelete
@@ -20,7 +20,7 @@ class Playlist(
     var coverUrl: String,
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val songs: MutableList<Song> = mutableListOf(),
+    val songs: MutableList<SongEntity> = mutableListOf(),
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val likes: MutableList<User> = mutableListOf(),

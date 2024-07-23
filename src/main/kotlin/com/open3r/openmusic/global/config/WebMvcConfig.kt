@@ -13,7 +13,7 @@ class WebMvcConfig : WebMvcConfigurer {
             .addMapping("/**")
             .allowedOriginPatterns("*")
             .allowedMethods("OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE")
-            .allowedHeaders("Content-Type", "Authorization")
+            .allowedHeaders("*")
             .allowCredentials(true)
             .maxAge(3600)
     }

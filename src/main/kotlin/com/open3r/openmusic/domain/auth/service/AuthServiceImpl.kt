@@ -16,6 +16,7 @@ import com.open3r.openmusic.global.security.UserSecurity
 import com.open3r.openmusic.global.security.jwt.Jwt
 import com.open3r.openmusic.global.security.jwt.JwtProvider
 import com.open3r.openmusic.global.security.jwt.JwtType
+import com.open3r.openmusic.logger
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.UnsupportedJwtException
@@ -142,7 +143,9 @@ class AuthServiceImpl(
             val code = emailCodeRepository.findByEmail(email) ?: throw CustomException(ErrorCode.EMAIL_CODE_NOT_FOUND)
             emailCodeRepository.save(email, code)
 
-            return AuthSendEmailResponse(email = email)
+            logger().info("Email: $email, Code: $code")
+
+            return AuthSendEmailResponse(email = email, resend = false)
         }
 
         val code = String.format("%06d", SecureRandom.getInstanceStrong().nextInt(999999))
@@ -159,6 +162,6 @@ class AuthServiceImpl(
 
         mailSender.send(message)
 
-        return AuthSendEmailResponse(email = email)
+        return AuthSendEmailResponse(email = email, resend = true)
     }
 }

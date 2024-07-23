@@ -3,7 +3,7 @@ package com.open3r.openmusic.domain.song.service
 import com.open3r.openmusic.domain.album.repository.AlbumRepository
 import com.open3r.openmusic.domain.song.dto.request.SongCreateRequest
 import com.open3r.openmusic.domain.song.dto.request.SongUpdateRequest
-import com.open3r.openmusic.domain.song.dto.response.SongResponse
+import com.open3r.openmusic.domain.song.dto.response.Song
 import com.open3r.openmusic.domain.song.repository.SongRepository
 import com.open3r.openmusic.domain.user.domain.UserRole
 import com.open3r.openmusic.global.error.CustomException
@@ -20,33 +20,24 @@ class SongServiceImpl(
     private val userSecurity: UserSecurity,
 ) : SongService {
     @Transactional(readOnly = true)
-    override fun getSongs(): List<SongResponse> {
+    override fun getSongs(): List<Song> {
         val songs = songRepository.findAll()
 
-        return songs.map { SongResponse.of(it) }
+        return songs.map { Song.of(it) }
     }
 
     @Transactional(readOnly = true)
-    override fun getSong(songId: Long): SongResponse {
+    override fun getSong(songId: Long): Song {
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
 
-        return SongResponse.of(song)
+        return Song.of(song)
     }
 
     @Transactional(readOnly = true)
-    override fun searchSong(query: String): List<SongResponse> {
+    override fun searchSong(query: String): List<Song> {
         val songs = songRepository.findAllByTitleContainingIgnoreCase(query)
 
-        return songs.map { SongResponse.of(it) }
-    }
-
-    @Transactional
-    override fun createSong(request: SongCreateRequest) {
-        val album = albumRepository.findByIdOrNull(request.albumId) ?: throw CustomException(ErrorCode.ALBUM_NOT_FOUND)
-        val artist = userSecurity.user
-        val song = request.toEntity(album, artist)
-
-        songRepository.save(song)
+        return songs.map { Song.of(it) }
     }
 
     @Transactional
@@ -57,8 +48,6 @@ class SongServiceImpl(
         if (song.artist.id != user.id && user.role != UserRole.ADMIN) throw CustomException(ErrorCode.SONG_NOT_UPDATABLE)
 
         song.title = request.title ?: song.title
-        song.description = request.description ?: song.description
-        song.coverUrl = request.coverUrl ?: song.coverUrl
         song.url = request.url ?: song.url
 
         songRepository.save(song)
@@ -75,7 +64,7 @@ class SongServiceImpl(
     }
 
     @Transactional
-    override fun createSongLike(songId: Long) {
+    override fun addSongLike(songId: Long) {
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
         val user = userSecurity.user
 
@@ -87,7 +76,7 @@ class SongServiceImpl(
     }
 
     @Transactional
-    override fun deleteSongLike(songId: Long) {
+    override fun removeSongLike(songId: Long) {
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
         val user = userSecurity.user
 

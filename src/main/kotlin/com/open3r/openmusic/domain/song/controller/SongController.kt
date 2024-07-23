@@ -27,12 +27,6 @@ class SongController(
     @GetMapping("/search")
     fun searchSong(@RequestParam query: String) = BaseResponse(songService.searchSong(query), 200).toEntity()
 
-    @Operation(summary = "음악 생성")
-    @PostMapping
-    @PreAuthorize("isAuthenticated()")
-    fun createSong(@RequestBody request: SongCreateRequest) =
-        BaseResponse(songService.createSong(request), 201).toEntity()
-
     @Operation(summary = "음악 수정")
     @PatchMapping("/{songId}")
     @PreAuthorize("isAuthenticated()")
@@ -48,11 +42,11 @@ class SongController(
     @PostMapping("/{songId}/likes")
     @PreAuthorize("isAuthenticated()")
     fun createSongLike(@PathVariable songId: Long) =
-        BaseResponse(songService.createSongLike(songId), 201).toEntity()
+        BaseResponse(songService.addSongLike(songId), 201).toEntity()
 
     @Operation(summary = "음악 좋아요 삭제")
     @DeleteMapping("/{songId}/likes")
     @PreAuthorize("isAuthenticated()")
     fun deleteSongLike(@PathVariable songId: Long) =
-        BaseResponse(songService.deleteSongLike(songId), 204).toEntity()
+        BaseResponse(songService.removeSongLike(songId), 204).toEntity()
 }

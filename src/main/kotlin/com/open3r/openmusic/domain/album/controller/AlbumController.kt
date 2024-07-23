@@ -44,27 +44,15 @@ class AlbumController(
     @PreAuthorize("isAuthenticated()")
     fun deleteAlbum(@PathVariable albumId: Long) = BaseResponse(albumService.deleteAlbum(albumId), 204).toEntity()
 
-    @Operation(summary = "앨범 노래 추가")
-    @PostMapping("/{albumId}/songs/{songId}")
-    @PreAuthorize("isAuthenticated()")
-    fun createAlbumSong(@PathVariable albumId: Long, @PathVariable songId: Long) =
-        BaseResponse(albumService.createAlbumSong(albumId, songId), 201).toEntity()
-
-    @Operation(summary = "앨범 노래 삭제")
-    @DeleteMapping("/{albumId}/songs/{songId}")
-    @PreAuthorize("isAuthenticated()")
-    fun deleteAlbumSong(@PathVariable albumId: Long, @PathVariable songId: Long) =
-        BaseResponse(albumService.deleteAlbumSong(albumId, songId), 204).toEntity()
-
     @Operation(summary = "앨범 좋아요 추가")
     @PostMapping("/{albumId}/likes")
     @PreAuthorize("isAuthenticated()")
-    fun createAlbumLike(@PathVariable albumId: Long) =
-        BaseResponse(albumService.createAlbumLike(albumId), 201).toEntity()
+    fun addAlbumLike(@PathVariable albumId: Long) =
+        BaseResponse(albumService.addAlbumLike(albumId), 201).toEntity()
 
     @Operation(summary = "앨범 좋아요 삭제")
     @DeleteMapping("/{albumId}/likes")
     @PreAuthorize("isAuthenticated()")
-    fun deleteAlbumLike(@PathVariable albumId: Long) =
-        BaseResponse(albumService.deleteAlbumLike(albumId), 204).toEntity()
+    fun removeAlbumLike(@PathVariable albumId: Long) =
+        BaseResponse(albumService.removeAlbumLike(albumId), 204).toEntity()
 }
