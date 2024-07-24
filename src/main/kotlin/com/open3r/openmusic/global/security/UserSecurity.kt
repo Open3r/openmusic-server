@@ -1,7 +1,7 @@
 package com.open3r.openmusic.global.security
 
-import com.open3r.openmusic.domain.user.domain.User
+import com.open3r.openmusic.domain.user.domain.UserEntity
 
 interface UserSecurity {
-    val user: User
+    val user: UserEntity
 }

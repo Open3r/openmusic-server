@@ -3,7 +3,8 @@ package com.open3r.openmusic.domain.album.domain.entity
 import com.open3r.openmusic.domain.album.domain.enums.AlbumGenre
 import com.open3r.openmusic.domain.album.domain.enums.AlbumScope
 import com.open3r.openmusic.domain.song.domain.entity.SongEntity
-import com.open3r.openmusic.domain.user.domain.User
+import com.open3r.openmusic.domain.user.domain.UserEntity
+import com.open3r.openmusic.global.common.BaseEntity
 import jakarta.persistence.*
 
 @Entity
@@ -28,9 +29,12 @@ class AlbumEntity(
     var genre: AlbumGenre,
 
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val likes: MutableList<User> = mutableListOf(),
+    val likes: MutableList<UserEntity> = mutableListOf(),
+
+    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    val songs: MutableList<SongEntity> = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id", nullable = false)
-    val artist: User,
-)
+    val artist: UserEntity,
+): BaseEntity()

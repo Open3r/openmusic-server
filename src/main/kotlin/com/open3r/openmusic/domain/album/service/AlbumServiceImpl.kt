@@ -44,21 +44,21 @@ class AlbumServiceImpl(
     @Transactional
     override fun createAlbum(request: AlbumCreateRequest) {
         val user = userSecurity.user
-        val album = AlbumEntity(
+        val album = albumRepository.save(AlbumEntity(
             title = request.title,
             coverUrl = request.coverUrl,
             artist = user,
             genre = request.genre,
             scope = request.scope,
-        )
+        ))
 
-        songRepository.saveAll(request.songs.map { SongEntity(
+        album.songs.addAll(songRepository.saveAll(request.songs.map { SongEntity(
                 title = it.title,
                 url = it.url,
                 album = album,
                 artist = user,
             )
-        })
+        }))
 
         albumRepository.save(album)
     }

@@ -1,7 +1,7 @@
 package com.open3r.openmusic.domain.playlist.domain
 
 import com.open3r.openmusic.domain.song.domain.entity.SongEntity
-import com.open3r.openmusic.domain.user.domain.User
+import com.open3r.openmusic.domain.user.domain.UserEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
@@ -23,10 +23,10 @@ class Playlist(
     val songs: MutableList<SongEntity> = mutableListOf(),
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val likes: MutableList<User> = mutableListOf(),
+    val likes: MutableList<UserEntity> = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    val artist: User
+    val artist: UserEntity
 )

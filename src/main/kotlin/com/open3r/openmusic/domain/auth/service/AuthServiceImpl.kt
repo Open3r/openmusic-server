@@ -4,7 +4,7 @@ import com.open3r.openmusic.domain.auth.dto.request.*
 import com.open3r.openmusic.domain.auth.dto.response.AuthSendEmailResponse
 import com.open3r.openmusic.domain.auth.repository.EmailCodeRepository
 import com.open3r.openmusic.domain.auth.repository.RefreshTokenRepository
-import com.open3r.openmusic.domain.user.domain.User
+import com.open3r.openmusic.domain.user.domain.UserEntity
 import com.open3r.openmusic.domain.user.domain.UserProvider
 import com.open3r.openmusic.domain.user.domain.UserRole
 import com.open3r.openmusic.domain.user.domain.UserStatus
@@ -48,7 +48,7 @@ class AuthServiceImpl(
         if (!emailCodeRepository.existsByEmail(request.email)) throw CustomException(ErrorCode.INVALID_EMAIL)
         if (emailCodeRepository.findByEmail(request.email) != request.emailCode) throw CustomException(ErrorCode.INVALID_EMAIL_CODE)
 
-        val user = User(
+        val user = UserEntity(
             nickname = request.name,
             email = request.email,
             password = passwordEncoder.encode(request.password),

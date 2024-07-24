@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     open-in-view: false
   data:
     redis:
@@ -60,6 +60,10 @@ google:
   client-id: 1
   client-secret: 1
   redirect-uri:
+
+admin:
+  email: ${ADMIN_EMAIL}
+  password: ${ADMIN_PASSWORD}
 
 management:
   endpoints:

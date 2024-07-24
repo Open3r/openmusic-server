@@ -1,6 +1,6 @@
 package com.open3r.openmusic.domain.user.dto.response
 
-import com.open3r.openmusic.domain.user.domain.User
+import com.open3r.openmusic.domain.user.domain.UserEntity
 import com.open3r.openmusic.domain.user.domain.UserProvider
 import com.open3r.openmusic.domain.user.domain.UserRole
 import com.open3r.openmusic.domain.user.domain.UserStatus
@@ -15,7 +15,7 @@ data class UserResponse(
     val status: UserStatus
 ) {
     companion object {
-        fun of(user: User) = UserResponse(
+        fun of(user: UserEntity) = UserResponse(
             id = user.id!!,
             email = user.email,
             nickname = user.nickname,

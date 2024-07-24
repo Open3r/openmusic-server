@@ -1,6 +1,6 @@
 package com.open3r.openmusic.global.security
 
-import com.open3r.openmusic.domain.user.domain.User
+import com.open3r.openmusic.domain.user.domain.UserEntity
 import com.open3r.openmusic.domain.user.repository.UserRepository
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 class UserSecurityImpl(
     private val userRepository: UserRepository
 ) : UserSecurity {
-    override val user: User
+    override val user: UserEntity
         get() {
             val email = SecurityContextHolder.getContext().authentication.name
 
