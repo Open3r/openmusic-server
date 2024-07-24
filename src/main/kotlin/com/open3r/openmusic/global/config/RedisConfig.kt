@@ -1,7 +1,6 @@
 package com.open3r.openmusic.global.config
 
 import com.open3r.openmusic.global.properties.RedisProperties
-import jakarta.annotation.PostConstruct
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisPassword

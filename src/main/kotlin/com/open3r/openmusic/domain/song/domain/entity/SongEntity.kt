@@ -1,6 +1,8 @@
 package com.open3r.openmusic.domain.song.domain.entity
 
 import com.open3r.openmusic.domain.album.domain.entity.AlbumEntity
+import com.open3r.openmusic.domain.album.domain.enums.AlbumGenre
+import com.open3r.openmusic.domain.album.domain.enums.AlbumScope
 import com.open3r.openmusic.domain.user.domain.UserEntity
 import com.open3r.openmusic.global.common.BaseEntity
 import jakarta.persistence.*
@@ -20,6 +22,14 @@ class SongEntity(
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val likes: MutableList<UserEntity> = mutableListOf(),
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "scope", nullable = false)
+    var scope: AlbumScope,
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "genre", nullable = false)
+    var genre: AlbumGenre,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id", nullable = false)

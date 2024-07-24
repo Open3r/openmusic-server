@@ -1,6 +1,5 @@
 package com.open3r.openmusic.domain.song.controller
 
-import com.open3r.openmusic.domain.song.dto.request.SongCreateRequest
 import com.open3r.openmusic.domain.song.dto.request.SongUpdateRequest
 import com.open3r.openmusic.domain.song.service.SongService
 import com.open3r.openmusic.global.common.BaseResponse
@@ -17,7 +16,26 @@ class SongController(
 ) {
     @Operation(summary = "음악 목록 조회")
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     fun getSongs() = BaseResponse(songService.getSongs(), 200).toEntity()
+
+    @Operation(summary = "음악 목록 조회 (공개)")
+    @GetMapping("/public")
+    fun getPublicSongs() = BaseResponse(songService.getPublicSongs(), 200).toEntity()
+
+    @Operation(summary = "음악 목록 조회 (비공개)")
+    @GetMapping("/private")
+    @PreAuthorize("hasRole('ADMIN')")
+    fun getPrivateSongs() = BaseResponse(songService.getPrivateSongs(), 200).toEntity()
+
+    @Operation(summary = "음악 목록 조회 (좋아요 순)")
+    @GetMapping("/ranking")
+    fun getRankingSongs() = BaseResponse(songService.getRankingSongs(), 200).toEntity()
+
+    @Operation(summary = "음악 목록 조회 (내 음악)")
+    @GetMapping("/my")
+    @PreAuthorize("isAuthenticated()")
+    fun getMySongs() = BaseResponse(songService.getMySongs(), 200).toEntity()
 
     @Operation(summary = "음악 조회")
     @GetMapping("/{songId}")

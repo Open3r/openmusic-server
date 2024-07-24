@@ -1,5 +1,7 @@
 package com.open3r.openmusic.domain.playlist.service
 
+import com.open3r.openmusic.domain.playlist.domain.entity.PlaylistEntity
+import com.open3r.openmusic.domain.playlist.domain.enums.PlaylistScope
 import com.open3r.openmusic.domain.playlist.dto.request.PlaylistCreateRequest
 import com.open3r.openmusic.domain.playlist.dto.request.PlaylistUpdateRequest
 import com.open3r.openmusic.domain.playlist.dto.response.PlaylistResponse
@@ -21,7 +23,27 @@ class PlaylistServiceImpl(
 ) : PlaylistService {
     @Transactional(readOnly = true)
     override fun getPlaylists(): List<PlaylistResponse> {
-        return playlistRepository.findAll().map { PlaylistResponse.of(it) }
+        return playlistRepository.findAll().map { it.toResponse() }
+    }
+
+    @Transactional(readOnly = true)
+    override fun getPublicPlaylists(): List<PlaylistResponse> {
+        return playlistRepository.findAllByScope(PlaylistScope.PUBLIC).map { it.toResponse() }
+    }
+
+    @Transactional(readOnly = true)
+    override fun getPrivatePlaylists(): List<PlaylistResponse> {
+        val user = userSecurity.user
+        val playlists = playlistRepository.findAllByScope(PlaylistScope.PRIVATE).map { PlaylistResponse.of(it, user) }
+
+        return playlists
+    }
+
+    @Transactional(readOnly = true)
+    override fun getMyPlaylists(): List<PlaylistResponse> {
+        val user = userSecurity.user
+
+        return playlistRepository.findAllByArtist(user).map { PlaylistResponse.of(it, user) }
     }
 
     @Transactional(readOnly = true)
@@ -29,14 +51,12 @@ class PlaylistServiceImpl(
         val playlist =
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
 
-        return PlaylistResponse.of(playlist)
+        return playlist.toResponse()
     }
 
     @Transactional(readOnly = true)
     override fun searchPlaylist(query: String): List<PlaylistResponse> {
-        val playlists = playlistRepository.findAllByTitleContainingIgnoreCase(query)
-
-        return playlists.map { PlaylistResponse.of(it) }
+        return playlistRepository.findAllByTitleContainingIgnoreCase(query).map { it.toResponse() }
     }
 
     @Transactional
@@ -57,6 +77,7 @@ class PlaylistServiceImpl(
 
         playlist.title = request.title ?: playlist.title
         playlist.coverUrl = request.coverUrl ?: playlist.coverUrl
+        playlist.scope = request.scope ?: playlist.scope
 
         playlistRepository.save(playlist)
     }
@@ -128,5 +149,11 @@ class PlaylistServiceImpl(
         playlist.likes.removeIf { it.id == user.id }
 
         playlistRepository.save(playlist)
+    }
+
+    private fun PlaylistEntity.toResponse() = if (userSecurity.isAuthenticated) {
+        PlaylistResponse.of(this, userSecurity.user)
+    } else {
+        PlaylistResponse.of(this)
     }
 }

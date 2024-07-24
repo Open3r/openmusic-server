@@ -2,6 +2,7 @@ plugins {
     id("org.springframework.boot") version "3.2.5"
     id("io.spring.dependency-management") version "1.1.5"
     kotlin("jvm") version "1.9.24"
+    kotlin("kapt") version "1.9.24"
     kotlin("plugin.spring") version "1.9.24"
     kotlin("plugin.jpa") version "1.9.24"
 }
@@ -39,6 +40,12 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus")
 
     implementation("net.dv8tion:JDA:5.0.0-beta.24")
+
+    // querydsl
+    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+    kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
+    kapt("jakarta.annotation:jakarta.annotation-api")
+    kapt("jakarta.persistence:jakarta.persistence-api")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 

@@ -6,6 +6,9 @@ import com.open3r.openmusic.domain.album.dto.response.AlbumResponse
 
 interface AlbumService {
     fun getAlbums(): List<AlbumResponse>
+    fun getPublicAlbums(): List<AlbumResponse>
+    fun getPrivateAlbums(): List<AlbumResponse>
+    fun getMyAlbums(): List<AlbumResponse>
     fun getAlbum(albumId: Long): AlbumResponse
     fun searchAlbum(query: String): List<AlbumResponse>
     fun createAlbum(request: AlbumCreateRequest)

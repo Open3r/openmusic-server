@@ -5,7 +5,10 @@ import com.open3r.openmusic.domain.album.dto.request.AlbumUpdateRequest
 import com.open3r.openmusic.domain.album.service.AlbumService
 import com.open3r.openmusic.global.common.BaseResponse
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
@@ -17,7 +20,30 @@ class AlbumController(
 ) {
     @Operation(summary = "앨범 목록 조회")
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "앨범 목록 조회 성공"),
+            ApiResponse(responseCode = "401", description = "권한 없음"),
+            ApiResponse(responseCode = "403", description = "접근 금지"),
+            ApiResponse(responseCode = "404", description = "앨범 없음")
+        ]
+    )
     fun getAlbums() = BaseResponse(albumService.getAlbums(), 200).toEntity()
+
+    @Operation(summary = "앨범 목록 조회 (공개)")
+    @GetMapping("/public")
+    fun getPublicAlbums() = BaseResponse(albumService.getPublicAlbums(), 200).toEntity()
+
+    @Operation(summary = "앨범 목록 조회 (비공개)")
+    @GetMapping("/private")
+    @PreAuthorize("hasRole('ADMIN')")
+    fun getPrivateAlbums() = BaseResponse(albumService.getPrivateAlbums(), 200).toEntity()
+
+    @Operation(summary = "앨범 목록 조회 (내 앨범)")
+    @GetMapping("/my")
+    @PreAuthorize("isAuthenticated()")
+    fun getMyAlbums() = BaseResponse(albumService.getMyAlbums(), 200).toEntity()
 
     @Operation(summary = "앨범 조회")
     @GetMapping("/{albumId}")
@@ -30,7 +56,7 @@ class AlbumController(
     @Operation(summary = "앨범 생성")
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    fun createAlbum(@RequestBody request: AlbumCreateRequest) =
+    fun createAlbum(@RequestBody @Valid request: AlbumCreateRequest) =
         BaseResponse(albumService.createAlbum(request), 201).toEntity()
 
     @Operation(summary = "앨범 수정")

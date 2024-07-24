@@ -6,6 +6,9 @@ import com.open3r.openmusic.domain.playlist.dto.response.PlaylistResponse
 
 interface PlaylistService {
     fun getPlaylists(): List<PlaylistResponse>
+    fun getPublicPlaylists(): List<PlaylistResponse>
+    fun getPrivatePlaylists(): List<PlaylistResponse>
+    fun getMyPlaylists(): List<PlaylistResponse>
     fun getPlaylist(playlistId: Long): PlaylistResponse
     fun searchPlaylist(query: String): List<PlaylistResponse>
     fun createPlaylist(request: PlaylistCreateRequest)

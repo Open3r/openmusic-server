@@ -1,28 +1,35 @@
 package com.open3r.openmusic.domain.album.dto.response
 
 import com.open3r.openmusic.domain.album.domain.entity.AlbumEntity
+import com.open3r.openmusic.domain.song.dto.response.SongResponse
+import com.open3r.openmusic.domain.user.domain.UserEntity
+import com.open3r.openmusic.domain.user.dto.response.UserResponse
 import java.time.LocalDateTime
 
 data class AlbumResponse(
     val id: Long,
     val title: String,
     val coverUrl: String,
-    val likes: List<Long>,
-    val songs: List<Long>,
-    val artistId: Long,
+//    val likes: List<Long>,
+    val liked: Boolean,
+    val likeCount: Long,
+    val songs: List<SongResponse>,
+    val artist: UserResponse,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
 ) {
     companion object {
-        fun of(album: AlbumEntity) = AlbumResponse(
+        fun of(album: AlbumEntity, user: UserEntity? = null) = AlbumResponse(
             id = album.id!!,
             title = album.title,
             coverUrl = album.coverUrl,
-            likes = album.likes.map { it.id!! },
-            songs = album.songs.map { it.id!! },
-            artistId = album.artist.id!!,
-            createdAt = album.createdAt!!,
-            updatedAt = album.updatedAt!!
+//            likes = album.likes.map { it.id!! },
+            liked = user?.let { album.likes.any { it.id == user.id } } ?: false,
+            likeCount = album.likes.size.toLong(),
+            songs = album.songs.map { SongResponse.of(it, user = user) },
+            artist = UserResponse.of(album.artist),
+            createdAt = album.createdAt,
+            updatedAt = album.updatedAt
         )
     }
 }

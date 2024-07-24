@@ -21,5 +21,6 @@ class FileController(
     @Operation(summary = "파일 업로드")
     @PostMapping("/upload", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @PreAuthorize("isAuthenticated()")
-    fun uploadFiles(@RequestPart files: List<MultipartFile>) = BaseResponse(fileService.uploadFiles(files), 201).toEntity()
+    fun uploadFiles(@RequestPart files: List<MultipartFile>) =
+        BaseResponse(fileService.uploadFiles(files), 201).toEntity()
 }

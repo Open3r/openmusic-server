@@ -6,6 +6,7 @@ import com.open3r.openmusic.domain.playlist.service.PlaylistService
 import com.open3r.openmusic.global.common.BaseResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
@@ -17,7 +18,22 @@ class PlaylistController(
 ) {
     @Operation(summary = "플레이리스트 목록 조회")
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     fun getPlaylists() = BaseResponse(playlistService.getPlaylists(), 200).toEntity()
+
+    @Operation(summary = "플레이리스트 목록 조회 (공개)")
+    @GetMapping("/public")
+    fun getPublicPlaylists() = BaseResponse(playlistService.getPublicPlaylists(), 200).toEntity()
+
+    @Operation(summary = "플레이리스트 목록 조회 (비공개)")
+    @GetMapping("/private")
+    @PreAuthorize("hasRole('ADMIN')")
+    fun getPrivatePlaylists() = BaseResponse(playlistService.getPrivatePlaylists(), 200).toEntity()
+
+    @Operation(summary = "플레이리스트 목록 조회 (내 플레이리스트)")
+    @GetMapping("/my")
+    @PreAuthorize("isAuthenticated()")
+    fun getMyPlaylists() = BaseResponse(playlistService.getMyPlaylists(), 200).toEntity()
 
     @Operation(summary = "플레이리스트 조회")
     @GetMapping("/{playlistId}")
@@ -32,7 +48,7 @@ class PlaylistController(
     @Operation(summary = "플레이리스트 생성")
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    fun createPlaylist(@RequestBody request: PlaylistCreateRequest) =
+    fun createPlaylist(@RequestBody @Valid request: PlaylistCreateRequest) =
         BaseResponse(playlistService.createPlaylist(request), 201).toEntity()
 
     @Operation(summary = "플레이리스트 수정")

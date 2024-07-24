@@ -49,6 +49,7 @@ class SecurityConfig(
             it
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/", "/**").permitAll()
+                .requestMatchers("/static/**").permitAll()
                 .anyRequest().authenticated()
         }
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)

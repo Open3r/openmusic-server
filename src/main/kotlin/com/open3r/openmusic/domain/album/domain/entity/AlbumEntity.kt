@@ -37,4 +37,4 @@ class AlbumEntity(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id", nullable = false)
     val artist: UserEntity,
-): BaseEntity()
+) : BaseEntity()

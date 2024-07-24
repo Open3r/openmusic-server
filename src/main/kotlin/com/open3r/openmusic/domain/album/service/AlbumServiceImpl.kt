@@ -1,6 +1,7 @@
 package com.open3r.openmusic.domain.album.service
 
 import com.open3r.openmusic.domain.album.domain.entity.AlbumEntity
+import com.open3r.openmusic.domain.album.domain.enums.AlbumScope
 import com.open3r.openmusic.domain.album.dto.request.AlbumCreateRequest
 import com.open3r.openmusic.domain.album.dto.request.AlbumUpdateRequest
 import com.open3r.openmusic.domain.album.dto.response.AlbumResponse
@@ -22,40 +23,62 @@ class AlbumServiceImpl(
 ) : AlbumService {
     @Transactional(readOnly = true)
     override fun getAlbums(): List<AlbumResponse> {
-        val albums = albumRepository.findAll()
+        return albumRepository.findAll().map { it.toResponse() }
+    }
 
-        return albums.map { AlbumResponse.of(it) }
+    @Transactional(readOnly = true)
+    override fun getPublicAlbums(): List<AlbumResponse> {
+        return albumRepository.findAllByScope(AlbumScope.PUBLIC).map { it.toResponse() }
+    }
+
+    @Transactional(readOnly = true)
+    override fun getPrivateAlbums(): List<AlbumResponse> {
+        val user = userSecurity.user
+        val albums = albumRepository.findAllByScope(AlbumScope.PRIVATE)
+
+        return albums.map { AlbumResponse.of(it, user) }
+    }
+
+    @Transactional(readOnly = true)
+    override fun getMyAlbums(): List<AlbumResponse> {
+        val user = userSecurity.user
+        val albums = albumRepository.findAllByArtist(user)
+
+        return albums.map { AlbumResponse.of(it, user) }
     }
 
     @Transactional(readOnly = true)
     override fun getAlbum(albumId: Long): AlbumResponse {
         val album = albumRepository.findByIdOrNull(albumId) ?: throw CustomException(ErrorCode.ALBUM_NOT_FOUND)
 
-        return AlbumResponse.of(album)
+        return album.toResponse()
     }
 
     @Transactional(readOnly = true)
     override fun searchAlbum(query: String): List<AlbumResponse> {
-        val albums = albumRepository.findAllByTitleContainingIgnoreCase(query)
-
-        return albums.map { AlbumResponse.of(it) }
+        return albumRepository.findAllByTitleContainingIgnoreCase(query).map { it.toResponse() }
     }
 
     @Transactional
     override fun createAlbum(request: AlbumCreateRequest) {
         val user = userSecurity.user
-        val album = albumRepository.save(AlbumEntity(
-            title = request.title,
-            coverUrl = request.coverUrl,
-            artist = user,
-            genre = request.genre,
-            scope = request.scope,
-        ))
+        val album = albumRepository.save(
+            AlbumEntity(
+                title = request.title,
+                coverUrl = request.coverUrl,
+                artist = user,
+                genre = request.genre,
+                scope = request.scope,
+            )
+        )
 
-        album.songs.addAll(songRepository.saveAll(request.songs.map { SongEntity(
+        album.songs.addAll(songRepository.saveAll(request.songs.map {
+            SongEntity(
                 title = it.title,
                 url = it.url,
                 album = album,
+                genre = album.genre,
+                scope = album.scope,
                 artist = user,
             )
         }))
@@ -111,4 +134,11 @@ class AlbumServiceImpl(
 
         albumRepository.save(album)
     }
+
+    private fun AlbumEntity.toResponse() = if (userSecurity.isAuthenticated) {
+        AlbumResponse.of(this, userSecurity.user)
+    } else {
+        AlbumResponse.of(this)
+    }
+
 }

@@ -4,6 +4,7 @@ import com.open3r.openmusic.domain.album.domain.enums.AlbumGenre
 import com.open3r.openmusic.domain.album.domain.enums.AlbumScope
 import com.open3r.openmusic.domain.song.dto.request.SongCreateRequest
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import org.hibernate.validator.constraints.URL
 
 data class AlbumCreateRequest(
@@ -13,7 +14,9 @@ data class AlbumCreateRequest(
     @field:URL
     val coverUrl: String,
     val artist: Long,
+    @field:NotNull
     val scope: AlbumScope,
+    @field:NotNull
     val genre: AlbumGenre,
     val songs: List<SongCreateRequest>
 )

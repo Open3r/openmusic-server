@@ -55,7 +55,7 @@ class AuthServiceImpl(
             role = UserRole.USER,
             provider = UserProvider.DEFAULT,
             providerId = "-1",
-            avatarUrl = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.youtube.com%2F%40TeamAvatar&psig=AOvVaw3EcZDNXj1d0bVuDq3OlPbZ&ust=1716791569621000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCPiQyJHZqoYDFQAAAAAdAAAAABAE"
+            avatarUrl = "https://t4.ftcdn.net/jpg/01/43/42/83/360_F_143428338_gcxw3Jcd0tJpkvvb53pfEztwtU9sxsgT.jpg"
         )
 
         userRepository.save(user)

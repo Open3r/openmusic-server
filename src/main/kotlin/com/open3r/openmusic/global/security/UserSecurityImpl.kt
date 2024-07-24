@@ -17,4 +17,7 @@ class UserSecurityImpl(
 
             return userRepository.findByEmail(email) ?: throw CustomException(ErrorCode.USER_NOT_FOUND)
         }
+
+    override val isAuthenticated: Boolean
+        get() = SecurityContextHolder.getContext().authentication.isAuthenticated
 }
