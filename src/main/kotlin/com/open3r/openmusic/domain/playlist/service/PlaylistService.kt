@@ -11,7 +11,7 @@ interface PlaylistService {
     fun getMyPlaylists(): List<PlaylistResponse>
     fun getPlaylist(playlistId: Long): PlaylistResponse
     fun searchPlaylist(query: String): List<PlaylistResponse>
-    fun createPlaylist(request: PlaylistCreateRequest)
+    fun createPlaylist(request: PlaylistCreateRequest): PlaylistResponse
     fun updatePlaylist(playlistId: Long, request: PlaylistUpdateRequest)
     fun deletePlaylist(playlistId: Long)
     fun createPlaylistSong(playlistId: Long, songId: Long)

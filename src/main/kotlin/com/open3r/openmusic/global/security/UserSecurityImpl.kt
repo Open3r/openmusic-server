@@ -1,6 +1,6 @@
 package com.open3r.openmusic.global.security
 
-import com.open3r.openmusic.domain.user.domain.UserEntity
+import com.open3r.openmusic.domain.user.domain.entity.UserEntity
 import com.open3r.openmusic.domain.user.repository.UserRepository
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode

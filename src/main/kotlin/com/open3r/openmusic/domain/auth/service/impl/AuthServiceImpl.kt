@@ -5,10 +5,10 @@ import com.open3r.openmusic.domain.auth.dto.response.AuthSendEmailResponse
 import com.open3r.openmusic.domain.auth.repository.EmailCodeRepository
 import com.open3r.openmusic.domain.auth.repository.RefreshTokenRepository
 import com.open3r.openmusic.domain.auth.service.AuthService
-import com.open3r.openmusic.domain.user.domain.UserEntity
-import com.open3r.openmusic.domain.user.domain.UserProvider
-import com.open3r.openmusic.domain.user.domain.UserRole
-import com.open3r.openmusic.domain.user.domain.UserStatus
+import com.open3r.openmusic.domain.user.domain.entity.UserEntity
+import com.open3r.openmusic.domain.user.domain.enums.UserProvider
+import com.open3r.openmusic.domain.user.domain.enums.UserRole
+import com.open3r.openmusic.domain.user.domain.enums.UserStatus
 import com.open3r.openmusic.domain.user.repository.UserRepository
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode

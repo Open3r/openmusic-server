@@ -1,6 +1,6 @@
-package com.open3r.openmusic.domain.album.domain.enums
+package com.open3r.openmusic.domain.song.domain.enums
 
-enum class AlbumGenre(val genreName: String) {
+enum class SongGenre(val genreName: String) {
     POP("팝"),
     HIPHOP("힙합"),
     BALLAD("발라드"),

@@ -1,6 +1,6 @@
 package com.open3r.openmusic.global.security
 
-import com.open3r.openmusic.domain.user.domain.UserEntity
+import com.open3r.openmusic.domain.user.domain.entity.UserEntity
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 

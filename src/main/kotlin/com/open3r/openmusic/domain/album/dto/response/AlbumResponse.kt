@@ -2,7 +2,7 @@ package com.open3r.openmusic.domain.album.dto.response
 
 import com.open3r.openmusic.domain.album.domain.entity.AlbumEntity
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
-import com.open3r.openmusic.domain.user.domain.UserEntity
+import com.open3r.openmusic.domain.user.domain.entity.UserEntity
 import com.open3r.openmusic.domain.user.dto.response.UserResponse
 import java.time.LocalDateTime
 

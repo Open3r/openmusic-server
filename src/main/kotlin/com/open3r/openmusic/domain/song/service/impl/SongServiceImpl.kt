@@ -6,7 +6,7 @@ import com.open3r.openmusic.domain.song.dto.request.SongUpdateRequest
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
 import com.open3r.openmusic.domain.song.repository.SongRepository
 import com.open3r.openmusic.domain.song.service.SongService
-import com.open3r.openmusic.domain.user.domain.UserRole
+import com.open3r.openmusic.domain.user.domain.enums.UserRole
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity

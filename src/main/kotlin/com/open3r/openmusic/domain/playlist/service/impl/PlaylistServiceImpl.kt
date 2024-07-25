@@ -8,7 +8,7 @@ import com.open3r.openmusic.domain.playlist.dto.response.PlaylistResponse
 import com.open3r.openmusic.domain.playlist.repository.PlaylistRepository
 import com.open3r.openmusic.domain.playlist.service.PlaylistService
 import com.open3r.openmusic.domain.song.repository.SongRepository
-import com.open3r.openmusic.domain.user.domain.UserRole
+import com.open3r.openmusic.domain.user.domain.enums.UserRole
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
@@ -61,11 +61,11 @@ class PlaylistServiceImpl(
     }
 
     @Transactional
-    override fun createPlaylist(request: PlaylistCreateRequest) {
+    override fun createPlaylist(request: PlaylistCreateRequest): PlaylistResponse {
         val user = userSecurity.user
         val playlist = request.toEntity(user)
 
-        playlistRepository.save(playlist)
+        return PlaylistResponse.of(playlistRepository.save(playlist), user)
     }
 
     @Transactional

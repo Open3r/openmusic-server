@@ -3,7 +3,7 @@ package com.open3r.openmusic.domain.playlist.dto.response
 import com.open3r.openmusic.domain.playlist.domain.entity.PlaylistEntity
 import com.open3r.openmusic.domain.playlist.domain.enums.PlaylistScope
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
-import com.open3r.openmusic.domain.user.domain.UserEntity
+import com.open3r.openmusic.domain.user.domain.entity.UserEntity
 import com.open3r.openmusic.domain.user.dto.response.UserResponse
 import java.time.LocalDateTime
 

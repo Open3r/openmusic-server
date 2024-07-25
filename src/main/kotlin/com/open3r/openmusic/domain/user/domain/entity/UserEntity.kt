@@ -1,5 +1,9 @@
-package com.open3r.openmusic.domain.user.domain
+package com.open3r.openmusic.domain.user.domain.entity
 
+import com.open3r.openmusic.domain.song.domain.enums.SongGenre
+import com.open3r.openmusic.domain.user.domain.enums.UserProvider
+import com.open3r.openmusic.domain.user.domain.enums.UserRole
+import com.open3r.openmusic.domain.user.domain.enums.UserStatus
 import com.open3r.openmusic.global.common.BaseEntity
 import jakarta.persistence.*
 
@@ -35,5 +39,10 @@ class UserEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    var status: UserStatus = UserStatus.ACTIVE
+    var status: UserStatus = UserStatus.ACTIVE,
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_genres", joinColumns = [JoinColumn(name = "user_id")])
+    @Column(name = "genre", nullable = false)
+    val genres: MutableSet<SongGenre> = mutableSetOf(),
 ) : BaseEntity()

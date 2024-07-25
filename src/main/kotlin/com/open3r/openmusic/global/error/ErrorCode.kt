@@ -13,7 +13,6 @@ enum class ErrorCode(
     FORBIDDEN(HttpStatus.FORBIDDEN, "Forbidden"),
 
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "Invalid input value"),
-    UNSUPPORTED_REGISTRATION_ID(HttpStatus.BAD_REQUEST, "Unsupported registration id"),
 
     // Jwt
     INVALID_GOOGLE_CODE(HttpStatus.BAD_REQUEST, "Invalid google code"),
@@ -35,8 +34,6 @@ enum class ErrorCode(
     ALBUM_NOT_FOUND(HttpStatus.NOT_FOUND, "Album not found"),
     ALBUM_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "Album is not deletable"),
     ALBUM_NOT_UPDATABLE(HttpStatus.BAD_REQUEST, "Album is not updatable"),
-    ALBUM_SONG_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "Album song already exists"),
-    ALBUM_SONG_NOT_FOUND(HttpStatus.NOT_FOUND, "Album song not found"),
     ALBUM_LIKE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "Album like already exists"),
     ALBUM_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "Album like not found"),
 
@@ -57,6 +54,8 @@ enum class ErrorCode(
     SONG_NOT_UPDATABLE(HttpStatus.BAD_REQUEST, "Song is not updatable"),
 
     // User
+    USER_GENRE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "User genre already exists"),
+    USER_GENRE_NOT_FOUND(HttpStatus.NOT_FOUND, "User genre not found"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
     USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "User already exists"),
     USER_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "User is not deletable"),

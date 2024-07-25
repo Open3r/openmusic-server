@@ -1,7 +1,9 @@
 package com.open3r.openmusic.domain.user.service.impl
 
-import com.open3r.openmusic.domain.user.domain.UserRole
+import com.open3r.openmusic.domain.song.domain.enums.SongGenre
+import com.open3r.openmusic.domain.user.domain.enums.UserRole
 import com.open3r.openmusic.domain.user.dto.request.UserUpdateRequest
+import com.open3r.openmusic.domain.user.dto.response.CheckEmailResponse
 import com.open3r.openmusic.domain.user.dto.response.UserResponse
 import com.open3r.openmusic.domain.user.repository.UserRepository
 import com.open3r.openmusic.domain.user.service.UserService
@@ -24,6 +26,11 @@ class UserServiceImpl(
         val users = userRepository.findAll()
 
         return users.map { UserResponse.of(it) }
+    }
+
+    @Transactional(readOnly = true)
+    override fun checkEmail(email: String): CheckEmailResponse {
+        return CheckEmailResponse(userRepository.existsByEmail(email))
     }
 
     @Transactional(readOnly = true)
@@ -55,6 +62,28 @@ class UserServiceImpl(
         user = userRepository.save(user)
 
         return UserResponse.of(user)
+    }
+
+    @Transactional
+    override fun addGenre(genre: SongGenre) {
+        val user = userSecurity.user
+
+        if (user.genres.contains(genre)) throw CustomException(ErrorCode.USER_GENRE_ALREADY_EXISTS)
+
+        user.genres.add(genre)
+
+        userRepository.save(user)
+    }
+
+    @Transactional
+    override fun removeGenre(genre: SongGenre) {
+        val user = userSecurity.user
+
+        if (!user.genres.contains(genre)) throw CustomException(ErrorCode.USER_GENRE_NOT_FOUND)
+
+        user.genres.remove(genre)
+
+        userRepository.save(user)
     }
 
     @Transactional(readOnly = true)

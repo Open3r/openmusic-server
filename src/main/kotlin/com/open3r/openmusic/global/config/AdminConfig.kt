@@ -1,8 +1,8 @@
 package com.open3r.openmusic.global.config
 
-import com.open3r.openmusic.domain.user.domain.UserEntity
-import com.open3r.openmusic.domain.user.domain.UserProvider
-import com.open3r.openmusic.domain.user.domain.UserRole
+import com.open3r.openmusic.domain.user.domain.entity.UserEntity
+import com.open3r.openmusic.domain.user.domain.enums.UserProvider
+import com.open3r.openmusic.domain.user.domain.enums.UserRole
 import com.open3r.openmusic.domain.user.repository.UserRepository
 import com.open3r.openmusic.global.properties.AdminProperties
 import jakarta.annotation.PostConstruct

@@ -1,6 +1,6 @@
 package com.open3r.openmusic.domain.album.dto.request
 
-import com.open3r.openmusic.domain.album.domain.enums.AlbumGenre
+import com.open3r.openmusic.domain.song.domain.enums.SongGenre
 import com.open3r.openmusic.domain.album.domain.enums.AlbumScope
 
 data class AlbumUpdateRequest(
@@ -8,5 +8,5 @@ data class AlbumUpdateRequest(
     val description: String?,
     val coverUrl: String?,
     val scope: AlbumScope?,
-    val genre: AlbumGenre?
+    val genre: SongGenre?
 )
