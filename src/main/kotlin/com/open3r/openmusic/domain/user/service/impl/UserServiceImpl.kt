@@ -1,9 +1,10 @@
-package com.open3r.openmusic.domain.user.service
+package com.open3r.openmusic.domain.user.service.impl
 
 import com.open3r.openmusic.domain.user.domain.UserRole
 import com.open3r.openmusic.domain.user.dto.request.UserUpdateRequest
 import com.open3r.openmusic.domain.user.dto.response.UserResponse
 import com.open3r.openmusic.domain.user.repository.UserRepository
+import com.open3r.openmusic.domain.user.service.UserService
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
@@ -24,13 +25,13 @@ class UserServiceImpl(
     }
 
     @Transactional
-    override fun updateMe(request: UserUpdateRequest) {
+    override fun updateMe(request: UserUpdateRequest): UserResponse {
         val user = userSecurity.user
 
         user.nickname = request.nickname ?: user.nickname
         user.avatarUrl = request.avatarUrl ?: user.avatarUrl
 
-        userRepository.save(user)
+        return UserResponse.of(userRepository.save(user))
     }
 
     @Transactional(readOnly = true)

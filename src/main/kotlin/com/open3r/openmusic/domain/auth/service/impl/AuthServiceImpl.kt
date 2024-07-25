@@ -1,9 +1,10 @@
-package com.open3r.openmusic.domain.auth.service
+package com.open3r.openmusic.domain.auth.service.impl
 
 import com.open3r.openmusic.domain.auth.dto.request.*
 import com.open3r.openmusic.domain.auth.dto.response.AuthSendEmailResponse
 import com.open3r.openmusic.domain.auth.repository.EmailCodeRepository
 import com.open3r.openmusic.domain.auth.repository.RefreshTokenRepository
+import com.open3r.openmusic.domain.auth.service.AuthService
 import com.open3r.openmusic.domain.user.domain.UserEntity
 import com.open3r.openmusic.domain.user.domain.UserProvider
 import com.open3r.openmusic.domain.user.domain.UserRole

@@ -1,6 +1,7 @@
-package com.open3r.openmusic.domain.auth.service
+package com.open3r.openmusic.domain.auth.service.impl
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.open3r.openmusic.domain.auth.service.GoogleService
 import com.open3r.openmusic.global.properties.GoogleProperties
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus

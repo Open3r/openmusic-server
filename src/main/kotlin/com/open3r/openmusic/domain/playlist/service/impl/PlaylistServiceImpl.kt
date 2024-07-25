@@ -1,4 +1,4 @@
-package com.open3r.openmusic.domain.playlist.service
+package com.open3r.openmusic.domain.playlist.service.impl
 
 import com.open3r.openmusic.domain.playlist.domain.entity.PlaylistEntity
 import com.open3r.openmusic.domain.playlist.domain.enums.PlaylistScope
@@ -6,6 +6,7 @@ import com.open3r.openmusic.domain.playlist.dto.request.PlaylistCreateRequest
 import com.open3r.openmusic.domain.playlist.dto.request.PlaylistUpdateRequest
 import com.open3r.openmusic.domain.playlist.dto.response.PlaylistResponse
 import com.open3r.openmusic.domain.playlist.repository.PlaylistRepository
+import com.open3r.openmusic.domain.playlist.service.PlaylistService
 import com.open3r.openmusic.domain.song.repository.SongRepository
 import com.open3r.openmusic.domain.user.domain.UserRole
 import com.open3r.openmusic.global.error.CustomException

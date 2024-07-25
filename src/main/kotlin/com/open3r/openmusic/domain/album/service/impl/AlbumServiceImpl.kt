@@ -1,4 +1,4 @@
-package com.open3r.openmusic.domain.album.service
+package com.open3r.openmusic.domain.album.service.impl
 
 import com.open3r.openmusic.domain.album.domain.entity.AlbumEntity
 import com.open3r.openmusic.domain.album.domain.enums.AlbumScope
@@ -6,6 +6,7 @@ import com.open3r.openmusic.domain.album.dto.request.AlbumCreateRequest
 import com.open3r.openmusic.domain.album.dto.request.AlbumUpdateRequest
 import com.open3r.openmusic.domain.album.dto.response.AlbumResponse
 import com.open3r.openmusic.domain.album.repository.AlbumRepository
+import com.open3r.openmusic.domain.album.service.AlbumService
 import com.open3r.openmusic.domain.song.domain.entity.SongEntity
 import com.open3r.openmusic.domain.song.repository.SongRepository
 import com.open3r.openmusic.global.error.CustomException
