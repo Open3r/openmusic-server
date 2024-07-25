@@ -5,6 +5,7 @@ import com.open3r.openmusic.domain.user.dto.response.UserResponse
 
 interface UserService {
     fun getUsers(): List<UserResponse>
+    fun getMe(): UserResponse
     fun updateMe(request: UserUpdateRequest): UserResponse
 
     fun getUser(userId: Long): UserResponse

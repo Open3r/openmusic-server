@@ -5,6 +5,7 @@ import com.open3r.openmusic.domain.user.service.UserService
 import com.open3r.openmusic.global.common.BaseResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 @Tag(name = "유저", description = "User")
@@ -16,6 +17,11 @@ class UserController(
     @Operation(summary = "유저 목록 조회")
     @GetMapping
     fun getUsers() = BaseResponse(userService.getUsers(), 200).toEntity()
+
+    @Operation(summary = "나 조회")
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    fun getMe() = BaseResponse(userService.getMe(), 200).toEntity()
 
     @Operation(summary = "나 수정")
     @PatchMapping("/me")

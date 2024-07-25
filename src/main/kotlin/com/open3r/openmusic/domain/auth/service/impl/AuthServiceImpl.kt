@@ -9,7 +9,6 @@ import com.open3r.openmusic.domain.user.domain.UserEntity
 import com.open3r.openmusic.domain.user.domain.UserProvider
 import com.open3r.openmusic.domain.user.domain.UserRole
 import com.open3r.openmusic.domain.user.domain.UserStatus
-import com.open3r.openmusic.domain.user.dto.response.UserResponse
 import com.open3r.openmusic.domain.user.repository.UserRepository
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
@@ -127,13 +126,6 @@ class AuthServiceImpl(
         u.status = UserStatus.DELETED
 
         userRepository.save(u)
-    }
-
-    @Transactional(readOnly = true)
-    override fun getMe(): UserResponse {
-        val user = userSecurity.user
-
-        return UserResponse.of(user)
     }
 
     override fun sendEmail(request: AuthSendEmailRequest): AuthSendEmailResponse {

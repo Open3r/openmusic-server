@@ -2,7 +2,6 @@ package com.open3r.openmusic.domain.auth.service
 
 import com.open3r.openmusic.domain.auth.dto.request.*
 import com.open3r.openmusic.domain.auth.dto.response.AuthSendEmailResponse
-import com.open3r.openmusic.domain.user.dto.response.UserResponse
 import com.open3r.openmusic.global.security.jwt.Jwt
 
 interface AuthService {
@@ -10,7 +9,6 @@ interface AuthService {
     fun login(request: AuthLoginRequest): Jwt
     fun reissue(request: AuthReissueRequest): Jwt
     fun signout(request: AuthSignOutRequest)
-    fun getMe(): UserResponse
 
     fun sendEmail(request: AuthSendEmailRequest): AuthSendEmailResponse
 }

@@ -46,10 +46,6 @@ class AuthController(
     fun sendEmail(@RequestBody request: AuthSendEmailRequest) =
         BaseResponse(authService.sendEmail(request), 201).toEntity()
 
-    @GetMapping("/me")
-    @PreAuthorize("isAuthenticated()")
-    fun getMe() = BaseResponse(authService.getMe(), 200).toEntity()
-
     @GetMapping("/google")
     @PreAuthorize("isAnonymous()")
     fun google(@RequestParam code: String): String {

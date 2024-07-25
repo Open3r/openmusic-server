@@ -24,6 +24,13 @@ class UserServiceImpl(
         return users.map { UserResponse.of(it) }
     }
 
+    @Transactional(readOnly = true)
+    override fun getMe(): UserResponse {
+        val user = userSecurity.user
+
+        return UserResponse.of(user)
+    }
+
     @Transactional
     override fun updateMe(request: UserUpdateRequest): UserResponse {
         val user = userSecurity.user
