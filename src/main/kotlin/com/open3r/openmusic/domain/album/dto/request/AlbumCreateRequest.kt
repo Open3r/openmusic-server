@@ -14,7 +14,6 @@ data class AlbumCreateRequest(
     @field:NotBlank
     @field:URL
     val coverUrl: String,
-    val artist: Long,
     @field:NotNull
     val scope: AlbumScope,
     @field:NotNull
