@@ -9,13 +9,15 @@ import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UserServiceImpl(
     private val userRepository: UserRepository,
-    private val userSecurity: UserSecurity
+    private val userSecurity: UserSecurity,
+    private val passwordEncoder: PasswordEncoder
 ) : UserService {
     @Transactional(readOnly = true)
     override fun getUsers(): List<UserResponse> {
@@ -33,12 +35,26 @@ class UserServiceImpl(
 
     @Transactional
     override fun updateMe(request: UserUpdateRequest): UserResponse {
-        val user = userSecurity.user
+        var user = userSecurity.user
 
-        user.nickname = request.nickname ?: user.nickname
-        user.avatarUrl = request.avatarUrl ?: user.avatarUrl
+        if (!passwordEncoder.matches(request.currentPassword, user.password))
+            throw CustomException(ErrorCode.USER_PASSWORD_NOT_MATCH)
 
-        return UserResponse.of(userRepository.save(user))
+        if (request.nickname != null) {
+            user.nickname = request.nickname
+        }
+
+        if (request.avatarUrl != null) {
+            user.avatarUrl = request.avatarUrl
+        }
+
+        if (request.password != null) {
+            user.password = passwordEncoder.encode(request.password)
+        }
+
+        user = userRepository.save(user)
+
+        return UserResponse.of(user)
     }
 
     @Transactional(readOnly = true)
