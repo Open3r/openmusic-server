@@ -66,6 +66,7 @@ class AlbumServiceImpl(
         val album = albumRepository.save(
             AlbumEntity(
                 title = request.title,
+                description = request.description,
                 coverUrl = request.coverUrl,
                 artist = user,
                 genre = request.genre,
@@ -95,6 +96,7 @@ class AlbumServiceImpl(
         if (album.artist.id != user.id) throw CustomException(ErrorCode.ALBUM_NOT_UPDATABLE)
 
         album.title = request.title ?: album.title
+        album.description = request.description ?: album.description
         album.coverUrl = request.coverUrl ?: album.coverUrl
         album.genre = request.genre ?: album.genre
         album.scope = request.scope ?: album.scope

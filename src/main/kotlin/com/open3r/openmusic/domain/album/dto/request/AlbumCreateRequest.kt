@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.URL
 data class AlbumCreateRequest(
     @field:NotBlank
     val title: String,
+    val description: String,
     @field:NotBlank
     @field:URL
     val coverUrl: String,

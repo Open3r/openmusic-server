@@ -17,6 +17,9 @@ class AlbumEntity(
     @Column(name = "title", nullable = true)
     var title: String,
 
+    @Column(name = "description", nullable = true)
+    var description: String,
+
     @Column(name = "cover_url", nullable = true)
     var coverUrl: String,
 

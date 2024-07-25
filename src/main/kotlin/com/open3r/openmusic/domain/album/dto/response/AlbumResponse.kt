@@ -9,6 +9,7 @@ import java.time.LocalDateTime
 data class AlbumResponse(
     val id: Long,
     val title: String,
+    val description: String,
     val coverUrl: String,
 //    val likes: List<Long>,
     val liked: Boolean,
@@ -22,6 +23,7 @@ data class AlbumResponse(
         fun of(album: AlbumEntity, user: UserEntity? = null) = AlbumResponse(
             id = album.id!!,
             title = album.title,
+            description = album.description,
             coverUrl = album.coverUrl,
 //            likes = album.likes.map { it.id!! },
             liked = user?.let { album.likes.any { it.id == user.id } } ?: false,
