@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size
 
 data class AuthSignUpRequest(
     @field:NotBlank
+    @field:Size(min = 3, max = 16)
     val name: String,
 
     @field:Email

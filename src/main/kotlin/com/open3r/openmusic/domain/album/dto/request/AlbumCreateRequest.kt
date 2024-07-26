@@ -1,7 +1,7 @@
 package com.open3r.openmusic.domain.album.dto.request
 
-import com.open3r.openmusic.domain.song.domain.enums.SongGenre
 import com.open3r.openmusic.domain.album.domain.enums.AlbumScope
+import com.open3r.openmusic.domain.song.domain.enums.SongGenre
 import com.open3r.openmusic.domain.song.dto.request.SongCreateRequest
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
