@@ -1,9 +1,12 @@
 package com.open3r.openmusic.domain.auth.controller
 
-import com.open3r.openmusic.domain.auth.dto.request.*
+import com.open3r.openmusic.domain.auth.dto.request.AuthLoginRequest
+import com.open3r.openmusic.domain.auth.dto.request.AuthReissueRequest
+import com.open3r.openmusic.domain.auth.dto.request.AuthSignOutRequest
+import com.open3r.openmusic.domain.auth.dto.request.AuthSignUpRequest
 import com.open3r.openmusic.domain.auth.service.AuthService
 import com.open3r.openmusic.domain.auth.service.GoogleService
-import com.open3r.openmusic.global.common.BaseResponse
+import com.open3r.openmusic.global.common.dto.response.BaseResponse
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
 import io.swagger.v3.oas.annotations.Operation
@@ -39,12 +42,6 @@ class AuthController(
     @DeleteMapping("/signout")
     @PreAuthorize("isAuthenticated()")
     fun signout(@RequestBody request: AuthSignOutRequest) = BaseResponse(authService.signout(request), 204).toEntity()
-
-    @Operation(summary = "이메일 인증")
-    @PostMapping("/send")
-    @PreAuthorize("isAnonymous()")
-    fun sendEmail(@RequestBody request: AuthSendEmailRequest) =
-        BaseResponse(authService.sendEmail(request), 201).toEntity()
 
     @GetMapping("/google")
     @PreAuthorize("isAnonymous()")

@@ -1,10 +1,13 @@
 package com.open3r.openmusic.domain.song.controller
 
+import com.open3r.openmusic.domain.song.domain.enums.SongGenre
 import com.open3r.openmusic.domain.song.dto.request.SongUpdateRequest
 import com.open3r.openmusic.domain.song.service.SongService
-import com.open3r.openmusic.global.common.BaseResponse
+import com.open3r.openmusic.global.common.dto.response.BaseResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
@@ -14,28 +17,17 @@ import org.springframework.web.bind.annotation.*
 class SongController(
     private val songService: SongService
 ) {
-    @Operation(summary = "음악 목록 조회")
-    @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    fun getSongs() = BaseResponse(songService.getSongs(), 200).toEntity()
-
     @Operation(summary = "음악 목록 조회 (공개)")
-    @GetMapping("/public")
-    fun getPublicSongs() = BaseResponse(songService.getPublicSongs(), 200).toEntity()
+    @GetMapping
+    fun getSongs(@PageableDefault pageable: Pageable) = BaseResponse(songService.getSongs(pageable), 200).toEntity()
 
-    @Operation(summary = "음악 목록 조회 (비공개)")
-    @GetMapping("/private")
-    @PreAuthorize("hasRole('ADMIN')")
-    fun getPrivateSongs() = BaseResponse(songService.getPrivateSongs(), 200).toEntity()
+    @Operation(summary = "음악 목록 조회 (장르 별)")
+    @GetMapping("/genre")
+    fun getGenreSongs(@RequestParam genre: SongGenre) = BaseResponse(songService.getGenreSongs(genre), 200).toEntity()
 
     @Operation(summary = "음악 목록 조회 (좋아요 순)")
     @GetMapping("/ranking")
     fun getRankingSongs() = BaseResponse(songService.getRankingSongs(), 200).toEntity()
-
-    @Operation(summary = "음악 목록 조회 (내 음악)")
-    @GetMapping("/my")
-    @PreAuthorize("isAuthenticated()")
-    fun getMySongs() = BaseResponse(songService.getMySongs(), 200).toEntity()
 
     @Operation(summary = "음악 조회")
     @GetMapping("/{songId}")

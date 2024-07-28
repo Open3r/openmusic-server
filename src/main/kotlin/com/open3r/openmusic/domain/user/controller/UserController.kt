@@ -1,11 +1,14 @@
 package com.open3r.openmusic.domain.user.controller
 
-import com.open3r.openmusic.domain.song.domain.enums.SongGenre
+import com.open3r.openmusic.domain.user.dto.request.UserAddGenreRequest
+import com.open3r.openmusic.domain.user.dto.request.UserRemoveGenreRequest
 import com.open3r.openmusic.domain.user.dto.request.UserUpdateRequest
 import com.open3r.openmusic.domain.user.service.UserService
-import com.open3r.openmusic.global.common.BaseResponse
+import com.open3r.openmusic.global.common.dto.response.BaseResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
@@ -20,10 +23,6 @@ class UserController(
     @PreAuthorize("hasRole('ADMIN')")
     fun getUsers() = BaseResponse(userService.getUsers(), 200).toEntity()
 
-    @Operation(summary = "이메일 중복 확인")
-    @GetMapping("/email/{email}")
-    fun checkEmail(@PathVariable email: String) = BaseResponse(userService.checkEmail(email), 200).toEntity()
-
     @Operation(summary = "나 조회")
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
@@ -34,15 +33,34 @@ class UserController(
     @PreAuthorize("isAuthenticated()")
     fun updateMe(@RequestBody request: UserUpdateRequest) = BaseResponse(userService.updateMe(request), 200).toEntity()
 
-    @Operation(summary = "유저 장르 추가")
-    @PostMapping("/me/genres/{genre}")
+    @Operation(summary = "내 앨범 조회")
+    @GetMapping("/me/albums")
     @PreAuthorize("isAuthenticated()")
-    fun addGenre(@PathVariable genre: SongGenre) = BaseResponse(userService.addGenre(genre), 201).toEntity()
+    fun getMyAlbums(@PageableDefault pageable: Pageable) =
+        BaseResponse(userService.getMyAlbums(pageable), 200).toEntity()
+
+    @Operation(summary = "내 노래 조회")
+    @GetMapping("/me/songs")
+    @PreAuthorize("isAuthenticated()")
+    fun getMySongs(@PageableDefault pageable: Pageable) = BaseResponse(userService.getMySongs(pageable), 200).toEntity()
+
+    @Operation(summary = "내 플레이리스트 조회")
+    @GetMapping("/me/playlists")
+    @PreAuthorize("isAuthenticated()")
+    fun getMyPlaylists(@PageableDefault pageable: Pageable) =
+        BaseResponse(userService.getMyPlaylists(pageable), 200).toEntity()
+
+    @Operation(summary = "유저 장르 추가")
+    @PostMapping("/me/genres")
+    @PreAuthorize("isAuthenticated()")
+    fun addGenre(@RequestBody request: UserAddGenreRequest) =
+        BaseResponse(userService.addGenre(request), 201).toEntity()
 
     @Operation(summary = "유저 장르 삭제")
-    @DeleteMapping("/me/genres/{genre}")
+    @DeleteMapping("/me/genres")
     @PreAuthorize("isAuthenticated()")
-    fun removeGenre(@PathVariable genre: SongGenre) = BaseResponse(userService.removeGenre(genre), 204).toEntity()
+    fun removeGenre(@RequestBody request: UserRemoveGenreRequest) =
+        BaseResponse(userService.removeGenre(request), 204).toEntity()
 
     @Operation(summary = "유저 조회")
     @GetMapping("/{userId}")
@@ -51,4 +69,17 @@ class UserController(
     @Operation(summary = "유저 삭제")
     @DeleteMapping("/{userId}")
     fun deleteUser(@PathVariable userId: Long) = BaseResponse(userService.deleteUser(userId), 204).toEntity()
+
+    @Operation(summary = "유저 앨범 조회")
+    @GetMapping("/{userId}/albums")
+    fun getUserAlbums(@PathVariable userId: Long) = BaseResponse(userService.getUserAlbums(userId), 200).toEntity()
+
+    @Operation(summary = "유저 노래 조회")
+    @GetMapping("/{userId}/songs")
+    fun getUserSongs(@PathVariable userId: Long) = BaseResponse(userService.getUserSongs(userId), 200).toEntity()
+
+    @Operation(summary = "유저 플레이리스트 조회")
+    @GetMapping("/{userId}/playlists")
+    fun getUserPlaylists(@PathVariable userId: Long) =
+        BaseResponse(userService.getUserPlaylists(userId), 200).toEntity()
 }

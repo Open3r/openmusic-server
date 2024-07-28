@@ -19,7 +19,7 @@ class AdminConfig(
     fun init() {
         if (!userRepository.existsByEmail("admin@openmusic.com")) {
             val user = UserEntity(
-                nickname = "admin",
+                nickname = "어드민",
                 email = adminProperties.email,
                 password = passwordEncoder.encode(adminProperties.password),
                 role = UserRole.ADMIN,

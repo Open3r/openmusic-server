@@ -1,10 +1,10 @@
 package com.open3r.openmusic.domain.album.service.impl
 
 import com.open3r.openmusic.domain.album.domain.entity.AlbumEntity
-import com.open3r.openmusic.domain.album.domain.enums.AlbumScope
 import com.open3r.openmusic.domain.album.dto.request.AlbumCreateRequest
 import com.open3r.openmusic.domain.album.dto.request.AlbumUpdateRequest
 import com.open3r.openmusic.domain.album.dto.response.AlbumResponse
+import com.open3r.openmusic.domain.album.repository.AlbumQueryRepository
 import com.open3r.openmusic.domain.album.repository.AlbumRepository
 import com.open3r.openmusic.domain.album.service.AlbumService
 import com.open3r.openmusic.domain.song.domain.entity.SongEntity
@@ -12,38 +12,23 @@ import com.open3r.openmusic.domain.song.repository.SongRepository
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class AlbumServiceImpl(
+    private val albumQueryRepository: AlbumQueryRepository,
     private val albumRepository: AlbumRepository,
     private val songRepository: SongRepository,
     private val userSecurity: UserSecurity
 ) : AlbumService {
     @Transactional(readOnly = true)
-    override fun getAlbums(): List<AlbumResponse> {
-        return albumRepository.findAll().map { it.toResponse() }
-    }
-
-    @Transactional(readOnly = true)
-    override fun getPublicAlbums(): List<AlbumResponse> {
-        return albumRepository.findAllByScope(AlbumScope.PUBLIC).map { it.toResponse() }
-    }
-
-    @Transactional(readOnly = true)
-    override fun getPrivateAlbums(): List<AlbumResponse> {
+    override fun getAlbums(pageable: Pageable): Page<AlbumResponse> {
+        val albums = albumQueryRepository.getAlbums(pageable)
         val user = userSecurity.user
-        val albums = albumRepository.findAllByScope(AlbumScope.PRIVATE)
-
-        return albums.map { AlbumResponse.of(it, user) }
-    }
-
-    @Transactional(readOnly = true)
-    override fun getMyAlbums(): List<AlbumResponse> {
-        val user = userSecurity.user
-        val albums = albumRepository.findAllByArtist(user)
 
         return albums.map { AlbumResponse.of(it, user) }
     }

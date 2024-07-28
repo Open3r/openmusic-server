@@ -1,4 +1,4 @@
-package com.open3r.openmusic.global.common
+package com.open3r.openmusic.global.common.domain.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners
@@ -13,11 +13,8 @@ import java.time.LocalDateTime
 abstract class BaseEntity(
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
-    private var _createdAt: LocalDateTime? = null,
+    var createdAt: LocalDateTime? = null,
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
-    private var _updatedAt: LocalDateTime? = null
-) {
-    val createdAt get() = _createdAt!!
-    val updatedAt get() = _updatedAt!!
-}
+    var updatedAt: LocalDateTime? = null
+)

@@ -1,20 +1,32 @@
 package com.open3r.openmusic.domain.user.service
 
-import com.open3r.openmusic.domain.song.domain.enums.SongGenre
+import com.open3r.openmusic.domain.album.dto.response.AlbumResponse
+import com.open3r.openmusic.domain.playlist.dto.response.PlaylistResponse
+import com.open3r.openmusic.domain.song.dto.response.SongResponse
+import com.open3r.openmusic.domain.user.dto.request.UserAddGenreRequest
+import com.open3r.openmusic.domain.user.dto.request.UserRemoveGenreRequest
 import com.open3r.openmusic.domain.user.dto.request.UserUpdateRequest
-import com.open3r.openmusic.domain.user.dto.response.CheckEmailResponse
 import com.open3r.openmusic.domain.user.dto.response.UserResponse
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 
 interface UserService {
     fun getUsers(): List<UserResponse>
-    fun checkEmail(email: String): CheckEmailResponse
 
     fun getMe(): UserResponse
     fun updateMe(request: UserUpdateRequest): UserResponse
 
-    fun addGenre(genre: SongGenre)
-    fun removeGenre(genre: SongGenre)
+    fun addGenre(request: UserAddGenreRequest)
+    fun removeGenre(request: UserRemoveGenreRequest)
 
     fun getUser(userId: Long): UserResponse
     fun deleteUser(userId: Long)
+
+    fun getMyAlbums(pageable: Pageable): Page<AlbumResponse>
+    fun getMySongs(pageable: Pageable): Page<SongResponse>
+    fun getMyPlaylists(pageable: Pageable): Page<PlaylistResponse>
+
+    fun getUserAlbums(userId: Long): List<AlbumResponse>
+    fun getUserSongs(userId: Long): List<SongResponse>
+    fun getUserPlaylists(userId: Long): List<PlaylistResponse>
 }

@@ -2,14 +2,18 @@ package com.open3r.openmusic.domain.song.service.impl
 
 import com.open3r.openmusic.domain.album.domain.enums.AlbumScope
 import com.open3r.openmusic.domain.song.domain.entity.SongEntity
+import com.open3r.openmusic.domain.song.domain.enums.SongGenre
 import com.open3r.openmusic.domain.song.dto.request.SongUpdateRequest
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
 import com.open3r.openmusic.domain.song.repository.SongRepository
+import com.open3r.openmusic.domain.song.repository.impl.SongQueryRepository
 import com.open3r.openmusic.domain.song.service.SongService
 import com.open3r.openmusic.domain.user.domain.enums.UserRole
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,28 +22,21 @@ import org.springframework.transaction.annotation.Transactional
 class SongServiceImpl(
     private val songRepository: SongRepository,
     private val userSecurity: UserSecurity,
+    private val songQueryRepository: SongQueryRepository,
 ) : SongService {
     @Transactional(readOnly = true)
-    override fun getSongs(): List<SongResponse> {
-        return songRepository.findAll().map { it.toResponse() }
-    }
-
-    @Transactional(readOnly = true)
-    override fun getPublicSongs(): List<SongResponse> {
-        return songRepository.findAllByScope(AlbumScope.PUBLIC).map { it.toResponse() }
-    }
-
-    @Transactional(readOnly = true)
-    override fun getPrivateSongs(): List<SongResponse> {
-        val user = userSecurity.user
-        val songs = songRepository.findAllByScope(AlbumScope.PRIVATE)
-
-        return songs.map { SongResponse.of(it, user) }
+    override fun getSongs(pageable: Pageable): Page<SongResponse> {
+        return songQueryRepository.getSongs(pageable).map { it.toResponse() }
     }
 
     @Transactional(readOnly = true)
     override fun getRankingSongs(): List<SongResponse> {
         return songRepository.findAllByScopeOrderByLikesDesc(AlbumScope.PUBLIC).map { it.toResponse() }
+    }
+
+    @Transactional(readOnly = true)
+    override fun getGenreSongs(genre: SongGenre): List<SongResponse> {
+        return songRepository.findAllByGenre(genre).map { it.toResponse() }
     }
 
     @Transactional(readOnly = true)

@@ -1,4 +1,4 @@
-package com.open3r.openmusic.domain.auth.repository
+package com.open3r.openmusic.domain.email.repository
 
 interface EmailCodeRepository {
     fun save(email: String, code: String)

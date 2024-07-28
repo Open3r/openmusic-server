@@ -3,7 +3,7 @@ package com.open3r.openmusic.domain.playlist.domain.entity
 import com.open3r.openmusic.domain.playlist.domain.enums.PlaylistScope
 import com.open3r.openmusic.domain.song.domain.entity.SongEntity
 import com.open3r.openmusic.domain.user.domain.entity.UserEntity
-import com.open3r.openmusic.global.common.BaseEntity
+import com.open3r.openmusic.global.common.domain.entity.BaseEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction

@@ -31,8 +31,8 @@ data class PlaylistResponse(
             liked = user?.let { playlist.likes.any { it.id == user.id } } ?: false,
             likeCount = playlist.likes.size.toLong(),
             artist = UserResponse.of(playlist.artist),
-            createdAt = playlist.createdAt,
-            updatedAt = playlist.updatedAt
+            createdAt = playlist.createdAt!!,
+            updatedAt = playlist.updatedAt!!
         )
     }
 }

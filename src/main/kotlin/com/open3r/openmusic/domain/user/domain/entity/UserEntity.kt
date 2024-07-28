@@ -4,7 +4,7 @@ import com.open3r.openmusic.domain.song.domain.enums.SongGenre
 import com.open3r.openmusic.domain.user.domain.enums.UserProvider
 import com.open3r.openmusic.domain.user.domain.enums.UserRole
 import com.open3r.openmusic.domain.user.domain.enums.UserStatus
-import com.open3r.openmusic.global.common.BaseEntity
+import com.open3r.openmusic.global.common.domain.entity.BaseEntity
 import jakarta.persistence.*
 
 @Entity

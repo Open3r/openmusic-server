@@ -1,10 +1,12 @@
 package com.open3r.openmusic.domain.auth.service.impl
 
-import com.open3r.openmusic.domain.auth.dto.request.*
-import com.open3r.openmusic.domain.auth.dto.response.AuthSendEmailResponse
-import com.open3r.openmusic.domain.auth.repository.EmailCodeRepository
+import com.open3r.openmusic.domain.auth.dto.request.AuthLoginRequest
+import com.open3r.openmusic.domain.auth.dto.request.AuthReissueRequest
+import com.open3r.openmusic.domain.auth.dto.request.AuthSignOutRequest
+import com.open3r.openmusic.domain.auth.dto.request.AuthSignUpRequest
 import com.open3r.openmusic.domain.auth.repository.RefreshTokenRepository
 import com.open3r.openmusic.domain.auth.service.AuthService
+import com.open3r.openmusic.domain.email.repository.EmailCodeRepository
 import com.open3r.openmusic.domain.user.domain.entity.UserEntity
 import com.open3r.openmusic.domain.user.domain.enums.UserProvider
 import com.open3r.openmusic.domain.user.domain.enums.UserRole
@@ -16,20 +18,17 @@ import com.open3r.openmusic.global.security.UserSecurity
 import com.open3r.openmusic.global.security.jwt.Jwt
 import com.open3r.openmusic.global.security.jwt.JwtProvider
 import com.open3r.openmusic.global.security.jwt.JwtType
-import com.open3r.openmusic.logger
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.UnsupportedJwtException
 import io.jsonwebtoken.security.SecurityException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.mail.javamail.JavaMailSender
-import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.security.SecureRandom
 
 @Service
 class AuthServiceImpl(
@@ -49,7 +48,7 @@ class AuthServiceImpl(
         if (emailCodeRepository.findByEmail(request.email) != request.emailCode) throw CustomException(ErrorCode.INVALID_EMAIL_CODE)
 
         val user = UserEntity(
-            nickname = request.name,
+            nickname = request.nickname,
             email = request.email,
             password = passwordEncoder.encode(request.password),
             role = UserRole.USER,
@@ -126,35 +125,5 @@ class AuthServiceImpl(
         u.status = UserStatus.DELETED
 
         userRepository.save(u)
-    }
-
-    override fun sendEmail(request: AuthSendEmailRequest): AuthSendEmailResponse {
-        val email = request.email
-
-        if (userRepository.existsByEmail(email)) throw CustomException(ErrorCode.USER_ALREADY_EXISTS)
-        if (emailCodeRepository.existsByEmail(email)) {
-            val code = emailCodeRepository.findByEmail(email) ?: throw CustomException(ErrorCode.EMAIL_CODE_NOT_FOUND)
-            emailCodeRepository.save(email, code)
-
-            logger().info("Email: $email, Code: $code")
-
-            return AuthSendEmailResponse(email = email, resend = false)
-        }
-
-        val code = String.format("%06d", SecureRandom.getInstanceStrong().nextInt(999999))
-
-        emailCodeRepository.save(email, code)
-
-        val message = mailSender.createMimeMessage()
-
-        MimeMessageHelper(message, false, "UTF-8").apply {
-            setTo(email)
-            setSubject("OpenMusic 인증 번호")
-            setText("인증 번호: $code")
-        }
-
-        mailSender.send(message)
-
-        return AuthSendEmailResponse(email = email, resend = true)
     }
 }

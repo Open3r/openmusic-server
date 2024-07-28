@@ -29,8 +29,8 @@ data class UserResponse(
             role = user.role,
             status = user.status,
             genres = user.genres,
-            createdAt = user.createdAt,
-            updatedAt = user.updatedAt
+            createdAt = user.createdAt!!,
+            updatedAt = user.updatedAt!!
         )
     }
 }

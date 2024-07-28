@@ -1,4 +1,4 @@
-package com.open3r.openmusic.global.common
+package com.open3r.openmusic.global.common.dto.response
 
 import org.springframework.http.ResponseEntity
 

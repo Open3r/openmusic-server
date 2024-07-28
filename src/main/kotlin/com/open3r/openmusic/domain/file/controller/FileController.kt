@@ -1,7 +1,7 @@
 package com.open3r.openmusic.domain.file.controller
 
 import com.open3r.openmusic.domain.file.service.FileService
-import com.open3r.openmusic.global.common.BaseResponse
+import com.open3r.openmusic.global.common.dto.response.BaseResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.MediaType

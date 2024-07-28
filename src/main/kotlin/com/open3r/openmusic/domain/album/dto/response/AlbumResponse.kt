@@ -11,7 +11,6 @@ data class AlbumResponse(
     val title: String,
     val description: String,
     val coverUrl: String,
-//    val likes: List<Long>,
     val liked: Boolean,
     val likeCount: Long,
     val songs: List<SongResponse>,
@@ -25,13 +24,12 @@ data class AlbumResponse(
             title = album.title,
             description = album.description,
             coverUrl = album.coverUrl,
-//            likes = album.likes.map { it.id!! },
             liked = user?.let { album.likes.any { it.id == user.id } } ?: false,
             likeCount = album.likes.size.toLong(),
             songs = album.songs.map { SongResponse.of(it, user = user) },
             artist = UserResponse.of(album.artist),
-            createdAt = album.createdAt,
-            updatedAt = album.updatedAt
+            createdAt = album.createdAt!!,
+            updatedAt = album.updatedAt!!
         )
     }
 }

@@ -1,10 +1,12 @@
 package com.open3r.openmusic.domain.playlist.service.impl
 
 import com.open3r.openmusic.domain.playlist.domain.entity.PlaylistEntity
-import com.open3r.openmusic.domain.playlist.domain.enums.PlaylistScope
+import com.open3r.openmusic.domain.playlist.dto.request.PlaylistAddSongRequest
 import com.open3r.openmusic.domain.playlist.dto.request.PlaylistCreateRequest
+import com.open3r.openmusic.domain.playlist.dto.request.PlaylistRemoveSongRequest
 import com.open3r.openmusic.domain.playlist.dto.request.PlaylistUpdateRequest
 import com.open3r.openmusic.domain.playlist.dto.response.PlaylistResponse
+import com.open3r.openmusic.domain.playlist.repository.PlaylistQueryRepository
 import com.open3r.openmusic.domain.playlist.repository.PlaylistRepository
 import com.open3r.openmusic.domain.playlist.service.PlaylistService
 import com.open3r.openmusic.domain.song.repository.SongRepository
@@ -12,39 +14,22 @@ import com.open3r.openmusic.domain.user.domain.enums.UserRole
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class PlaylistServiceImpl(
+    private val playlistQueryRepository: PlaylistQueryRepository,
     private val playlistRepository: PlaylistRepository,
     private val userSecurity: UserSecurity,
     private val songRepository: SongRepository
 ) : PlaylistService {
     @Transactional(readOnly = true)
-    override fun getPlaylists(): List<PlaylistResponse> {
-        return playlistRepository.findAll().map { it.toResponse() }
-    }
-
-    @Transactional(readOnly = true)
-    override fun getPublicPlaylists(): List<PlaylistResponse> {
-        return playlistRepository.findAllByScope(PlaylistScope.PUBLIC).map { it.toResponse() }
-    }
-
-    @Transactional(readOnly = true)
-    override fun getPrivatePlaylists(): List<PlaylistResponse> {
-        val user = userSecurity.user
-        val playlists = playlistRepository.findAllByScope(PlaylistScope.PRIVATE).map { PlaylistResponse.of(it, user) }
-
-        return playlists
-    }
-
-    @Transactional(readOnly = true)
-    override fun getMyPlaylists(): List<PlaylistResponse> {
-        val user = userSecurity.user
-
-        return playlistRepository.findAllByArtist(user).map { PlaylistResponse.of(it, user) }
+    override fun getPlaylists(pageable: Pageable): Page<PlaylistResponse> {
+        return playlistQueryRepository.getPlaylists(pageable).map { it.toResponse() }
     }
 
     @Transactional(readOnly = true)
@@ -95,7 +80,8 @@ class PlaylistServiceImpl(
     }
 
     @Transactional
-    override fun createPlaylistSong(playlistId: Long, songId: Long) {
+    override fun addSongToPlaylist(playlistId: Long, request: PlaylistAddSongRequest) {
+        val songId = request.songId
         val playlist =
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
         val user = userSecurity.user
@@ -106,12 +92,11 @@ class PlaylistServiceImpl(
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
 
         playlist.songs.add(song)
-
-        playlistRepository.save(playlist)
     }
 
     @Transactional
-    override fun deletePlaylistSong(playlistId: Long, songId: Long) {
+    override fun removeSongToPlaylist(playlistId: Long, request: PlaylistRemoveSongRequest) {
+        val songId = request.songId
         val playlist =
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
         val user = userSecurity.user
@@ -122,12 +107,10 @@ class PlaylistServiceImpl(
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
 
         playlist.songs.removeIf { it.id == song.id }
-
-        playlistRepository.save(playlist)
     }
 
     @Transactional
-    override fun createPlaylistLike(playlistId: Long) {
+    override fun addLikeToPlaylist(playlistId: Long) {
         val playlist =
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
         val user = userSecurity.user
@@ -135,12 +118,10 @@ class PlaylistServiceImpl(
         if (playlist.likes.any { it.id == user.id }) throw CustomException(ErrorCode.PLAYLIST_LIKE_ALREADY_EXISTS)
 
         playlist.likes.add(user)
-
-        playlistRepository.save(playlist)
     }
 
     @Transactional
-    override fun deletePlaylistLike(playlistId: Long) {
+    override fun removeLikeToPlaylist(playlistId: Long) {
         val playlist =
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
         val user = userSecurity.user
@@ -148,8 +129,6 @@ class PlaylistServiceImpl(
         if (playlist.likes.none { it.id == user.id }) throw CustomException(ErrorCode.PLAYLIST_LIKE_NOT_FOUND)
 
         playlist.likes.removeIf { it.id == user.id }
-
-        playlistRepository.save(playlist)
     }
 
     private fun PlaylistEntity.toResponse() = if (userSecurity.isAuthenticated) {

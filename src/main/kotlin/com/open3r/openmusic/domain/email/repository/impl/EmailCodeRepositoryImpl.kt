@@ -1,5 +1,6 @@
-package com.open3r.openmusic.domain.auth.repository
+package com.open3r.openmusic.domain.email.repository.impl
 
+import com.open3r.openmusic.domain.email.repository.EmailCodeRepository
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Repository
 import java.util.concurrent.TimeUnit
