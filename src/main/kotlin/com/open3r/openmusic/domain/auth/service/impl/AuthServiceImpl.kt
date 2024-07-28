@@ -39,7 +39,6 @@ class AuthServiceImpl(
     private val refreshTokenRepository: RefreshTokenRepository,
     private val userSecurity: UserSecurity,
     private val emailCodeRepository: EmailCodeRepository,
-    private val mailSender: JavaMailSender
 ) : AuthService {
     @Transactional
     override fun signup(request: AuthSignUpRequest) {
