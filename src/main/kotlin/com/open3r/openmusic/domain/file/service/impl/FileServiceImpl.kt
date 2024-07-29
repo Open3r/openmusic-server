@@ -21,7 +21,8 @@ class FileServiceImpl(
 
     override fun uploadFiles(files: List<MultipartFile>): List<FileUploadResponse> {
         return files.map {
-            val name = "${UUID.randomUUID()}_${it.originalFilename}"
+            val name = "${UUID.randomUUID()}.${it.originalFilename?.substringAfterLast(".")}"
+
             val metadata = ObjectMetadata().apply {
                 contentType = it.contentType
                 contentLength = it.size
@@ -31,7 +32,7 @@ class FileServiceImpl(
 
             val url = "https://$bucket.s3.$region.amazonaws.com/$name"
 
-            FileUploadResponse(name = name, url = url)
+            FileUploadResponse(url)
         }
     }
 }

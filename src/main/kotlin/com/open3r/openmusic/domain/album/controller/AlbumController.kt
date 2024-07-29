@@ -52,11 +52,11 @@ class AlbumController(
     @PostMapping("/{albumId}/likes")
     @PreAuthorize("isAuthenticated()")
     fun addAlbumLike(@PathVariable albumId: Long) =
-        BaseResponse(albumService.addAlbumLike(albumId), 201).toEntity()
+        BaseResponse(albumService.addLikeToAlbum(albumId), 201).toEntity()
 
     @Operation(summary = "앨범 좋아요 삭제")
     @DeleteMapping("/{albumId}/likes")
     @PreAuthorize("isAuthenticated()")
     fun removeAlbumLike(@PathVariable albumId: Long) =
-        BaseResponse(albumService.removeAlbumLike(albumId), 204).toEntity()
+        BaseResponse(albumService.removeLikeFromAlbum(albumId), 204).toEntity()
 }

@@ -97,7 +97,7 @@ class AlbumServiceImpl(
     }
 
     @Transactional
-    override fun addAlbumLike(albumId: Long) {
+    override fun addLikeToAlbum(albumId: Long): AlbumResponse {
         val album = albumRepository.findByIdOrNull(albumId) ?: throw CustomException(ErrorCode.ALBUM_NOT_FOUND)
         val user = userSecurity.user
 
@@ -105,11 +105,11 @@ class AlbumServiceImpl(
 
         album.likes.add(user)
 
-        albumRepository.save(album)
+        return albumRepository.save(album).toResponse()
     }
 
     @Transactional
-    override fun removeAlbumLike(albumId: Long) {
+    override fun removeLikeFromAlbum(albumId: Long): AlbumResponse {
         val album = albumRepository.findByIdOrNull(albumId) ?: throw CustomException(ErrorCode.ALBUM_NOT_FOUND)
         val user = userSecurity.user
 
@@ -117,7 +117,7 @@ class AlbumServiceImpl(
 
         album.likes.removeIf { it.id == user.id }
 
-        albumRepository.save(album)
+        return albumRepository.save(album).toResponse()
     }
 
     private fun AlbumEntity.toResponse() = if (userSecurity.isAuthenticated) {

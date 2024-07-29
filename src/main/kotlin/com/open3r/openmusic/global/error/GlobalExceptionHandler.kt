@@ -6,6 +6,7 @@ import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.UnsupportedJwtException
 import net.dv8tion.jda.api.JDA
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -32,6 +33,11 @@ class GlobalExceptionHandler(
     @ExceptionHandler(NoHandlerFoundException::class)
     fun handleNoHandlerFoundException(e: NoHandlerFoundException): ResponseEntity<ErrorResponse> {
         return ErrorResponse(ErrorCode.NOT_FOUND).toEntity()
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ResponseEntity<ErrorResponse> {
+        return ErrorResponse(ErrorCode.INVALID_INPUT_VALUE).toEntity()
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)

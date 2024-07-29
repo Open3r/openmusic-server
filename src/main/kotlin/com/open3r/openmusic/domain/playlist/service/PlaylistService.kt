@@ -13,8 +13,8 @@ interface PlaylistService {
     fun createPlaylist(request: PlaylistCreateRequest): PlaylistResponse
     fun updatePlaylist(playlistId: Long, request: PlaylistUpdateRequest)
     fun deletePlaylist(playlistId: Long)
-    fun addSongToPlaylist(playlistId: Long, songId: Long)
-    fun removeSongToPlaylist(playlistId: Long, songId: Long)
-    fun addLikeToPlaylist(playlistId: Long)
-    fun removeLikeToPlaylist(playlistId: Long)
+    fun addSongToPlaylist(playlistId: Long, songId: Long): PlaylistResponse
+    fun removeSongFromPlaylist(playlistId: Long, songId: Long): PlaylistResponse
+    fun addLikeToPlaylist(playlistId: Long): PlaylistResponse
+    fun removeLikeFromPlaylist(playlistId: Long): PlaylistResponse
 }

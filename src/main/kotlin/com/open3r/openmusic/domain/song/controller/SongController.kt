@@ -19,15 +19,18 @@ class SongController(
 ) {
     @Operation(summary = "음악 목록 조회 (공개)")
     @GetMapping
-    fun getSongs(@PageableDefault pageable: Pageable) = BaseResponse(songService.getSongs(pageable), 200).toEntity()
+    fun getSongs(@PageableDefault(sort = ["createdAt desc"]) pageable: Pageable) =
+        BaseResponse(songService.getSongs(pageable), 200).toEntity()
 
     @Operation(summary = "음악 목록 조회 (장르 별)")
     @GetMapping("/genre")
-    fun getGenreSongs(@RequestParam genre: SongGenre) = BaseResponse(songService.getGenreSongs(genre), 200).toEntity()
+    fun getGenreSongs(@RequestParam genre: SongGenre, @PageableDefault pageable: Pageable) =
+        BaseResponse(songService.getGenreSongs(genre, pageable), 200).toEntity()
 
-    @Operation(summary = "음악 목록 조회 (좋아요 순)")
+    @Operation(summary = "음악 목록 조회 (랭킹, 최대 100노래)")
     @GetMapping("/ranking")
-    fun getRankingSongs() = BaseResponse(songService.getRankingSongs(), 200).toEntity()
+    fun getRankingSongs(@PageableDefault pageable: Pageable) =
+        BaseResponse(songService.getRankingSongs(pageable), 200).toEntity()
 
     @Operation(summary = "음악 조회")
     @GetMapping("/{songId}")
@@ -52,11 +55,11 @@ class SongController(
     @PostMapping("/{songId}/likes")
     @PreAuthorize("isAuthenticated()")
     fun createSongLike(@PathVariable songId: Long) =
-        BaseResponse(songService.addSongLike(songId), 201).toEntity()
+        BaseResponse(songService.addLikeToSong(songId), 201).toEntity()
 
     @Operation(summary = "음악 좋아요 삭제")
     @DeleteMapping("/{songId}/likes")
     @PreAuthorize("isAuthenticated()")
     fun deleteSongLike(@PathVariable songId: Long) =
-        BaseResponse(songService.removeSongLike(songId), 204).toEntity()
+        BaseResponse(songService.removeLikeFromSong(songId), 204).toEntity()
 }

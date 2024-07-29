@@ -1,7 +1,6 @@
 package com.open3r.openmusic.domain.playlist.domain.entity
 
 import com.open3r.openmusic.domain.playlist.domain.enums.PlaylistScope
-import com.open3r.openmusic.domain.song.domain.entity.SongEntity
 import com.open3r.openmusic.domain.user.domain.entity.UserEntity
 import com.open3r.openmusic.global.common.domain.entity.BaseEntity
 import jakarta.persistence.*
@@ -25,8 +24,8 @@ class PlaylistEntity(
     @Column(name = "scope", nullable = false)
     var scope: PlaylistScope,
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val songs: MutableList<SongEntity> = mutableListOf(),
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    val songs: MutableList<PlaylistSongEntity> = mutableListOf(),
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val likes: MutableList<UserEntity> = mutableListOf(),

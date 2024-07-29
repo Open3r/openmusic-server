@@ -1,12 +1,11 @@
 package com.open3r.openmusic.domain.song.service.impl
 
-import com.open3r.openmusic.domain.album.domain.enums.AlbumScope
 import com.open3r.openmusic.domain.song.domain.entity.SongEntity
 import com.open3r.openmusic.domain.song.domain.enums.SongGenre
 import com.open3r.openmusic.domain.song.dto.request.SongUpdateRequest
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
+import com.open3r.openmusic.domain.song.repository.SongQueryRepository
 import com.open3r.openmusic.domain.song.repository.SongRepository
-import com.open3r.openmusic.domain.song.repository.impl.SongQueryRepository
 import com.open3r.openmusic.domain.song.service.SongService
 import com.open3r.openmusic.domain.user.domain.enums.UserRole
 import com.open3r.openmusic.global.error.CustomException
@@ -14,6 +13,7 @@ import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Slice
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -30,13 +30,13 @@ class SongServiceImpl(
     }
 
     @Transactional(readOnly = true)
-    override fun getRankingSongs(): List<SongResponse> {
-        return songRepository.findAllByScopeOrderByLikesDesc(AlbumScope.PUBLIC).map { it.toResponse() }
+    override fun getRankingSongs(pageable: Pageable): Slice<SongResponse> {
+        return songQueryRepository.getRankingSongs(pageable).map { it.toResponse() }
     }
 
     @Transactional(readOnly = true)
-    override fun getGenreSongs(genre: SongGenre): List<SongResponse> {
-        return songRepository.findAllByGenre(genre).map { it.toResponse() }
+    override fun getGenreSongs(genre: SongGenre, pageable: Pageable): Page<SongResponse> {
+        return songQueryRepository.getGenreSongs(genre, pageable).map { it.toResponse() }
     }
 
     @Transactional(readOnly = true)
@@ -83,7 +83,7 @@ class SongServiceImpl(
     }
 
     @Transactional
-    override fun addSongLike(songId: Long) {
+    override fun addLikeToSong(songId: Long): SongResponse {
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
         val user = userSecurity.user
 
@@ -91,11 +91,11 @@ class SongServiceImpl(
 
         song.likes.add(user)
 
-        songRepository.save(song)
+        return songRepository.save(song).toResponse()
     }
 
     @Transactional
-    override fun removeSongLike(songId: Long) {
+    override fun removeLikeFromSong(songId: Long): SongResponse {
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
         val user = userSecurity.user
 
@@ -103,7 +103,7 @@ class SongServiceImpl(
 
         song.likes.removeIf { it.id == user.id }
 
-        songRepository.save(song)
+        return songRepository.save(song).toResponse()
     }
 
     private fun SongEntity.toResponse() = if (userSecurity.isAuthenticated) {

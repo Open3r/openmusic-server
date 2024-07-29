@@ -26,7 +26,7 @@ data class PlaylistResponse(
             title = playlist.title,
             coverUrl = playlist.coverUrl,
             scope = playlist.scope,
-            songs = playlist.songs.map { SongResponse.of(it, user = user) },
+            songs = playlist.songs.map { SongResponse.of(it.song, user = user) },
 //            likes = playlist.likes.map { it.id!! },
             liked = user?.let { playlist.likes.any { it.id == user.id } } ?: false,
             likeCount = playlist.likes.size.toLong(),

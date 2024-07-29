@@ -13,6 +13,6 @@ interface AlbumService {
     fun createAlbum(request: AlbumCreateRequest)
     fun updateAlbum(albumId: Long, request: AlbumUpdateRequest)
     fun deleteAlbum(albumId: Long)
-    fun addAlbumLike(albumId: Long)
-    fun removeAlbumLike(albumId: Long)
+    fun addLikeToAlbum(albumId: Long): AlbumResponse
+    fun removeLikeFromAlbum(albumId: Long): AlbumResponse
 }
