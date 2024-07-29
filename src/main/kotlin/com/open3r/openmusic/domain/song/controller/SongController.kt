@@ -54,12 +54,12 @@ class SongController(
     @Operation(summary = "음악 좋아요 추가")
     @PostMapping("/{songId}/likes")
     @PreAuthorize("isAuthenticated()")
-    fun createSongLike(@PathVariable songId: Long) =
+    fun addLikeToSong(@PathVariable songId: Long) =
         BaseResponse(songService.addLikeToSong(songId), 201).toEntity()
 
     @Operation(summary = "음악 좋아요 삭제")
     @DeleteMapping("/{songId}/likes")
     @PreAuthorize("isAuthenticated()")
-    fun deleteSongLike(@PathVariable songId: Long) =
+    fun removeLikeToSong(@PathVariable songId: Long) =
         BaseResponse(songService.removeLikeFromSong(songId), 200).toEntity()
 }

@@ -27,8 +27,8 @@ class PlaylistEntity(
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     val songs: MutableList<PlaylistSongEntity> = mutableListOf(),
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val likes: MutableList<UserEntity> = mutableListOf(),
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    val likes: MutableList<PlaylistLikeEntity> = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id", nullable = false)

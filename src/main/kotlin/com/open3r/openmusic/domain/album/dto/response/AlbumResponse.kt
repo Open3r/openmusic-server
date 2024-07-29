@@ -26,7 +26,7 @@ data class AlbumResponse(
             coverUrl = album.coverUrl,
             liked = user?.let { album.likes.any { it.id == user.id } } ?: false,
             likeCount = album.likes.size.toLong(),
-            songs = album.songs.map { SongResponse.of(it, user = user) },
+            songs = album.songs.map { SongResponse.of(it.song, user = user) },
             artist = UserResponse.of(album.artist),
             createdAt = album.createdAt!!,
             updatedAt = album.updatedAt!!

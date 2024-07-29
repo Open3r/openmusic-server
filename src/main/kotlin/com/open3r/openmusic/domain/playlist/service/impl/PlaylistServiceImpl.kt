@@ -1,6 +1,7 @@
 package com.open3r.openmusic.domain.playlist.service.impl
 
 import com.open3r.openmusic.domain.playlist.domain.entity.PlaylistEntity
+import com.open3r.openmusic.domain.playlist.domain.entity.PlaylistLikeEntity
 import com.open3r.openmusic.domain.playlist.domain.entity.PlaylistSongEntity
 import com.open3r.openmusic.domain.playlist.dto.request.PlaylistCreateRequest
 import com.open3r.openmusic.domain.playlist.dto.request.PlaylistUpdateRequest
@@ -116,9 +117,9 @@ class PlaylistServiceImpl(
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
         val user = userSecurity.user
 
-        if (playlist.likes.any { it.id == user.id }) throw CustomException(ErrorCode.PLAYLIST_LIKE_ALREADY_EXISTS)
+        if (playlist.likes.any { it.user.id == user.id }) throw CustomException(ErrorCode.PLAYLIST_LIKE_ALREADY_EXISTS)
 
-        playlist.likes.add(user)
+        playlist.likes.add(PlaylistLikeEntity(user = user, playlist = playlist))
 
         return playlistRepository.save(playlist).toResponse()
     }
@@ -129,9 +130,9 @@ class PlaylistServiceImpl(
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
         val user = userSecurity.user
 
-        if (playlist.likes.none { it.id == user.id }) throw CustomException(ErrorCode.PLAYLIST_LIKE_NOT_FOUND)
+        if (playlist.likes.none { it.user.id == user.id }) throw CustomException(ErrorCode.PLAYLIST_LIKE_NOT_FOUND)
 
-        playlist.likes.removeIf { it.id == user.id }
+        playlist.likes.removeIf { it.user.id == user.id }
 
         return playlistRepository.save(playlist).toResponse()
     }

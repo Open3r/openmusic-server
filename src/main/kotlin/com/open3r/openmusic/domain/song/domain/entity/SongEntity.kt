@@ -20,8 +20,8 @@ class SongEntity(
     @Column(name = "url", nullable = false, columnDefinition = "longtext")
     var url: String,
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val likes: MutableList<UserEntity> = mutableListOf(),
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    val likes: MutableList<SongLikeEntity> = mutableListOf(),
 
     @Enumerated(EnumType.STRING)
     @Column(name = "scope", nullable = false)

@@ -1,6 +1,7 @@
 package com.open3r.openmusic.domain.song.service.impl
 
 import com.open3r.openmusic.domain.song.domain.entity.SongEntity
+import com.open3r.openmusic.domain.song.domain.entity.SongLikeEntity
 import com.open3r.openmusic.domain.song.domain.enums.SongGenre
 import com.open3r.openmusic.domain.song.dto.request.SongUpdateRequest
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
@@ -87,9 +88,9 @@ class SongServiceImpl(
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
         val user = userSecurity.user
 
-        if (song.likes.any { it.id == user.id }) throw CustomException(ErrorCode.SONG_LIKE_ALREADY_EXISTS)
+        if (song.likes.any { it.user.id == user.id }) throw CustomException(ErrorCode.SONG_LIKE_ALREADY_EXISTS)
 
-        song.likes.add(user)
+        song.likes.add(SongLikeEntity(user = user, song = song))
 
         return songRepository.save(song).toResponse()
     }
@@ -99,9 +100,9 @@ class SongServiceImpl(
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
         val user = userSecurity.user
 
-        if (song.likes.none { it.id == user.id }) throw CustomException(ErrorCode.SONG_LIKE_NOT_FOUND)
+        if (song.likes.none { it.user.id == user.id }) throw CustomException(ErrorCode.SONG_LIKE_NOT_FOUND)
 
-        song.likes.removeIf { it.id == user.id }
+        song.likes.removeIf { it.user.id == user.id }
 
         return songRepository.save(song).toResponse()
     }

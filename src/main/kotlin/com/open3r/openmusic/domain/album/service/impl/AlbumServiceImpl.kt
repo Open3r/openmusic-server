@@ -1,6 +1,8 @@
 package com.open3r.openmusic.domain.album.service.impl
 
 import com.open3r.openmusic.domain.album.domain.entity.AlbumEntity
+import com.open3r.openmusic.domain.album.domain.entity.AlbumLikeEntity
+import com.open3r.openmusic.domain.album.domain.entity.AlbumSongEntity
 import com.open3r.openmusic.domain.album.dto.request.AlbumCreateRequest
 import com.open3r.openmusic.domain.album.dto.request.AlbumUpdateRequest
 import com.open3r.openmusic.domain.album.dto.response.AlbumResponse
@@ -65,7 +67,7 @@ class AlbumServiceImpl(
                 scope = album.scope,
                 artist = user,
             )
-        }))
+        }).map { AlbumSongEntity(song = it, album = album) })
 
         albumRepository.save(album)
     }
@@ -101,9 +103,9 @@ class AlbumServiceImpl(
         val album = albumRepository.findByIdOrNull(albumId) ?: throw CustomException(ErrorCode.ALBUM_NOT_FOUND)
         val user = userSecurity.user
 
-        if (album.likes.any { it.id == user.id }) throw CustomException(ErrorCode.ALBUM_LIKE_ALREADY_EXISTS)
+        if (album.likes.any { it.user.id == user.id }) throw CustomException(ErrorCode.ALBUM_LIKE_ALREADY_EXISTS)
 
-        album.likes.add(user)
+        album.likes.add(AlbumLikeEntity(user = user, album = album))
 
         return albumRepository.save(album).toResponse()
     }
@@ -113,9 +115,9 @@ class AlbumServiceImpl(
         val album = albumRepository.findByIdOrNull(albumId) ?: throw CustomException(ErrorCode.ALBUM_NOT_FOUND)
         val user = userSecurity.user
 
-        if (album.likes.none { it.id == user.id }) throw CustomException(ErrorCode.ALBUM_LIKE_NOT_FOUND)
+        if (album.likes.none { it.user.id == user.id }) throw CustomException(ErrorCode.ALBUM_LIKE_NOT_FOUND)
 
-        album.likes.removeIf { it.id == user.id }
+        album.likes.removeIf { it.user.id == user.id }
 
         return albumRepository.save(album).toResponse()
     }
