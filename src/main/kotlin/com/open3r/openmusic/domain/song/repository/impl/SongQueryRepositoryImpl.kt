@@ -6,6 +6,7 @@ import com.open3r.openmusic.domain.song.domain.entity.SongEntity
 import com.open3r.openmusic.domain.song.domain.enums.SongGenre
 import com.open3r.openmusic.domain.song.repository.SongQueryRepository
 import com.open3r.openmusic.global.util.orderBy
+import com.open3r.openmusic.global.util.paginate
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.data.domain.*
 import org.springframework.stereotype.Repository
@@ -39,8 +40,7 @@ class SongQueryRepositoryImpl(
     override fun getGenreSongs(genre: SongGenre, pageable: Pageable): Page<SongEntity> {
         val songs = jpaQueryFactory.selectFrom(songEntity)
             .where(songEntity.scope.eq(AlbumScope.PUBLIC), songEntity.genre.eq(genre))
-            .offset(pageable.offset)
-            .limit(pageable.pageSize.toLong())
+            .paginate(pageable)
             .orderBy(pageable.sort)
             .fetch()
 
@@ -50,12 +50,24 @@ class SongQueryRepositoryImpl(
     override fun getSongsByGenreIn(genres: List<SongGenre>, pageable: Pageable): Page<SongEntity> {
         val songs = jpaQueryFactory.selectFrom(songEntity)
             .where(songEntity.scope.eq(AlbumScope.PUBLIC), songEntity.genre.`in`(genres))
-            .offset(pageable.offset)
-            .limit(pageable.pageSize.toLong())
+            .paginate(pageable)
             .fetch()
             .shuffled()
 
         return PageImpl(songs, pageable, songs.size.toLong())
+    }
+
+    override fun searchSongs(query: String, pageable: Pageable): Slice<SongEntity> {
+        val songs = jpaQueryFactory.selectFrom(songEntity)
+            .where(
+                songEntity.scope.eq(AlbumScope.PUBLIC),
+                songEntity.title.containsIgnoreCase(query).or(songEntity.artist.nickname.containsIgnoreCase(query))
+            )
+            .paginate(pageable)
+            .orderBy(pageable.sort)
+            .fetch()
+
+        return SliceImpl(songs, pageable, true)
     }
 }
 

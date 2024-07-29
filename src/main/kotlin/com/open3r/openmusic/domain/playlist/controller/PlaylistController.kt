@@ -31,8 +31,8 @@ class PlaylistController(
 
     @Operation(summary = "플레이리스트 검색")
     @GetMapping("/search")
-    fun searchPlaylist(@RequestParam query: String) =
-        BaseResponse(playlistService.searchPlaylist(query), 200).toEntity()
+    fun searchPlaylist(@RequestParam query: String, @PageableDefault pageable: Pageable) =
+        BaseResponse(playlistService.searchPlaylists(query, pageable), 200).toEntity()
 
     @Operation(summary = "플레이리스트 생성")
     @PostMapping

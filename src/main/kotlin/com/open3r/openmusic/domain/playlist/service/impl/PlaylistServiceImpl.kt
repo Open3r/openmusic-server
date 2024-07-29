@@ -16,6 +16,7 @@ import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Slice
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -41,8 +42,8 @@ class PlaylistServiceImpl(
     }
 
     @Transactional(readOnly = true)
-    override fun searchPlaylist(query: String): List<PlaylistResponse> {
-        return playlistRepository.findAllByTitleContainingIgnoreCase(query).map { it.toResponse() }
+    override fun searchPlaylists(query: String, pageable: Pageable): Slice<PlaylistResponse> {
+        return playlistQueryRepository.searchPlaylists(query, pageable).map { it.toResponse() }
     }
 
     @Transactional

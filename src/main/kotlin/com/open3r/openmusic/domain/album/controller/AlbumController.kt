@@ -29,7 +29,7 @@ class AlbumController(
     @Operation(summary = "앨범 검색")
     @GetMapping("/search")
     fun searchAlbum(@RequestParam query: String, @PageableDefault pageable: Pageable) =
-        BaseResponse(albumService.searchAlbum(query, pageable), 200).toEntity()
+        BaseResponse(albumService.searchAlbums(query, pageable), 200).toEntity()
 
     @Operation(summary = "앨범 생성")
     @PostMapping

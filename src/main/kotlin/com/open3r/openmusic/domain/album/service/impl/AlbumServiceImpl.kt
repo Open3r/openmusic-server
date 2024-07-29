@@ -33,7 +33,7 @@ class AlbumServiceImpl(
     }
 
     @Transactional(readOnly = true)
-    override fun searchAlbum(query: String, pageable: Pageable): Page<AlbumResponse> {
+    override fun searchAlbums(query: String, pageable: Pageable): Page<AlbumResponse> {
         return albumQueryRepository.searchAlbums(query, pageable).map { it.toResponse() }
     }
 

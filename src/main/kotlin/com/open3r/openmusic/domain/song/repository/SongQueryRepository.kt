@@ -11,4 +11,5 @@ interface SongQueryRepository {
     fun getRankingSongs(pageable: Pageable): Slice<SongEntity>
     fun getGenreSongs(genre: SongGenre, pageable: Pageable): Page<SongEntity>
     fun getSongsByGenreIn(genres: List<SongGenre>, pageable: Pageable): Page<SongEntity>
+    fun searchSongs(query: String, pageable: Pageable): Slice<SongEntity>
 }

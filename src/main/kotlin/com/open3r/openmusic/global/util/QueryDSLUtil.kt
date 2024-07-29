@@ -5,6 +5,7 @@ import com.querydsl.core.types.Order
 import com.querydsl.core.types.OrderSpecifier
 import com.querydsl.core.types.dsl.PathBuilder
 import com.querydsl.jpa.impl.JPAQuery
+import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 
 inline fun <reified T> JPAQuery<T>.orderBy(sort: Sort): JPAQuery<T> {
@@ -20,4 +21,9 @@ inline fun <reified T> JPAQuery<T>.orderBy(sort: Sort): JPAQuery<T> {
     }
 
     return this
+}
+
+fun <T> JPAQuery<T>.paginate(pageable: Pageable): JPAQuery<T> = apply {
+    offset(pageable.offset)
+    limit(pageable.pageSize.toLong())
 }

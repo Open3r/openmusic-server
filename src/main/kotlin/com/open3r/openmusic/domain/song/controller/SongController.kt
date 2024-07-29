@@ -38,7 +38,8 @@ class SongController(
 
     @Operation(summary = "음악 검색")
     @GetMapping("/search")
-    fun searchSong(@RequestParam query: String) = BaseResponse(songService.searchSong(query), 200).toEntity()
+    fun searchSongs(@RequestParam query: String, @PageableDefault pageable: Pageable) =
+        BaseResponse(songService.searchSongs(query, pageable), 200).toEntity()
 
     @Operation(summary = "음악 수정")
     @PatchMapping("/{songId}")

@@ -56,8 +56,8 @@ class SongServiceImpl(
     }
 
     @Transactional(readOnly = true)
-    override fun searchSong(query: String): List<SongResponse> {
-        return songRepository.findAllByTitleContainingIgnoreCase(query).map { it.toResponse() }
+    override fun searchSongs(query: String, pageable: Pageable): Slice<SongResponse> {
+        return songQueryRepository.searchSongs(query, pageable).map { it.toResponse() }
     }
 
     @Transactional

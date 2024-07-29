@@ -7,7 +7,6 @@ import com.open3r.openmusic.domain.playlist.repository.PlaylistRepository
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
 import com.open3r.openmusic.domain.song.repository.SongQueryRepository
 import com.open3r.openmusic.domain.song.repository.SongRepository
-import com.open3r.openmusic.domain.song.repository.impl.SongQueryRepositoryImpl
 import com.open3r.openmusic.domain.user.domain.enums.UserRole
 import com.open3r.openmusic.domain.user.dto.request.UserAddGenreRequest
 import com.open3r.openmusic.domain.user.dto.request.UserRemoveGenreRequest
