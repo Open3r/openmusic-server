@@ -58,5 +58,5 @@ class AlbumController(
     @DeleteMapping("/{albumId}/likes")
     @PreAuthorize("isAuthenticated()")
     fun removeAlbumLike(@PathVariable albumId: Long) =
-        BaseResponse(albumService.removeLikeFromAlbum(albumId), 204).toEntity()
+        BaseResponse(albumService.removeLikeFromAlbum(albumId), 200).toEntity()
 }

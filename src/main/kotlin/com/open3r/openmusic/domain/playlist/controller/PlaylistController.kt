@@ -62,7 +62,7 @@ class PlaylistController(
     @DeleteMapping("/{playlistId}/songs/{songId}")
     @PreAuthorize("isAuthenticated()")
     fun deletePlaylistSong(@PathVariable playlistId: Long, @PathVariable songId: Long) =
-        BaseResponse(playlistService.removeSongFromPlaylist(playlistId, songId), 204).toEntity()
+        BaseResponse(playlistService.removeSongFromPlaylist(playlistId, songId), 200).toEntity()
 
     @Operation(summary = "플레이리스트 좋아요 추가")
     @PostMapping("/{playlistId}/likes")
@@ -74,5 +74,5 @@ class PlaylistController(
     @DeleteMapping("/{playlistId}/likes")
     @PreAuthorize("isAuthenticated()")
     fun deletePlaylistLike(@PathVariable playlistId: Long) =
-        BaseResponse(playlistService.removeLikeFromPlaylist(playlistId), 204).toEntity()
+        BaseResponse(playlistService.removeLikeFromPlaylist(playlistId), 200).toEntity()
 }
