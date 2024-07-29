@@ -19,7 +19,7 @@ class SongController(
 ) {
     @Operation(summary = "음악 목록 조회 (공개)")
     @GetMapping
-    fun getSongs(@PageableDefault(sort = ["createdAt desc"]) pageable: Pageable) =
+    fun getSongs(@PageableDefault(sort = ["createdAt"]) pageable: Pageable) =
         BaseResponse(songService.getSongs(pageable), 200).toEntity()
 
     @Operation(summary = "음악 목록 조회 (장르 별)")
