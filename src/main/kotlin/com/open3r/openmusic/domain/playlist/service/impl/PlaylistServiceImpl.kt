@@ -1,9 +1,7 @@
 package com.open3r.openmusic.domain.playlist.service.impl
 
 import com.open3r.openmusic.domain.playlist.domain.entity.PlaylistEntity
-import com.open3r.openmusic.domain.playlist.dto.request.PlaylistAddSongRequest
 import com.open3r.openmusic.domain.playlist.dto.request.PlaylistCreateRequest
-import com.open3r.openmusic.domain.playlist.dto.request.PlaylistRemoveSongRequest
 import com.open3r.openmusic.domain.playlist.dto.request.PlaylistUpdateRequest
 import com.open3r.openmusic.domain.playlist.dto.response.PlaylistResponse
 import com.open3r.openmusic.domain.playlist.repository.PlaylistQueryRepository
@@ -80,8 +78,7 @@ class PlaylistServiceImpl(
     }
 
     @Transactional
-    override fun addSongToPlaylist(playlistId: Long, request: PlaylistAddSongRequest) {
-        val songId = request.songId
+    override fun addSongToPlaylist(playlistId: Long, songId: Long) {
         val playlist =
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
         val user = userSecurity.user
@@ -95,8 +92,7 @@ class PlaylistServiceImpl(
     }
 
     @Transactional
-    override fun removeSongToPlaylist(playlistId: Long, request: PlaylistRemoveSongRequest) {
-        val songId = request.songId
+    override fun removeSongToPlaylist(playlistId: Long, songId: Long) {
         val playlist =
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
         val user = userSecurity.user

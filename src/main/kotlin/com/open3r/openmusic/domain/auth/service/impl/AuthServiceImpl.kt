@@ -23,7 +23,6 @@ import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.UnsupportedJwtException
 import io.jsonwebtoken.security.SecurityException
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -32,13 +31,13 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class AuthServiceImpl(
-    private val authenticationManagerBuilder: AuthenticationManagerBuilder,
     private val jwtProvider: JwtProvider,
+    private val userSecurity: UserSecurity,
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val refreshTokenRepository: RefreshTokenRepository,
-    private val userSecurity: UserSecurity,
     private val emailCodeRepository: EmailCodeRepository,
+    private val refreshTokenRepository: RefreshTokenRepository,
+    private val authenticationManagerBuilder: AuthenticationManagerBuilder,
 ) : AuthService {
     @Transactional
     override fun signup(request: AuthSignUpRequest) {

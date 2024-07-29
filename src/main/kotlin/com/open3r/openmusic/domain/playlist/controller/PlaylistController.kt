@@ -2,7 +2,6 @@ package com.open3r.openmusic.domain.playlist.controller
 
 import com.open3r.openmusic.domain.playlist.dto.request.PlaylistAddSongRequest
 import com.open3r.openmusic.domain.playlist.dto.request.PlaylistCreateRequest
-import com.open3r.openmusic.domain.playlist.dto.request.PlaylistRemoveSongRequest
 import com.open3r.openmusic.domain.playlist.dto.request.PlaylistUpdateRequest
 import com.open3r.openmusic.domain.playlist.service.PlaylistService
 import com.open3r.openmusic.global.common.dto.response.BaseResponse
@@ -57,13 +56,13 @@ class PlaylistController(
     @PostMapping("/{playlistId}/songs")
     @PreAuthorize("isAuthenticated()")
     fun createPlaylistSong(@PathVariable playlistId: Long, @RequestBody request: PlaylistAddSongRequest) =
-        BaseResponse(playlistService.addSongToPlaylist(playlistId, request), 201).toEntity()
+        BaseResponse(playlistService.addSongToPlaylist(playlistId, request.songId), 201).toEntity()
 
     @Operation(summary = "플레이리스트 음악 삭제")
-    @DeleteMapping("/{playlistId}/songs")
+    @DeleteMapping("/{playlistId}/songs/{songId}")
     @PreAuthorize("isAuthenticated()")
-    fun deletePlaylistSong(@PathVariable playlistId: Long, @RequestBody request: PlaylistRemoveSongRequest) =
-        BaseResponse(playlistService.removeSongToPlaylist(playlistId, request), 204).toEntity()
+    fun deletePlaylistSong(@PathVariable playlistId: Long, @PathVariable songId: Long) =
+        BaseResponse(playlistService.removeSongToPlaylist(playlistId, songId), 204).toEntity()
 
     @Operation(summary = "플레이리스트 좋아요 추가")
     @PostMapping("/{playlistId}/likes")

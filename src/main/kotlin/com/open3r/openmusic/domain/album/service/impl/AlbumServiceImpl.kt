@@ -20,17 +20,19 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class AlbumServiceImpl(
-    private val albumQueryRepository: AlbumQueryRepository,
-    private val albumRepository: AlbumRepository,
+    private val userSecurity: UserSecurity,
     private val songRepository: SongRepository,
-    private val userSecurity: UserSecurity
+    private val albumRepository: AlbumRepository,
+    private val albumQueryRepository: AlbumQueryRepository
 ) : AlbumService {
     @Transactional(readOnly = true)
     override fun getAlbums(pageable: Pageable): Page<AlbumResponse> {
-        val albums = albumQueryRepository.getAlbums(pageable)
-        val user = userSecurity.user
+        return albumQueryRepository.getAlbums(pageable).map { it.toResponse() }
+    }
 
-        return albums.map { AlbumResponse.of(it, user) }
+    @Transactional(readOnly = true)
+    override fun searchAlbum(query: String, pageable: Pageable): Page<AlbumResponse> {
+        return albumQueryRepository.searchAlbums(query, pageable).map { it.toResponse() }
     }
 
     @Transactional(readOnly = true)
@@ -38,11 +40,6 @@ class AlbumServiceImpl(
         val album = albumRepository.findByIdOrNull(albumId) ?: throw CustomException(ErrorCode.ALBUM_NOT_FOUND)
 
         return album.toResponse()
-    }
-
-    @Transactional(readOnly = true)
-    override fun searchAlbum(query: String): List<AlbumResponse> {
-        return albumRepository.findAllByTitleContainingIgnoreCase(query).map { it.toResponse() }
     }
 
     @Transactional
@@ -128,5 +125,4 @@ class AlbumServiceImpl(
     } else {
         AlbumResponse.of(this)
     }
-
 }

@@ -14,6 +14,17 @@ import org.springframework.stereotype.Repository
 class AlbumQueryRepositoryImpl(
     private val jpaQueryFactory: JPAQueryFactory
 ) : AlbumQueryRepository {
+    override fun searchAlbums(query: String, pageable: Pageable): Page<AlbumEntity> {
+        val albums = jpaQueryFactory.selectFrom(albumEntity)
+            .where(albumEntity.title.containsIgnoreCase(query), albumEntity.scope.eq(AlbumScope.PUBLIC))
+            .offset(pageable.offset)
+            .limit(pageable.pageSize.toLong())
+            .orderBy()
+            .fetch()
+
+        return PageImpl(albums, pageable, albums.size.toLong())
+    }
+
     override fun getAlbums(pageable: Pageable): Page<AlbumEntity> {
         val albums = jpaQueryFactory.selectFrom(albumEntity)
             .where(albumEntity.scope.eq(AlbumScope.PUBLIC))

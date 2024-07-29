@@ -8,8 +8,8 @@ import org.springframework.data.domain.Pageable
 
 interface AlbumService {
     fun getAlbums(pageable: Pageable): Page<AlbumResponse>
+    fun searchAlbum(query: String, pageable: Pageable): Page<AlbumResponse>
     fun getAlbum(albumId: Long): AlbumResponse
-    fun searchAlbum(query: String): List<AlbumResponse>
     fun createAlbum(request: AlbumCreateRequest)
     fun updateAlbum(albumId: Long, request: AlbumUpdateRequest)
     fun deleteAlbum(albumId: Long)

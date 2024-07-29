@@ -5,5 +5,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
 interface AlbumQueryRepository {
+    fun searchAlbums(query: String, pageable: Pageable): Page<AlbumEntity>
     fun getAlbums(pageable: Pageable): Page<AlbumEntity>
 }
