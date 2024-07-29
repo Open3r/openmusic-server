@@ -25,6 +25,7 @@ interface UserService {
     fun getMyAlbums(pageable: Pageable): Page<AlbumResponse>
     fun getMySongs(pageable: Pageable): Page<SongResponse>
     fun getMyPlaylists(pageable: Pageable): Page<PlaylistResponse>
+    fun getMyRecommendations(pageable: Pageable): Page<SongResponse>
 
     fun getUserAlbums(userId: Long): List<AlbumResponse>
     fun getUserSongs(userId: Long): List<SongResponse>

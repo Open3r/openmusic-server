@@ -5,7 +5,9 @@ import com.open3r.openmusic.domain.album.repository.AlbumRepository
 import com.open3r.openmusic.domain.playlist.dto.response.PlaylistResponse
 import com.open3r.openmusic.domain.playlist.repository.PlaylistRepository
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
+import com.open3r.openmusic.domain.song.repository.SongQueryRepository
 import com.open3r.openmusic.domain.song.repository.SongRepository
+import com.open3r.openmusic.domain.song.repository.impl.SongQueryRepositoryImpl
 import com.open3r.openmusic.domain.user.domain.enums.UserRole
 import com.open3r.openmusic.domain.user.dto.request.UserAddGenreRequest
 import com.open3r.openmusic.domain.user.dto.request.UserRemoveGenreRequest
@@ -30,7 +32,8 @@ class UserServiceImpl(
     private val passwordEncoder: PasswordEncoder,
     private val albumRepository: AlbumRepository,
     private val playlistRepository: PlaylistRepository,
-    private val songRepository: SongRepository
+    private val songRepository: SongRepository,
+    private val songQueryRepository: SongQueryRepository
 ) : UserService {
     @Transactional(readOnly = true)
     override fun getUsers(): List<UserResponse> {
@@ -133,6 +136,14 @@ class UserServiceImpl(
         val playlists = playlistRepository.findAllByArtist(user, pageable)
 
         return playlists.map { PlaylistResponse.of(it, user) }
+    }
+
+    @Transactional(readOnly = true)
+    override fun getMyRecommendations(pageable: Pageable): Page<SongResponse> {
+        val user = userSecurity.user
+        val songs = songQueryRepository.getSongsByGenreIn(user.genres.toList(), pageable)
+
+        return songs.map { SongResponse.of(it, user) }
     }
 
     @Transactional(readOnly = true)

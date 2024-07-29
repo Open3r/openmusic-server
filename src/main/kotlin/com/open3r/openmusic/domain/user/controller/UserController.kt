@@ -50,6 +50,12 @@ class UserController(
     fun getMyPlaylists(@PageableDefault pageable: Pageable) =
         BaseResponse(userService.getMyPlaylists(pageable), 200).toEntity()
 
+    @Operation(summary = "내 추천 노래 조회")
+    @GetMapping("/me/recommendations")
+    @PreAuthorize("isAuthenticated()")
+    fun getMyRecommendations(@PageableDefault pageable: Pageable) =
+        BaseResponse(userService.getMyRecommendations(pageable), 200).toEntity()
+
     @Operation(summary = "유저 장르 추가")
     @PostMapping("/me/genres")
     @PreAuthorize("isAuthenticated()")

@@ -46,5 +46,16 @@ class SongQueryRepositoryImpl(
 
         return PageImpl(songs, pageable, songs.size.toLong())
     }
+
+    override fun getSongsByGenreIn(genres: List<SongGenre>, pageable: Pageable): Page<SongEntity> {
+        val songs = jpaQueryFactory.selectFrom(songEntity)
+            .where(songEntity.scope.eq(AlbumScope.PUBLIC), songEntity.genre.`in`(genres))
+            .offset(pageable.offset)
+            .limit(pageable.pageSize.toLong())
+            .fetch()
+            .shuffled()
+
+        return PageImpl(songs, pageable, songs.size.toLong())
+    }
 }
 
