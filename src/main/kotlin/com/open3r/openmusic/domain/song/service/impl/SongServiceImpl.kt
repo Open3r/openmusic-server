@@ -95,7 +95,7 @@ class SongServiceImpl(
     }
 
     @Transactional
-    override fun removeLikeFromSong(songId: Long): SongResponse {
+    override fun removeLikeFromSAlbum(songId: Long): SongResponse {
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
         val user = userSecurity.user
 
