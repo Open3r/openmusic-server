@@ -24,7 +24,7 @@ data class SongResponse(
             title = song.title,
             url = song.url,
 //            likes = song.likes.map { it.id!! },
-            liked = user?.let { song.likes.any { it.id == user.id } } ?: false,
+            liked = user?.let { song.likes.any { it.user.id == user.id } } ?: false,
             likeCount = song.likes.size.toLong(),
             genre = song.genre,
             scope = song.scope,

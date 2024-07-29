@@ -24,7 +24,7 @@ data class AlbumResponse(
             title = album.title,
             description = album.description,
             coverUrl = album.coverUrl,
-            liked = user?.let { album.likes.any { it.id == user.id } } ?: false,
+            liked = user?.let { album.likes.any { it.user.id == user.id } } ?: false,
             likeCount = album.likes.size.toLong(),
             songs = album.songs.map { SongResponse.of(it.song, user = user) },
             artist = UserResponse.of(album.artist),
