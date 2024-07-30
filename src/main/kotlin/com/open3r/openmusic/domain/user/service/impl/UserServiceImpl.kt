@@ -7,6 +7,7 @@ import com.open3r.openmusic.domain.playlist.repository.PlaylistRepository
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
 import com.open3r.openmusic.domain.song.repository.SongQueryRepository
 import com.open3r.openmusic.domain.song.repository.SongRepository
+import com.open3r.openmusic.domain.user.domain.entity.UserEntity
 import com.open3r.openmusic.domain.user.domain.entity.UserNowPlayingEntity
 import com.open3r.openmusic.domain.user.domain.entity.UserQueueEntity
 import com.open3r.openmusic.domain.user.domain.enums.UserRole
@@ -21,6 +22,8 @@ import com.open3r.openmusic.domain.user.service.UserService
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
+import jakarta.persistence.EntityManager
+import jakarta.persistence.PersistenceContext
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -39,6 +42,9 @@ class UserServiceImpl(
     private val songRepository: SongRepository,
     private val songQueryRepository: SongQueryRepository
 ) : UserService {
+    @PersistenceContext
+    private lateinit var entityManager: EntityManager
+
     @Transactional(readOnly = true)
     override fun getUsers(): List<UserResponse> {
         val users = userRepository.findAll()
@@ -150,35 +156,59 @@ class UserServiceImpl(
         return songs.map { SongResponse.of(it, user) }
     }
 
+    @Transactional
     override fun copyQueueFromPlaylist(playlistId: Long) {
         val user = userSecurity.user
         val playlist =
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
 
         user.queue.clear()
-        user.queue.addAll(playlist.songs.map { UserQueueEntity(song = it.song, user = user) })
+
+        val songs = playlist.songs.map { UserQueueEntity(song = it.song, user = user) }
+
+        saveChunked(songs, user)
 
         userRepository.save(user)
     }
 
+    @Transactional
     override fun copyQueueFromAlbum(albumId: Long) {
         val user = userSecurity.user
         val album = albumRepository.findByIdOrNull(albumId) ?: throw CustomException(ErrorCode.ALBUM_NOT_FOUND)
 
         user.queue.clear()
-        user.queue.addAll(album.songs.map { UserQueueEntity(song = it.song, user = user) })
+
+        val songs = album.songs.map { UserQueueEntity(song = it.song, user = user) }
+
+        saveChunked(songs, user)
 
         userRepository.save(user)
     }
 
+    @Transactional
     override fun copyQueueFromRanking() {
         val user = userSecurity.user
-        val ranking = songQueryRepository.getRankingSongs(PageRequest.of(0, 100))
+        val ranking = songQueryRepository.getRankingSongs(PageRequest.of(0, 100)).content
 
         user.queue.clear()
-        user.queue.addAll(ranking.map { UserQueueEntity(song = it, user = user) })
+
+        val songs = ranking.map { UserQueueEntity(song = it, user = user) }
+
+        saveChunked(songs, user)
 
         userRepository.save(user)
+    }
+
+    private fun saveChunked(entities: List<UserQueueEntity>, user: UserEntity) {
+        val chunks = entities.chunked(20)
+
+        chunks.forEach {
+            user.queue.addAll(it)
+            userRepository.save(user)
+
+            entityManager.flush()
+            entityManager.clear()
+        }
     }
 
     @Transactional
