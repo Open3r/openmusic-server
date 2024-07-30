@@ -24,10 +24,10 @@ class PlaylistEntity(
     @Column(name = "scope", nullable = false)
     var scope: PlaylistScope,
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "playlist")
     val songs: MutableList<PlaylistSongEntity> = mutableListOf(),
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "playlist")
     val likes: MutableList<PlaylistLikeEntity> = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)

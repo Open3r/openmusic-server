@@ -15,7 +15,6 @@ enum class ErrorCode(
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "Invalid input value"),
 
     // Jwt
-    INVALID_GOOGLE_CODE(HttpStatus.BAD_REQUEST, "Invalid google code"),
     EXPIRED_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "Expired access token"),
     INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid access token"),
     UNSUPPORTED_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "Unsupported access token"),
@@ -28,7 +27,6 @@ enum class ErrorCode(
     INVALID_EMAIL(HttpStatus.BAD_REQUEST, "Invalid email"),
     INVALID_EMAIL_CODE(HttpStatus.BAD_REQUEST, "Invalid email code"),
     EMAIL_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "Email code not found"),
-
 
     // Album
     ALBUM_NOT_FOUND(HttpStatus.NOT_FOUND, "Album not found"),
@@ -47,6 +45,7 @@ enum class ErrorCode(
     PLAYLIST_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "Playlist like not found"),
 
     // Song
+    SONG_NOT_PLAYING(HttpStatus.BAD_REQUEST, "Song is not playing"),
     SONG_NOT_FOUND(HttpStatus.NOT_FOUND, "Song not found"),
     SONG_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "Song is not deletable"),
     SONG_LIKE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "Song like already exists"),
@@ -60,6 +59,7 @@ enum class ErrorCode(
     USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "User already exists"),
     USER_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "User is not deletable"),
     USER_PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "User password not match"),
+    USER_QUEUE_NOT_FOUND(HttpStatus.NOT_FOUND, "User queue not found"),
 
     // Else
     MAX_UPLOAD_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "Max upload size exceeded")

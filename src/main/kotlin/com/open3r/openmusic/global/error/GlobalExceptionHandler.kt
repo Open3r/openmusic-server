@@ -1,6 +1,6 @@
 package com.open3r.openmusic.global.error
 
-import com.open3r.openmusic.global.properties.DiscordProperties
+import com.open3r.openmusic.global.config.discord.DiscordProperties
 import com.open3r.openmusic.global.util.DiscordUtil
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.UnsupportedJwtException

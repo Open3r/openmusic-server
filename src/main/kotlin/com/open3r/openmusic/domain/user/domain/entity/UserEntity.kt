@@ -41,6 +41,15 @@ class UserEntity(
     @Column(name = "status", nullable = false)
     var status: UserStatus = UserStatus.ACTIVE,
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    val queue: MutableList<UserQueueEntity> = mutableListOf(),
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    val lastPlayed: MutableList<UserLastPlayedEntity> = mutableListOf(),
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var nowPlaying: UserNowPlayingEntity? = null,
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_genres", joinColumns = [JoinColumn(name = "user_id")])
     @Column(name = "genre", nullable = false)

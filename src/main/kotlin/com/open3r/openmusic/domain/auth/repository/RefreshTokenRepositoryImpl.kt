@@ -1,6 +1,6 @@
 package com.open3r.openmusic.domain.auth.repository
 
-import com.open3r.openmusic.global.security.jwt.JwtProperties
+import com.open3r.openmusic.global.security.jwt.config.JwtProperties
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Repository
 import java.util.concurrent.TimeUnit

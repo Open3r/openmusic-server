@@ -8,6 +8,9 @@ import com.open3r.openmusic.domain.song.dto.response.SongResponse
 import com.open3r.openmusic.domain.song.repository.SongQueryRepository
 import com.open3r.openmusic.domain.song.repository.SongRepository
 import com.open3r.openmusic.domain.song.service.SongService
+import com.open3r.openmusic.domain.user.domain.entity.UserLastPlayedEntity
+import com.open3r.openmusic.domain.user.domain.entity.UserNowPlayingEntity
+import com.open3r.openmusic.domain.user.domain.entity.UserQueueEntity
 import com.open3r.openmusic.domain.user.domain.enums.UserRole
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
@@ -53,6 +56,27 @@ class SongServiceImpl(
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
 
         return song.toResponse()
+    }
+
+    @Transactional
+    override fun playSong(songId: Long): SongResponse {
+        val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
+        val user = userSecurity.user
+
+        if (user.lastPlayed.any { it.song.id == song.id }) {
+            user.lastPlayed.removeIf { it.song.id == song.id }
+        }
+
+        if (user.lastPlayed.size >= 10) {
+            user.lastPlayed.last().also { user.lastPlayed.remove(it) }
+        }
+
+        user.lastPlayed.addFirst(UserLastPlayedEntity(song = song, user = user))
+        user.queue.add(UserQueueEntity(song = song, user = user))
+
+        user.nowPlaying = UserNowPlayingEntity(song = song, user = user, progress = 0)
+
+        return songRepository.save(song).toResponse()
     }
 
     @Transactional(readOnly = true)

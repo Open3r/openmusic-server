@@ -1,8 +1,6 @@
 package com.open3r.openmusic.domain.user.controller
 
-import com.open3r.openmusic.domain.user.dto.request.UserAddGenreRequest
-import com.open3r.openmusic.domain.user.dto.request.UserRemoveGenreRequest
-import com.open3r.openmusic.domain.user.dto.request.UserUpdateRequest
+import com.open3r.openmusic.domain.user.dto.request.*
 import com.open3r.openmusic.domain.user.service.UserService
 import com.open3r.openmusic.global.common.dto.response.BaseResponse
 import io.swagger.v3.oas.annotations.Operation
@@ -32,6 +30,17 @@ class UserController(
     @PatchMapping("/me")
     @PreAuthorize("isAuthenticated()")
     fun updateMe(@RequestBody request: UserUpdateRequest) = BaseResponse(userService.updateMe(request), 200).toEntity()
+
+    @Operation(summary = "현재 재생 중인 노래 조회")
+    @GetMapping("/me/now-playing")
+    @PreAuthorize("isAuthenticated()")
+    fun getMyNowPlaying() = BaseResponse(userService.getMyNowPlaying(), 200).toEntity()
+
+    @Operation(summary = "현재 재생 중인 노래 설정")
+    @PostMapping("/me/now-playing")
+    @PreAuthorize("isAuthenticated()")
+    fun setMyNowPlaying(@RequestBody request: UserSetNowPlayingRequest) =
+        BaseResponse(userService.setMyNowPlaying(request), 201).toEntity()
 
     @Operation(summary = "내 앨범 조회")
     @GetMapping("/me/albums")
@@ -67,6 +76,39 @@ class UserController(
     @PreAuthorize("isAuthenticated()")
     fun removeGenre(@RequestBody request: UserRemoveGenreRequest) =
         BaseResponse(userService.removeGenre(request), 204).toEntity()
+
+    @Operation(summary = "유저 큐 조회")
+    @GetMapping("/me/queue")
+    @PreAuthorize("isAuthenticated()")
+    fun getMyQueue() = BaseResponse(userService.getMyQueue(), 200).toEntity()
+
+    @Operation(summary = "플레이리스트로 큐 설정")
+    @PostMapping("/me/queue/playlist")
+    @PreAuthorize("isAuthenticated()")
+    fun setQueueFromPlaylist(@RequestBody request: UserSetQueueFromPlaylistRequest) =
+        BaseResponse(userService.setQueueFromPlaylist(request.playlistId), 201).toEntity()
+
+    @Operation(summary = "유저 큐 추가")
+    @PostMapping("/me/queue")
+    @PreAuthorize("isAuthenticated()")
+    fun addSongToQueue(@RequestBody request: UserAddQueueRequest) =
+        BaseResponse(userService.addSongToQueue(request.songId), 201).toEntity()
+
+    @Operation(summary = "유저 큐 삭제")
+    @DeleteMapping("/me/queue/{songId}")
+    @PreAuthorize("isAuthenticated()")
+    fun removeSongFromQueue(@PathVariable songId: Long) =
+        BaseResponse(userService.removeSongFromQueue(songId), 204).toEntity()
+
+    @Operation(summary = "유저 큐 전체 삭제")
+    @DeleteMapping("/me/queue")
+    @PreAuthorize("isAuthenticated()")
+    fun clearQueue() = BaseResponse(userService.clearQueue(), 204).toEntity()
+
+    @Operation(summary = "유저 최근 들은 노래 조회")
+    @GetMapping("/me/last-played")
+    @PreAuthorize("isAuthenticated()")
+    fun getMyLastPlayed() = BaseResponse(userService.getMyLastPlayed(), 200).toEntity()
 
     @Operation(summary = "유저 조회")
     @GetMapping("/{userId}")

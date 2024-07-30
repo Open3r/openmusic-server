@@ -4,7 +4,7 @@ import com.open3r.openmusic.domain.auth.dto.request.AuthLoginRequest
 import com.open3r.openmusic.domain.auth.dto.request.AuthReissueRequest
 import com.open3r.openmusic.domain.auth.dto.request.AuthSignOutRequest
 import com.open3r.openmusic.domain.auth.dto.request.AuthSignUpRequest
-import com.open3r.openmusic.global.security.jwt.Jwt
+import com.open3r.openmusic.global.security.jwt.dto.Jwt
 
 interface AuthService {
     fun signup(request: AuthSignUpRequest)

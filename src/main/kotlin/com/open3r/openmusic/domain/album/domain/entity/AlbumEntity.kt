@@ -30,10 +30,10 @@ class AlbumEntity(
     @Column(name = "genre", nullable = true)
     var genre: SongGenre,
 
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "album")
     val likes: MutableList<AlbumLikeEntity> = mutableListOf(),
 
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "album")
     val songs: MutableList<AlbumSongEntity> = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)

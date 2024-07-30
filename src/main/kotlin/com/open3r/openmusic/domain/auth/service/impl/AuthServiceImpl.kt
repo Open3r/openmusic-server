@@ -15,9 +15,9 @@ import com.open3r.openmusic.domain.user.repository.UserRepository
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
-import com.open3r.openmusic.global.security.jwt.Jwt
-import com.open3r.openmusic.global.security.jwt.JwtProvider
-import com.open3r.openmusic.global.security.jwt.JwtType
+import com.open3r.openmusic.global.security.jwt.dto.Jwt
+import com.open3r.openmusic.global.security.jwt.enums.JwtType
+import com.open3r.openmusic.global.security.jwt.provider.JwtProvider
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.UnsupportedJwtException

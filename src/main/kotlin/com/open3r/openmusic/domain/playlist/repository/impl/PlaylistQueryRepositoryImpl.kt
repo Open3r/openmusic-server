@@ -25,7 +25,8 @@ class PlaylistQueryRepositoryImpl(
 
     override fun searchPlaylists(query: String, pageable: Pageable): Slice<PlaylistEntity> {
         val playlists = jpaQueryFactory.selectFrom(playlistEntity)
-            .where(playlistEntity.scope.eq(PlaylistScope.PUBLIC),
+            .where(
+                playlistEntity.scope.eq(PlaylistScope.PUBLIC),
                 playlistEntity.title.containsIgnoreCase(query)
                     .or(playlistEntity.artist.nickname.containsIgnoreCase(query))
             )

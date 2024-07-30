@@ -13,6 +13,7 @@ interface SongService {
     fun getGenreSongs(genre: SongGenre, pageable: Pageable): Page<SongResponse>
     fun getMySongs(): List<SongResponse>
     fun getSong(songId: Long): SongResponse
+    fun playSong(songId: Long): SongResponse
     fun searchSongs(query: String, pageable: Pageable): Slice<SongResponse>
     fun updateSong(songId: Long, request: SongUpdateRequest)
     fun deleteSong(songId: Long)
