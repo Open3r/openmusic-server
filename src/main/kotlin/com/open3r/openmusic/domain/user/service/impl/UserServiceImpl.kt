@@ -22,6 +22,7 @@ import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -150,13 +151,35 @@ class UserServiceImpl(
     }
 
     @Transactional
-    override fun setQueueFromPlaylist(playlistId: Long) {
+    override fun copyQueueFromPlaylist(playlistId: Long) {
         val user = userSecurity.user
         val playlist =
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
 
         user.queue.clear()
         user.queue.addAll(playlist.songs.map { UserQueueEntity(song = it.song, user = user) })
+
+        userRepository.save(user)
+    }
+
+    @Transactional
+    override fun copyQueueFromAlbum(albumId: Long) {
+        val user = userSecurity.user
+        val album = albumRepository.findByIdOrNull(albumId) ?: throw CustomException(ErrorCode.ALBUM_NOT_FOUND)
+
+        user.queue.clear()
+        user.queue.addAll(album.songs.map { UserQueueEntity(song = it.song, user = user) })
+
+        userRepository.save(user)
+    }
+
+    @Transactional
+    override fun copyQueueFromRanking() {
+        val user = userSecurity.user
+        val ranking = songQueryRepository.getRankingSongs(PageRequest.of(0, 100))
+
+        user.queue.clear()
+        user.queue.addAll(ranking.map { UserQueueEntity(song = it, user = user) })
 
         userRepository.save(user)
     }

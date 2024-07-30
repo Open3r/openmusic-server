@@ -1,5 +1,5 @@
 package com.open3r.openmusic.domain.user.dto.request
 
-data class UserSetQueueFromPlaylistRequest(
+data class UserCopyQueueFromPlaylistRequest(
     val playlistId: Long
 )

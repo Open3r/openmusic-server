@@ -33,7 +33,9 @@ interface UserService {
     fun getMyRecommendations(pageable: Pageable): Page<SongResponse>
 
     fun getMyQueue(): List<SongResponse>
-    fun setQueueFromPlaylist(playlistId: Long)
+    fun copyQueueFromPlaylist(playlistId: Long)
+    fun copyQueueFromAlbum(albumId: Long)
+    fun copyQueueFromRanking()
     fun addSongToQueue(songId: Long)
     fun removeSongFromQueue(songId: Long)
     fun clearQueue()

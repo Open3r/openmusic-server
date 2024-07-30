@@ -85,8 +85,20 @@ class UserController(
     @Operation(summary = "플레이리스트로 큐 설정")
     @PostMapping("/me/queue/playlist")
     @PreAuthorize("isAuthenticated()")
-    fun setQueueFromPlaylist(@RequestBody request: UserSetQueueFromPlaylistRequest) =
-        BaseResponse(userService.setQueueFromPlaylist(request.playlistId), 201).toEntity()
+    fun copyQueueFromPlaylist(@RequestBody request: UserCopyQueueFromPlaylistRequest) =
+        BaseResponse(userService.copyQueueFromPlaylist(request.playlistId), 201).toEntity()
+
+    @Operation(summary = "앨범으로 큐 설정")
+    @PostMapping("/me/queue/album")
+    @PreAuthorize("isAuthenticated()")
+    fun copyQueueFromAlbum(@RequestBody request: UserCopyQueueFromAlbumRequest) =
+        BaseResponse(userService.copyQueueFromAlbum(request.albumId), 201).toEntity()
+
+    @Operation(summary = "랭킹으로 큐 설정")
+    @PostMapping("/me/queue/ranking")
+    @PreAuthorize("isAuthenticated()")
+    fun copyQueueFromRanking() =
+        BaseResponse(userService.copyQueueFromRanking(), 201).toEntity()
 
     @Operation(summary = "유저 큐 추가")
     @PostMapping("/me/queue")
