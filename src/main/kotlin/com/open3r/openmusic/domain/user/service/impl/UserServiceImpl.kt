@@ -150,7 +150,6 @@ class UserServiceImpl(
         return songs.map { SongResponse.of(it, user) }
     }
 
-    @Transactional
     override fun copyQueueFromPlaylist(playlistId: Long) {
         val user = userSecurity.user
         val playlist =
@@ -162,7 +161,6 @@ class UserServiceImpl(
         userRepository.save(user)
     }
 
-    @Transactional
     override fun copyQueueFromAlbum(albumId: Long) {
         val user = userSecurity.user
         val album = albumRepository.findByIdOrNull(albumId) ?: throw CustomException(ErrorCode.ALBUM_NOT_FOUND)
@@ -173,7 +171,6 @@ class UserServiceImpl(
         userRepository.save(user)
     }
 
-    @Transactional
     override fun copyQueueFromRanking() {
         val user = userSecurity.user
         val ranking = songQueryRepository.getRankingSongs(PageRequest.of(0, 100))
