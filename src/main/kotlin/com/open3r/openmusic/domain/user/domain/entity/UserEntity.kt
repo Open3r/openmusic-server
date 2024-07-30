@@ -42,10 +42,10 @@ class UserEntity(
     var status: UserStatus = UserStatus.ACTIVE,
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val queue: MutableList<UserQueueEntity> = mutableListOf(),
+    val queue: MutableSet<UserQueueEntity> = mutableSetOf(),
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val lastPlayed: MutableList<UserLastPlayedEntity> = mutableListOf(),
+    val recents: MutableList<UserRecentEntity> = mutableListOf(),
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var nowPlaying: UserNowPlayingEntity? = null,

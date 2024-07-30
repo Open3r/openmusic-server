@@ -8,9 +8,9 @@ import com.open3r.openmusic.domain.song.dto.response.SongResponse
 import com.open3r.openmusic.domain.song.repository.SongQueryRepository
 import com.open3r.openmusic.domain.song.repository.SongRepository
 import com.open3r.openmusic.domain.song.service.SongService
-import com.open3r.openmusic.domain.user.domain.entity.UserLastPlayedEntity
 import com.open3r.openmusic.domain.user.domain.entity.UserNowPlayingEntity
 import com.open3r.openmusic.domain.user.domain.entity.UserQueueEntity
+import com.open3r.openmusic.domain.user.domain.entity.UserRecentEntity
 import com.open3r.openmusic.domain.user.domain.enums.UserRole
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
@@ -63,18 +63,23 @@ class SongServiceImpl(
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
         val user = userSecurity.user
 
-        if (user.lastPlayed.any { it.song.id == song.id }) {
-            user.lastPlayed.removeIf { it.song.id == song.id }
+        if (user.recents.any { it.song.id == song.id }) {
+            user.recents.removeIf { it.song.id == song.id }
         }
 
-        if (user.lastPlayed.size >= 10) {
-            user.lastPlayed.last().also { user.lastPlayed.remove(it) }
+        if (user.recents.size >= 10) {
+            user.recents.last().also { user.recents.remove(it) }
         }
 
-        user.lastPlayed.addFirst(UserLastPlayedEntity(song = song, user = user))
+        user.recents.addFirst(UserRecentEntity(song = song, user = user))
         user.queue.add(UserQueueEntity(song = song, user = user))
 
-        user.nowPlaying = UserNowPlayingEntity(song = song, user = user, progress = 0)
+        if (user.nowPlaying == null) {
+            user.nowPlaying = UserNowPlayingEntity(song = song, user = user, progress = 0)
+        } else {
+            user.nowPlaying!!.song = song
+            user.nowPlaying!!.progress = 0
+        }
 
         return songRepository.save(song).toResponse()
     }

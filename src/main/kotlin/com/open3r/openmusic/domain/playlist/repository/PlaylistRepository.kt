@@ -9,5 +9,4 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface PlaylistRepository : JpaRepository<PlaylistEntity, Long> {
     fun findAllByArtist(artist: UserEntity): List<PlaylistEntity>
     fun findAllByArtist(artist: UserEntity, pageable: Pageable): Page<PlaylistEntity>
-    fun findAllByTitleContainingIgnoreCase(title: String): List<PlaylistEntity>
 }

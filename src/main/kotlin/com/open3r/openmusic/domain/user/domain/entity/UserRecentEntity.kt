@@ -4,8 +4,8 @@ import com.open3r.openmusic.domain.song.domain.entity.SongEntity
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "user_latest_songs")
-class UserLastPlayedEntity(
+@Table(name = "user_recents")
+class UserRecentEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,

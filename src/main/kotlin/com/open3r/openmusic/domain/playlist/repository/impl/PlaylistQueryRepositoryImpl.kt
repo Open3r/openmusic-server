@@ -8,21 +8,29 @@ import com.open3r.openmusic.global.util.paginate
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.data.domain.*
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class PlaylistQueryRepositoryImpl(
     private val jpaQueryFactory: JPAQueryFactory
 ) : PlaylistQueryRepository {
+    @Transactional
     override fun getPlaylists(pageable: Pageable): Page<PlaylistEntity> {
+        val count = jpaQueryFactory.select(playlistEntity.count())
+            .from(playlistEntity)
+            .where(playlistEntity.scope.eq(PlaylistScope.PUBLIC))
+            .fetchOne() ?: 0
+
         val playlists = jpaQueryFactory.selectFrom(playlistEntity)
             .where(playlistEntity.scope.eq(PlaylistScope.PUBLIC))
-            .paginate(pageable)
             .orderBy(playlistEntity.createdAt.desc())
+            .paginate(pageable)
             .fetch()
 
-        return PageImpl(playlists, pageable, playlists.size.toLong())
+        return PageImpl(playlists, pageable, count)
     }
 
+    @Transactional
     override fun searchPlaylists(query: String, pageable: Pageable): Slice<PlaylistEntity> {
         val playlists = jpaQueryFactory.selectFrom(playlistEntity)
             .where(
@@ -30,8 +38,8 @@ class PlaylistQueryRepositoryImpl(
                 playlistEntity.title.containsIgnoreCase(query)
                     .or(playlistEntity.artist.nickname.containsIgnoreCase(query))
             )
-            .paginate(pageable)
             .orderBy(playlistEntity.createdAt.desc())
+            .paginate(pageable)
             .fetch()
 
         return SliceImpl(playlists, pageable, true)

@@ -7,7 +7,6 @@ import com.open3r.openmusic.domain.playlist.repository.PlaylistRepository
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
 import com.open3r.openmusic.domain.song.repository.SongQueryRepository
 import com.open3r.openmusic.domain.song.repository.SongRepository
-import com.open3r.openmusic.domain.user.domain.entity.UserEntity
 import com.open3r.openmusic.domain.user.domain.entity.UserNowPlayingEntity
 import com.open3r.openmusic.domain.user.domain.entity.UserQueueEntity
 import com.open3r.openmusic.domain.user.domain.enums.UserRole
@@ -22,8 +21,6 @@ import com.open3r.openmusic.domain.user.service.UserService
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
-import jakarta.persistence.EntityManager
-import jakarta.persistence.PersistenceContext
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -42,8 +39,6 @@ class UserServiceImpl(
     private val songRepository: SongRepository,
     private val songQueryRepository: SongQueryRepository
 ) : UserService {
-    @PersistenceContext
-    private lateinit var entityManager: EntityManager
 
     @Transactional(readOnly = true)
     override fun getUsers(): List<UserResponse> {
@@ -157,58 +152,34 @@ class UserServiceImpl(
     }
 
     @Transactional
-    override fun copyQueueFromPlaylist(playlistId: Long) {
+    override fun addPlaylistSongsToQueue(playlistId: Long) {
         val user = userSecurity.user
         val playlist =
             playlistRepository.findByIdOrNull(playlistId) ?: throw CustomException(ErrorCode.PLAYLIST_NOT_FOUND)
 
-        user.queue.clear()
-
-        val songs = playlist.songs.map { UserQueueEntity(song = it.song, user = user) }
-
-        saveChunked(songs, user)
+        user.queue.addAll(playlist.songs.map { UserQueueEntity(song = it.song, user = user) })
 
         userRepository.save(user)
     }
 
     @Transactional
-    override fun copyQueueFromAlbum(albumId: Long) {
+    override fun addAlbumSongsToQueue(albumId: Long) {
         val user = userSecurity.user
         val album = albumRepository.findByIdOrNull(albumId) ?: throw CustomException(ErrorCode.ALBUM_NOT_FOUND)
 
-        user.queue.clear()
-
-        val songs = album.songs.map { UserQueueEntity(song = it.song, user = user) }
-
-        saveChunked(songs, user)
+        user.queue.addAll(album.songs.map { UserQueueEntity(song = it.song, user = user) })
 
         userRepository.save(user)
     }
 
     @Transactional
-    override fun copyQueueFromRanking() {
+    override fun addRankingSongsToQueue() {
         val user = userSecurity.user
-        val ranking = songQueryRepository.getRankingSongs(PageRequest.of(0, 100)).content
+        val songs = songQueryRepository.getRankingSongs(PageRequest.of(0, 100)).content
 
-        user.queue.clear()
-
-        val songs = ranking.map { UserQueueEntity(song = it, user = user) }
-
-        saveChunked(songs, user)
+        user.queue.addAll(songs.map { UserQueueEntity(song = it, user = user) })
 
         userRepository.save(user)
-    }
-
-    private fun saveChunked(entities: List<UserQueueEntity>, user: UserEntity) {
-        val chunks = entities.chunked(20)
-
-        chunks.forEach {
-            user.queue.addAll(it)
-            userRepository.save(user)
-
-            entityManager.flush()
-            entityManager.clear()
-        }
     }
 
     @Transactional
@@ -254,15 +225,24 @@ class UserServiceImpl(
         val user = userSecurity.user
         val song = songRepository.findByIdOrNull(request.songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
 
-        user.nowPlaying = UserNowPlayingEntity(song = song, user = user, progress = request.progress)
+        println(user.nowPlaying.toString())
+
+        if (user.nowPlaying == null) {
+            user.nowPlaying = UserNowPlayingEntity(song = song, user = user, progress = request.progress)
+        } else {
+            user.nowPlaying!!.song = song
+            user.nowPlaying!!.progress = request.progress
+        }
+
+        userRepository.save(user)
 
         return SongResponse.of(song, user)
     }
 
     @Transactional(readOnly = true)
-    override fun getMyLastPlayed(): List<SongResponse> {
+    override fun getMyRecents(): List<SongResponse> {
         val user = userSecurity.user
-        val songs = user.lastPlayed.map { it.song }
+        val songs = user.recents.map { it.song }.reversed()
 
         return songs.map { SongResponse.of(it, user) }
     }

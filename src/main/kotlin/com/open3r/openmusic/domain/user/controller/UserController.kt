@@ -86,19 +86,19 @@ class UserController(
     @PostMapping("/me/queue/playlist")
     @PreAuthorize("isAuthenticated()")
     fun copyQueueFromPlaylist(@RequestBody request: UserCopyQueueFromPlaylistRequest) =
-        BaseResponse(userService.copyQueueFromPlaylist(request.playlistId), 201).toEntity()
+        BaseResponse(userService.addPlaylistSongsToQueue(request.playlistId), 201).toEntity()
 
     @Operation(summary = "앨범으로 큐 설정")
     @PostMapping("/me/queue/album")
     @PreAuthorize("isAuthenticated()")
     fun copyQueueFromAlbum(@RequestBody request: UserCopyQueueFromAlbumRequest) =
-        BaseResponse(userService.copyQueueFromAlbum(request.albumId), 201).toEntity()
+        BaseResponse(userService.addAlbumSongsToQueue(request.albumId), 201).toEntity()
 
     @Operation(summary = "랭킹으로 큐 설정")
     @PostMapping("/me/queue/ranking")
     @PreAuthorize("isAuthenticated()")
     fun copyQueueFromRanking() =
-        BaseResponse(userService.copyQueueFromRanking(), 201).toEntity()
+        BaseResponse(userService.addRankingSongsToQueue(), 201).toEntity()
 
     @Operation(summary = "유저 큐 추가")
     @PostMapping("/me/queue")
@@ -118,9 +118,9 @@ class UserController(
     fun clearQueue() = BaseResponse(userService.clearQueue(), 204).toEntity()
 
     @Operation(summary = "유저 최근 들은 노래 조회")
-    @GetMapping("/me/last-played")
+    @GetMapping("/me/recents")
     @PreAuthorize("isAuthenticated()")
-    fun getMyLastPlayed() = BaseResponse(userService.getMyLastPlayed(), 200).toEntity()
+    fun getMyRecents() = BaseResponse(userService.getMyRecents(), 200).toEntity()
 
     @Operation(summary = "유저 조회")
     @GetMapping("/{userId}")
