@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
+import kotlin.math.log
 
 @Service
 class AuthServiceImpl(
@@ -129,6 +130,9 @@ class AuthServiceImpl(
 
     @Transactional
     override fun googleLogin(code: String): Jwt {
+        logger().info("Google Login Start")
+        logger().info("Code: $code")
+
         val token = WebClient.create("https://oauth2.googleapis.com")
             .post()
             .uri("/token")
