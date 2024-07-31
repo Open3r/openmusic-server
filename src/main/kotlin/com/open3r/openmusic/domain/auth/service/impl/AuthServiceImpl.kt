@@ -142,7 +142,10 @@ class AuthServiceImpl(
             .retrieve()
             .onStatus({ it.is4xxClientError }) {
                 it.bodyToMono(String::class.java)
-                    .map { body -> CustomException(ErrorCode.INVALID_GOOGLE_TOKEN) }
+                    .map { body -> {
+                        println(body)
+                    }}
+                    .map { _ -> CustomException(ErrorCode.INVALID_GOOGLE_TOKEN) }
             }
             .bodyToMono(GoogleTokenResponse::class.java)
             .block()
