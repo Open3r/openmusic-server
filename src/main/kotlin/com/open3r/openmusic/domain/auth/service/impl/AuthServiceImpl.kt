@@ -147,9 +147,6 @@ class AuthServiceImpl(
             .retrieve()
             .onStatus({ it.is4xxClientError }) {
                 it.bodyToMono(String::class.java)
-                    .map { body -> {
-                        logger().info("Google Login Failed: $body")
-                    }}
                     .map { _ -> CustomException(ErrorCode.INVALID_GOOGLE_TOKEN) }
             }
             .bodyToMono(GoogleTokenResponse::class.java)
@@ -170,7 +167,7 @@ class AuthServiceImpl(
         if (info == null) {
             logger().info("Google Login Failed")
 
-            throw CustomException(ErrorCode.INVALID_GOOGLE_TOKEN)
+            throw CustomException(ErrorCode.INVALID_GOOGLE_ACCESS_TOKEN)
         }
 
         if (userRepository.existsByEmailAndProviderIsNot(info.email, UserProvider.GOOGLE)) throw CustomException(
