@@ -147,6 +147,9 @@ class AuthServiceImpl(
 
             .onRawStatus({ it == 400 }) {
                 logger().info("Login Failed: 400")
+                it.bodyToMono(String::class.java).map {
+                    logger().info("login Failed Message: $it")
+                }
                 throw CustomException(ErrorCode.INVALID_GOOGLE_CODE)
             }
             .onRawStatus({ it == 401 }) {
@@ -155,9 +158,6 @@ class AuthServiceImpl(
             }
             .onRawStatus({ it == 403 }) {
                 logger().info("Login Failed: 403")
-                it.bodyToMono(String::class.java).map {
-                    logger().info("login Failed Message: $it")
-                }
                 throw CustomException(ErrorCode.INVALID_GOOGLE_CODE)
             }
             .onRawStatus({ it == 404 }) {
