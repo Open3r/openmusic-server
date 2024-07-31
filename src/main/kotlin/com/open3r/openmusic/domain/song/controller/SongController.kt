@@ -32,6 +32,11 @@ class SongController(
     fun getRankingSongs(@PageableDefault pageable: Pageable) =
         BaseResponse(songService.getRankingSongs(pageable), 200).toEntity()
 
+    @Operation(summary = "음악 목록 조회 (최신)")
+    @GetMapping("/latest")
+    fun getLatestSongs(@PageableDefault pageable: Pageable) =
+        BaseResponse(songService.getLatestSongs(pageable), 200).toEntity()
+
     @Operation(summary = "음악 조회")
     @GetMapping("/{songId}")
     fun getSong(@PathVariable songId: Long) = BaseResponse(songService.getSong(songId), 200).toEntity()

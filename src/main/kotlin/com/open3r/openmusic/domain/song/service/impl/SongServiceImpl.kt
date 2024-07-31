@@ -47,6 +47,11 @@ class SongServiceImpl(
     }
 
     @Transactional(readOnly = true)
+    override fun getLatestSongs(pageable: Pageable): Slice<SongResponse> {
+        return songQueryRepository.getLatestSongs(pageable).map { it.toResponse() }
+    }
+
+    @Transactional(readOnly = true)
     override fun getMySongs(): List<SongResponse> {
         val user = userSecurity.user
         val songs = songRepository.findAllByArtist(user)
