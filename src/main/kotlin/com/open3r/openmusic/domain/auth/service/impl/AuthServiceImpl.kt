@@ -33,6 +33,8 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
+import reactor.core.publisher.Mono
+import reactor.core.scheduler.Schedulers
 
 @Service
 class AuthServiceImpl(
@@ -145,36 +147,16 @@ class AuthServiceImpl(
             )
             .retrieve()
 
-            .onRawStatus({ it == 400 }) {
-                logger().info("Login Failed: 400")
-                it.bodyToMono(String::class.java).map {
-                    logger().info("login Failed Message: $it")
-                }
-                throw CustomException(ErrorCode.INVALID_GOOGLE_CODE)
-            }
-            .onRawStatus({ it == 401 }) {
-                logger().info("Login Failed: 401")
-                throw CustomException(ErrorCode.INVALID_GOOGLE_CODE)
-            }
-            .onRawStatus({ it == 403 }) {
-                logger().info("Login Failed: 403")
-                throw CustomException(ErrorCode.INVALID_GOOGLE_CODE)
-            }
-            .onRawStatus({ it == 404 }) {
-                logger().info("Login Failed: 404")
-                throw CustomException(ErrorCode.INVALID_GOOGLE_CODE)
-            }
-            .onRawStatus({ it == 405 }) {
-                logger().info("Login Failed: 405")
-                throw CustomException(ErrorCode.INVALID_GOOGLE_CODE)
-            }
-            .onRawStatus({ it == 409 }) {
-                logger().info("Login Failed: 409")
-                throw CustomException(ErrorCode.INVALID_GOOGLE_CODE)
-            }
-            .onStatus({ it.is4xxClientError }) {
+            .onStatus({ it.isError }) {
+                logger().info("Status: ${it.statusCode().value()}")
+
                 it.bodyToMono(String::class.java)
-                    .map { _ -> CustomException(ErrorCode.INVALID_GOOGLE_CODE) }
+                    .publishOn(Schedulers.boundedElastic())
+                    .subscribe {
+                        logger().info("Response Body: $it")
+                    }
+
+                Mono.error(CustomException(ErrorCode.INVALID_GOOGLE_CODE))
             }
             .bodyToMono(GoogleTokenResponse::class.java)
             .block()
