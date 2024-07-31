@@ -21,6 +21,7 @@ import com.open3r.openmusic.global.security.UserSecurity
 import com.open3r.openmusic.global.security.jwt.dto.Jwt
 import com.open3r.openmusic.global.security.jwt.enums.JwtType
 import com.open3r.openmusic.global.security.jwt.provider.JwtProvider
+import com.open3r.openmusic.logger
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.UnsupportedJwtException
@@ -143,7 +144,7 @@ class AuthServiceImpl(
             .onStatus({ it.is4xxClientError }) {
                 it.bodyToMono(String::class.java)
                     .map { body -> {
-                        println(body)
+                        logger().info("Google Login Failed: $body")
                     }}
                     .map { _ -> CustomException(ErrorCode.INVALID_GOOGLE_TOKEN) }
             }
@@ -162,7 +163,11 @@ class AuthServiceImpl(
             .bodyToMono(GoogleUserInfoResponse::class.java)
             .block()
 
-        if (info == null) throw CustomException(ErrorCode.INVALID_GOOGLE_TOKEN)
+        if (info == null) {
+            logger().info("Google Login Failed")
+
+            throw CustomException(ErrorCode.INVALID_GOOGLE_TOKEN)
+        }
 
         if (userRepository.existsByEmailAndProviderIsNot(info.email, UserProvider.GOOGLE)) throw CustomException(
             ErrorCode.USER_ALREADY_EXISTS
