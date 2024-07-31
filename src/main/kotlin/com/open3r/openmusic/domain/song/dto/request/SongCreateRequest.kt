@@ -9,4 +9,5 @@ data class SongCreateRequest(
     @field:NotBlank
     @field:URL
     val url: String,
+    val lyrics: List<SongCreateLyricsRequest>? = null,
 )

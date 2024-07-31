@@ -11,7 +11,6 @@ enum class ErrorCode(
     NOT_FOUND(HttpStatus.NOT_FOUND, "Not found"),
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "Method not allowed"),
     FORBIDDEN(HttpStatus.FORBIDDEN, "Forbidden"),
-
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "Invalid input value"),
 
     // Jwt
@@ -27,6 +26,7 @@ enum class ErrorCode(
     INVALID_EMAIL(HttpStatus.BAD_REQUEST, "Invalid email"),
     INVALID_EMAIL_CODE(HttpStatus.BAD_REQUEST, "Invalid email code"),
     EMAIL_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "Email code not found"),
+    INVALID_GOOGLE_TOKEN(HttpStatus.BAD_REQUEST, "Invalid google token"),
 
     // Album
     ALBUM_NOT_FOUND(HttpStatus.NOT_FOUND, "Album not found"),
@@ -60,6 +60,7 @@ enum class ErrorCode(
     USER_NOT_DELETABLE(HttpStatus.BAD_REQUEST, "User is not deletable"),
     USER_PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "User password not match"),
     USER_QUEUE_NOT_FOUND(HttpStatus.NOT_FOUND, "User queue not found"),
+    USER_QUEUE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "User queue already exists"),
 
     // Else
     MAX_UPLOAD_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "Max upload size exceeded")

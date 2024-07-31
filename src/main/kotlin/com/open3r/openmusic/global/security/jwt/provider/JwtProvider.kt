@@ -1,5 +1,6 @@
 package com.open3r.openmusic.global.security.jwt.provider
 
+import com.open3r.openmusic.domain.user.domain.entity.UserEntity
 import com.open3r.openmusic.domain.user.repository.UserRepository
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
@@ -25,16 +26,14 @@ class JwtProvider(
 ) {
     private val key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.secretKey))
 
-    fun generateToken(authentication: Authentication): Jwt {
-        val authorities = authentication.authorities.joinToString("") { it.authority }
+    fun generateToken(user: UserEntity): Jwt {
         val now = Date()
         val accessExpiration = Date(now.time + jwtProperties.accessTokenExpiration)
         val refreshExpiration = Date(now.time + jwtProperties.refreshTokenExpiration)
 
         val accessToken = Jwts.builder()
             .setHeaderParam(Header.JWT_TYPE, JwtType.ACCESS)
-            .setSubject(authentication.name)
-            .claim("auth", authorities)
+            .setSubject(user.email)
             .setIssuedAt(now)
             .setExpiration(accessExpiration)
             .signWith(key, SignatureAlgorithm.HS256)
@@ -42,7 +41,7 @@ class JwtProvider(
 
         val refreshToken = Jwts.builder()
             .setHeaderParam(Header.JWT_TYPE, JwtType.REFRESH)
-            .setSubject(authentication.name)
+            .setSubject(user.email)
             .setIssuedAt(now)
             .setExpiration(refreshExpiration)
             .signWith(key, SignatureAlgorithm.HS256)

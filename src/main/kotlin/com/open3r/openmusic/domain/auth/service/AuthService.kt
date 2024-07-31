@@ -11,4 +11,5 @@ interface AuthService {
     fun login(request: AuthLoginRequest): Jwt
     fun reissue(request: AuthReissueRequest): Jwt
     fun signout(request: AuthSignOutRequest)
+    fun googleLogin(code: String): Jwt
 }

@@ -16,7 +16,9 @@ data class SongResponse(
     val likeCount: Long,
     val genre: SongGenre,
     val scope: AlbumScope,
-    val artist: UserResponse
+    val artist: UserResponse,
+    val lyrics: List<SongLyricsResponse>,
+    val album: SongAlbumResponse
 ) {
     companion object {
         fun of(song: SongEntity, user: UserEntity? = null) = SongResponse(
@@ -29,7 +31,9 @@ data class SongResponse(
             genre = song.genre,
             scope = song.scope,
             thumbnailUrl = song.album.coverUrl,
-            artist = UserResponse.of(song.artist)
+            artist = UserResponse.of(song.artist),
+            lyrics = song.lyrics.map { SongLyricsResponse.of(it) },
+            album = SongAlbumResponse.of(song.album)
         )
     }
 }

@@ -23,6 +23,9 @@ class SongEntity(
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "song")
     val likes: MutableList<SongLikeEntity> = mutableListOf(),
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "song")
+    val lyrics: MutableList<SongLyricsEntity> = mutableListOf(),
+
     @Enumerated(EnumType.STRING)
     @Column(name = "scope", nullable = false)
     var scope: AlbumScope,

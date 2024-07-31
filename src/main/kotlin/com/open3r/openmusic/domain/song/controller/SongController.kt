@@ -67,4 +67,15 @@ class SongController(
     @PreAuthorize("isAuthenticated()")
     fun removeLikeToSong(@PathVariable songId: Long) =
         BaseResponse(songService.removeLikeFromSong(songId), 200).toEntity()
+
+    @Operation(summary = "음악 좋아요 여부 확인")
+    @GetMapping("/{songId}/likes")
+    @PreAuthorize("isAuthenticated()")
+    fun checkLikeToSong(@PathVariable songId: Long) =
+        BaseResponse(songService.checkLikeToSong(songId), 200).toEntity()
+
+    @Operation(summary = "음악 가사 조회")
+    @GetMapping("/{songId}/lyrics")
+    fun getLyrics(@PathVariable songId: Long) =
+        BaseResponse(songService.getLyricsOfSong(songId), 200).toEntity()
 }

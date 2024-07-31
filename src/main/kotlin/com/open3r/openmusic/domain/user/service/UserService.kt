@@ -36,11 +36,14 @@ interface UserService {
     fun addPlaylistSongsToQueue(playlistId: Long)
     fun addAlbumSongsToQueue(albumId: Long)
     fun addRankingSongsToQueue()
+    fun addLatestSongsToQueue()
     fun addSongToQueue(songId: Long)
     fun removeSongFromQueue(songId: Long)
     fun clearQueue()
+    fun shuffleQueue(): List<SongResponse>
 
     fun getMyRecents(): List<SongResponse>
+    fun addSongToRecents(songId: Long)
 
     fun getUserAlbums(userId: Long): List<AlbumResponse>
     fun getUserSongs(userId: Long): List<SongResponse>

@@ -61,6 +61,17 @@ class SongQueryRepositoryImpl(
     }
 
     @Transactional
+    override fun getLatestSongs(pageable: Pageable): Slice<SongEntity> {
+        val songs = jpaQueryFactory.selectFrom(songEntity)
+            .where(songEntity.scope.eq(AlbumScope.PUBLIC))
+            .paginate(pageable)
+            .orderBy(songEntity.createdAt.desc())
+            .fetch()
+
+        return SliceImpl(songs, pageable, true)
+    }
+
+    @Transactional
     override fun getSongsByGenreIn(genres: List<SongGenre>, pageable: Pageable): Page<SongEntity> {
         val count = jpaQueryFactory.select(songEntity.count())
             .from(songEntity)

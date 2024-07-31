@@ -2,6 +2,7 @@ package com.open3r.openmusic.domain.song.service
 
 import com.open3r.openmusic.domain.song.domain.enums.SongGenre
 import com.open3r.openmusic.domain.song.dto.request.SongUpdateRequest
+import com.open3r.openmusic.domain.song.dto.response.SongLyricsResponse
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -17,6 +18,10 @@ interface SongService {
     fun searchSongs(query: String, pageable: Pageable): Slice<SongResponse>
     fun updateSong(songId: Long, request: SongUpdateRequest)
     fun deleteSong(songId: Long)
+
     fun addLikeToSong(songId: Long): SongResponse
     fun removeLikeFromSong(songId: Long): SongResponse
+    fun checkLikeToSong(songId: Long): Boolean
+
+    fun getLyricsOfSong(songId: Long): List<SongLyricsResponse>
 }

@@ -4,6 +4,7 @@ import com.open3r.openmusic.domain.song.domain.entity.SongEntity
 import com.open3r.openmusic.domain.song.domain.entity.SongLikeEntity
 import com.open3r.openmusic.domain.song.domain.enums.SongGenre
 import com.open3r.openmusic.domain.song.dto.request.SongUpdateRequest
+import com.open3r.openmusic.domain.song.dto.response.SongLyricsResponse
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
 import com.open3r.openmusic.domain.song.repository.SongQueryRepository
 import com.open3r.openmusic.domain.song.repository.SongRepository
@@ -12,6 +13,7 @@ import com.open3r.openmusic.domain.user.domain.entity.UserNowPlayingEntity
 import com.open3r.openmusic.domain.user.domain.entity.UserQueueEntity
 import com.open3r.openmusic.domain.user.domain.entity.UserRecentEntity
 import com.open3r.openmusic.domain.user.domain.enums.UserRole
+import com.open3r.openmusic.domain.user.repository.UserRepository
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class SongServiceImpl(
+    private val userRepository: UserRepository,
     private val songRepository: SongRepository,
     private val userSecurity: UserSecurity,
     private val songQueryRepository: SongQueryRepository,
@@ -81,7 +84,9 @@ class SongServiceImpl(
             user.nowPlaying!!.progress = 0
         }
 
-        return songRepository.save(song).toResponse()
+        userRepository.save(user)
+
+        return song.toResponse()
     }
 
     @Transactional(readOnly = true)
@@ -134,6 +139,21 @@ class SongServiceImpl(
         song.likes.removeIf { it.user.id == user.id }
 
         return songRepository.save(song).toResponse()
+    }
+
+    @Transactional(readOnly = true)
+    override fun checkLikeToSong(songId: Long): Boolean {
+        val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
+        val user = userSecurity.user
+
+        return song.likes.any { it.user.id == user.id }
+    }
+
+    @Transactional(readOnly = true)
+    override fun getLyricsOfSong(songId: Long): List<SongLyricsResponse> {
+        val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
+
+        return song.lyrics.map { SongLyricsResponse.of(it) }
     }
 
     private fun SongEntity.toResponse() = if (userSecurity.isAuthenticated) {

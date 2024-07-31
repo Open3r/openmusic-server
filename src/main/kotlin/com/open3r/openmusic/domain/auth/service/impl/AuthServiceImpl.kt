@@ -4,6 +4,8 @@ import com.open3r.openmusic.domain.auth.dto.request.AuthLoginRequest
 import com.open3r.openmusic.domain.auth.dto.request.AuthReissueRequest
 import com.open3r.openmusic.domain.auth.dto.request.AuthSignOutRequest
 import com.open3r.openmusic.domain.auth.dto.request.AuthSignUpRequest
+import com.open3r.openmusic.domain.auth.dto.response.GoogleTokenResponse
+import com.open3r.openmusic.domain.auth.dto.response.GoogleUserInfoResponse
 import com.open3r.openmusic.domain.auth.repository.RefreshTokenRepository
 import com.open3r.openmusic.domain.auth.service.AuthService
 import com.open3r.openmusic.domain.email.repository.EmailCodeRepository
@@ -12,6 +14,7 @@ import com.open3r.openmusic.domain.user.domain.enums.UserProvider
 import com.open3r.openmusic.domain.user.domain.enums.UserRole
 import com.open3r.openmusic.domain.user.domain.enums.UserStatus
 import com.open3r.openmusic.domain.user.repository.UserRepository
+import com.open3r.openmusic.global.config.oauth2.OAuth2GoogleProperties
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
@@ -23,11 +26,12 @@ import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.UnsupportedJwtException
 import io.jsonwebtoken.security.SecurityException
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.http.MediaType
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.reactive.function.BodyInserters
+import org.springframework.web.reactive.function.client.WebClient
 
 @Service
 class AuthServiceImpl(
@@ -37,7 +41,7 @@ class AuthServiceImpl(
     private val passwordEncoder: PasswordEncoder,
     private val emailCodeRepository: EmailCodeRepository,
     private val refreshTokenRepository: RefreshTokenRepository,
-    private val authenticationManagerBuilder: AuthenticationManagerBuilder,
+    private val oAuth2GoogleProperties: OAuth2GoogleProperties,
 ) : AuthService {
     @Transactional
     override fun signup(request: AuthSignUpRequest) {
@@ -67,10 +71,7 @@ class AuthServiceImpl(
         if (!passwordEncoder.matches(request.password, user.password))
             throw CustomException(ErrorCode.USER_PASSWORD_NOT_MATCH)
 
-
-        val authenticationToken = UsernamePasswordAuthenticationToken(request.email, request.password)
-        val authentication = authenticationManagerBuilder.`object`.authenticate(authenticationToken)
-        val token = jwtProvider.generateToken(authentication)
+        val token = jwtProvider.generateToken(user)
 
         refreshTokenRepository.save(user.id!!, token.refreshToken)
 
@@ -102,7 +103,7 @@ class AuthServiceImpl(
 
         if (refreshToken != request.refreshToken) throw CustomException(ErrorCode.INVALID_REFRESH_TOKEN)
 
-        val token = jwtProvider.generateToken(authentication)
+        val token = jwtProvider.generateToken(user)
 
         refreshTokenRepository.save(user.id, token.refreshToken)
 
@@ -123,5 +124,68 @@ class AuthServiceImpl(
         u.status = UserStatus.DELETED
 
         userRepository.save(u)
+    }
+
+    @Transactional
+    override fun googleLogin(code: String): Jwt {
+        val token = WebClient.create("https://oauth2.googleapis.com")
+            .post()
+            .uri("/token")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(
+                BodyInserters.fromFormData("code", code)
+                    .with("client_id", oAuth2GoogleProperties.clientId)
+                    .with("client_secret", oAuth2GoogleProperties.clientSecret)
+                    .with("redirect_uri", oAuth2GoogleProperties.redirectUri)
+                    .with("grant_type", "authorization_code")
+            )
+            .retrieve()
+            .onStatus({ it.is4xxClientError }) {
+                it.bodyToMono(String::class.java)
+                    .map { body -> CustomException(ErrorCode.INVALID_GOOGLE_TOKEN) }
+            }
+            .bodyToMono(GoogleTokenResponse::class.java)
+            .block()
+
+        val info = WebClient.create("https://www.googleapis.com")
+            .get()
+            .uri {
+                it.path("/oauth2/v1/userinfo")
+                    .queryParam("alt", "json")
+                    .build()
+            }
+            .header("Authorization", "Bearer ${token?.accessToken}")
+            .retrieve()
+            .bodyToMono(GoogleUserInfoResponse::class.java)
+            .block()
+
+        if (info == null) throw CustomException(ErrorCode.INVALID_GOOGLE_TOKEN)
+
+        var user = userRepository.findByEmailAndProvider(info.email, UserProvider.GOOGLE)
+
+        user = if (user == null) {
+            val newUser = UserEntity(
+                nickname = info.name,
+                email = info.email,
+                role = UserRole.USER,
+                provider = UserProvider.GOOGLE,
+                providerId = info.id,
+                avatarUrl = info.picture,
+                password = passwordEncoder.encode(""),
+            )
+
+            userRepository.save(newUser)
+        } else {
+            user.providerId = info.id
+            user.avatarUrl = info.picture
+
+            userRepository.save(user)
+        }
+
+        val jwt = jwtProvider.generateToken(user)
+
+        refreshTokenRepository.save(user.id!!, jwt.refreshToken)
+
+        return jwt
     }
 }

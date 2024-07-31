@@ -38,4 +38,9 @@ class AuthController(
     @DeleteMapping("/signout")
     @PreAuthorize("isAuthenticated()")
     fun signout(@RequestBody request: AuthSignOutRequest) = BaseResponse(authService.signout(request), 204).toEntity()
+
+    @Operation(summary = "구글 로그인")
+    @GetMapping("/google")
+    @PreAuthorize("isAnonymous()")
+    fun googleLogin(@RequestParam code: String) = BaseResponse(authService.googleLogin(code), 200).toEntity()
 }

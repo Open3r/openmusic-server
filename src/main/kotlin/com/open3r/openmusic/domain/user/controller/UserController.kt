@@ -16,11 +16,6 @@ import org.springframework.web.bind.annotation.*
 class UserController(
     private val userService: UserService
 ) {
-    @Operation(summary = "유저 목록 조회")
-    @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    fun getUsers() = BaseResponse(userService.getUsers(), 200).toEntity()
-
     @Operation(summary = "나 조회")
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
@@ -85,20 +80,25 @@ class UserController(
     @Operation(summary = "플레이리스트로 큐 설정")
     @PostMapping("/me/queue/playlist")
     @PreAuthorize("isAuthenticated()")
-    fun copyQueueFromPlaylist(@RequestBody request: UserCopyQueueFromPlaylistRequest) =
+    fun addPlaylistSongsToQueue(@RequestBody request: UserCopyQueueFromPlaylistRequest) =
         BaseResponse(userService.addPlaylistSongsToQueue(request.playlistId), 201).toEntity()
 
     @Operation(summary = "앨범으로 큐 설정")
     @PostMapping("/me/queue/album")
     @PreAuthorize("isAuthenticated()")
-    fun copyQueueFromAlbum(@RequestBody request: UserCopyQueueFromAlbumRequest) =
+    fun addAlbumSongsToQueue(@RequestBody request: UserCopyQueueFromAlbumRequest) =
         BaseResponse(userService.addAlbumSongsToQueue(request.albumId), 201).toEntity()
 
     @Operation(summary = "랭킹으로 큐 설정")
     @PostMapping("/me/queue/ranking")
     @PreAuthorize("isAuthenticated()")
-    fun copyQueueFromRanking() =
+    fun addRankingSongsToQueue() =
         BaseResponse(userService.addRankingSongsToQueue(), 201).toEntity()
+
+    @Operation(summary = "최신 노래로 큐 설정")
+    @PostMapping("/me/queue/latest")
+    @PreAuthorize("isAuthenticated()")
+    fun addLatestSongsToQueue() = BaseResponse(userService.addLatestSongsToQueue(), 201).toEntity()
 
     @Operation(summary = "유저 큐 추가")
     @PostMapping("/me/queue")
@@ -117,10 +117,21 @@ class UserController(
     @PreAuthorize("isAuthenticated()")
     fun clearQueue() = BaseResponse(userService.clearQueue(), 204).toEntity()
 
+    @Operation(summary = "유저 큐 셔플")
+    @PostMapping("/me/queue/shuffle")
+    @PreAuthorize("isAuthenticated()")
+    fun shuffleQueue() = BaseResponse(userService.shuffleQueue(), 200).toEntity()
+
     @Operation(summary = "유저 최근 들은 노래 조회")
     @GetMapping("/me/recents")
     @PreAuthorize("isAuthenticated()")
     fun getMyRecents() = BaseResponse(userService.getMyRecents(), 200).toEntity()
+
+    @Operation(summary = "유저 최근 들은 노래 추가")
+    @PostMapping("/me/recents")
+    @PreAuthorize("isAuthenticated()")
+    fun addSongToRecents(@RequestBody request: UserAddRecentRequest) =
+        BaseResponse(userService.addSongToRecents(request.songId), 201).toEntity()
 
     @Operation(summary = "유저 조회")
     @GetMapping("/{userId}")

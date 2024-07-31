@@ -28,10 +28,10 @@ class UserEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "provider", nullable = false, updatable = false)
-    val provider: UserProvider,
+    val provider: UserProvider = UserProvider.DEFAULT,
 
     @Column(name = "provider_id", nullable = false, updatable = false)
-    val providerId: String,
+    var providerId: String = "-1",
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
@@ -41,13 +41,13 @@ class UserEntity(
     @Column(name = "status", nullable = false)
     var status: UserStatus = UserStatus.ACTIVE,
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     val queue: MutableSet<UserQueueEntity> = mutableSetOf(),
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     val recents: MutableList<UserRecentEntity> = mutableListOf(),
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     var nowPlaying: UserNowPlayingEntity? = null,
 
     @ElementCollection(fetch = FetchType.EAGER)

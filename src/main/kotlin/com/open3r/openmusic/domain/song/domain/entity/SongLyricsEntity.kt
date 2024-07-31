@@ -14,5 +14,8 @@ class SongLyricsEntity(
     val song: SongEntity,
 
     @Column(name = "lyrics", nullable = false)
-    val lyrics: String
+    val lyrics: String,
+
+    @Column(name = "timestamp", nullable = false)
+    val timestamp: Int
 )

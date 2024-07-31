@@ -9,6 +9,7 @@ import com.open3r.openmusic.domain.song.repository.SongQueryRepository
 import com.open3r.openmusic.domain.song.repository.SongRepository
 import com.open3r.openmusic.domain.user.domain.entity.UserNowPlayingEntity
 import com.open3r.openmusic.domain.user.domain.entity.UserQueueEntity
+import com.open3r.openmusic.domain.user.domain.entity.UserRecentEntity
 import com.open3r.openmusic.domain.user.domain.enums.UserRole
 import com.open3r.openmusic.domain.user.dto.request.UserAddGenreRequest
 import com.open3r.openmusic.domain.user.dto.request.UserRemoveGenreRequest
@@ -146,7 +147,7 @@ class UserServiceImpl(
     @Transactional
     override fun getMyQueue(): List<SongResponse> {
         val user = userSecurity.user
-        val songs = user.queue.map { it.song }
+        val songs = user.queue.reversed().map { it.song }
 
         return songs.map { SongResponse.of(it, user) }
     }
@@ -183,9 +184,21 @@ class UserServiceImpl(
     }
 
     @Transactional
+    override fun addLatestSongsToQueue() {
+        val user = userSecurity.user
+        val songs = songQueryRepository.getLatestSongs(PageRequest.of(0, 100)).content
+
+        user.queue.addAll(songs.map { UserQueueEntity(song = it, user = user) })
+
+        userRepository.save(user)
+    }
+
+    @Transactional
     override fun addSongToQueue(songId: Long) {
         val user = userSecurity.user
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
+
+        if (user.queue.any { it.song.id == song.id }) throw CustomException(ErrorCode.USER_QUEUE_ALREADY_EXISTS)
 
         user.queue.add(UserQueueEntity(song = song, user = user))
 
@@ -198,7 +211,7 @@ class UserServiceImpl(
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
         val queue = user.queue.find { it.song.id == song.id } ?: throw CustomException(ErrorCode.USER_QUEUE_NOT_FOUND)
 
-        user.queue.removeIf { it.id == queue.id }
+        user.queue.remove(queue)
 
         userRepository.save(user)
     }
@@ -210,6 +223,19 @@ class UserServiceImpl(
         user.queue.clear()
 
         userRepository.save(user)
+    }
+
+    @Transactional
+    override fun shuffleQueue(): List<SongResponse> {
+        val user = userSecurity.user
+        val songs = user.queue.shuffled().map { it.song }
+
+        user.queue.clear()
+        user.queue.addAll(songs.map { UserQueueEntity(song = it, user = user) })
+
+        userRepository.save(user)
+
+        return songs.map { SongResponse.of(it, user) }
     }
 
     @Transactional(readOnly = true)
@@ -224,8 +250,6 @@ class UserServiceImpl(
     override fun setMyNowPlaying(request: UserSetNowPlayingRequest): SongResponse {
         val user = userSecurity.user
         val song = songRepository.findByIdOrNull(request.songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
-
-        println(user.nowPlaying.toString())
 
         if (user.nowPlaying == null) {
             user.nowPlaying = UserNowPlayingEntity(song = song, user = user, progress = request.progress)
@@ -245,6 +269,25 @@ class UserServiceImpl(
         val songs = user.recents.map { it.song }.reversed()
 
         return songs.map { SongResponse.of(it, user) }
+    }
+
+    @Transactional
+    override fun addSongToRecents(songId: Long) {
+        val user = userSecurity.user
+        val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
+
+        if (user.recents.any { it.song.id == song.id }) {
+            val recent = user.recents.find { it.song.id == song.id }!!
+            user.recents.remove(recent)
+        }
+
+        if (user.recents.size >= 10) {
+            user.recents.removeLast()
+        }
+
+        user.recents.addFirst(UserRecentEntity(song = song, user = user))
+
+        userRepository.save(user)
     }
 
     @Transactional(readOnly = true)

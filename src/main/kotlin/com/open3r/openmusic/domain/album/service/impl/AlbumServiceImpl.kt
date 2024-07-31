@@ -10,6 +10,7 @@ import com.open3r.openmusic.domain.album.repository.AlbumQueryRepository
 import com.open3r.openmusic.domain.album.repository.AlbumRepository
 import com.open3r.openmusic.domain.album.service.AlbumService
 import com.open3r.openmusic.domain.song.domain.entity.SongEntity
+import com.open3r.openmusic.domain.song.domain.entity.SongLyricsEntity
 import com.open3r.openmusic.domain.song.repository.SongRepository
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
@@ -58,16 +59,29 @@ class AlbumServiceImpl(
             )
         )
 
-        album.songs.addAll(songRepository.saveAll(request.songs.map {
-            SongEntity(
-                title = it.title,
-                url = it.url,
-                album = album,
-                genre = album.genre,
-                scope = album.scope,
-                artist = user,
+        request.songs.forEach {
+            val song = songRepository.save(
+                SongEntity(
+                    title = it.title,
+                    url = it.url,
+                    album = album,
+                    genre = album.genre,
+                    scope = album.scope,
+                    artist = user,
+                )
             )
-        }).map { AlbumSongEntity(song = it, album = album) })
+
+            if (!it.lyrics.isNullOrEmpty()) {
+                val lyrics =
+                    it.lyrics.map { SongLyricsEntity(lyrics = it.lyrics, timestamp = it.timestamp, song = song) }
+
+                song.lyrics.addAll(lyrics)
+
+                songRepository.save(song)
+            }
+
+            album.songs.add(AlbumSongEntity(song = song, album = album))
+        }
 
         albumRepository.save(album)
     }

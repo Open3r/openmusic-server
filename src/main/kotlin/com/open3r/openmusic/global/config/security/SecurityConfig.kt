@@ -41,11 +41,6 @@ class SecurityConfig(
         .rememberMe { it.disable() }
         .logout { it.disable() }
 
-        .oauth2Login {
-            it.userInfoEndpoint {
-            }
-        }
-
         .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
 
         .exceptionHandling {
