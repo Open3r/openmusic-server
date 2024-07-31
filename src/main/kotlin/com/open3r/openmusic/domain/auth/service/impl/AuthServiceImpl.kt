@@ -161,7 +161,9 @@ class AuthServiceImpl(
 
         if (info == null) throw CustomException(ErrorCode.INVALID_GOOGLE_TOKEN)
 
-        if (userRepository.existsByEmailAndProviderIsNot(info.email, UserProvider.GOOGLE)) throw CustomException(ErrorCode.USER_ALREADY_EXISTS)
+        if (userRepository.existsByEmailAndProviderIsNot(info.email, UserProvider.GOOGLE)) throw CustomException(
+            ErrorCode.USER_ALREADY_EXISTS
+        )
 
         var user = userRepository.findByEmailAndProvider(info.email, UserProvider.GOOGLE)
 

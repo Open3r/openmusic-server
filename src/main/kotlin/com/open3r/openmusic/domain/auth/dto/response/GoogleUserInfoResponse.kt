@@ -7,9 +7,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 data class GoogleUserInfoResponse(
     val id: String,
     val email: String,
-    val verifiedEmail: Boolean,
     val name: String?,
-    val givenName: String,
-    val familyName: String,
     val picture: String
 )
