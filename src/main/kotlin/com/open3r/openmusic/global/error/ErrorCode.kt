@@ -26,7 +26,7 @@ enum class ErrorCode(
     INVALID_EMAIL(HttpStatus.BAD_REQUEST, "Invalid email"),
     INVALID_EMAIL_CODE(HttpStatus.BAD_REQUEST, "Invalid email code"),
     EMAIL_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "Email code not found"),
-    INVALID_GOOGLE_TOKEN(HttpStatus.BAD_REQUEST, "Invalid google token"),
+    INVALID_GOOGLE_CODE(HttpStatus.BAD_REQUEST, "Invalid google code"),
     INVALID_GOOGLE_ACCESS_TOKEN(HttpStatus.BAD_REQUEST, "Invalid google access token"),
 
     // Album
