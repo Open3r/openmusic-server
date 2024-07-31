@@ -161,11 +161,13 @@ class AuthServiceImpl(
 
         if (info == null) throw CustomException(ErrorCode.INVALID_GOOGLE_TOKEN)
 
+        if (userRepository.existsByEmailAndProviderIsNot(info.email, UserProvider.GOOGLE)) throw CustomException(ErrorCode.USER_ALREADY_EXISTS)
+
         var user = userRepository.findByEmailAndProvider(info.email, UserProvider.GOOGLE)
 
         user = if (user == null) {
             val newUser = UserEntity(
-                nickname = info.name,
+                nickname = info.name ?: "User",
                 email = info.email,
                 role = UserRole.USER,
                 provider = UserProvider.GOOGLE,
