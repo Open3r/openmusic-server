@@ -17,6 +17,7 @@ import com.open3r.openmusic.domain.user.dto.request.UserSetNowPlayingRequest
 import com.open3r.openmusic.domain.user.dto.request.UserUpdateRequest
 import com.open3r.openmusic.domain.user.dto.response.UserNowPlayingResponse
 import com.open3r.openmusic.domain.user.dto.response.UserResponse
+import com.open3r.openmusic.domain.user.repository.UserQueryRepository
 import com.open3r.openmusic.domain.user.repository.UserRepository
 import com.open3r.openmusic.domain.user.service.UserService
 import com.open3r.openmusic.global.error.CustomException
@@ -38,7 +39,8 @@ class UserServiceImpl(
     private val albumRepository: AlbumRepository,
     private val playlistRepository: PlaylistRepository,
     private val songRepository: SongRepository,
-    private val songQueryRepository: SongQueryRepository
+    private val songQueryRepository: SongQueryRepository,
+    private val userQueryRepository: UserQueryRepository
 ) : UserService {
 
     @Transactional(readOnly = true)
@@ -147,7 +149,7 @@ class UserServiceImpl(
     @Transactional
     override fun getMyQueue(): List<SongResponse> {
         val user = userSecurity.user
-        val songs = user.queue.reversed().map { it.song }
+        val songs = user.queue.map { it.song }
 
         return songs.map { SongResponse.of(it, user) }
     }
@@ -320,5 +322,12 @@ class UserServiceImpl(
         val songs = songRepository.findAllByArtist(user)
 
         return songs.map { SongResponse.of(it, user) }
+    }
+
+    @Transactional(readOnly = true)
+    override fun searchUsers(keyword: String, pageable: Pageable): Page<UserResponse> {
+        val users = userQueryRepository.searchUsers(keyword, pageable)
+
+        return users.map { UserResponse.of(it) }
     }
 }

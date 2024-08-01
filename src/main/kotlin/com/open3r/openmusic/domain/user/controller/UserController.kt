@@ -155,4 +155,9 @@ class UserController(
     @GetMapping("/{userId}/playlists")
     fun getUserPlaylists(@PathVariable userId: Long) =
         BaseResponse(userService.getUserPlaylists(userId), 200).toEntity()
+
+    @Operation(summary = "유저 검색")
+    @GetMapping("/search")
+    fun searchUsers(@RequestParam keyword: String, @PageableDefault pageable: Pageable) =
+        BaseResponse(userService.searchUsers(keyword, pageable), 200).toEntity()
 }

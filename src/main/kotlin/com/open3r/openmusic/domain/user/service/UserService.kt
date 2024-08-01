@@ -48,4 +48,6 @@ interface UserService {
     fun getUserAlbums(userId: Long): List<AlbumResponse>
     fun getUserSongs(userId: Long): List<SongResponse>
     fun getUserPlaylists(userId: Long): List<PlaylistResponse>
+
+    fun searchUsers(keyword: String, pageable: Pageable): Page<UserResponse>
 }

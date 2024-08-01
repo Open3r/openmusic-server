@@ -62,6 +62,7 @@ enum class ErrorCode(
     USER_PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "User password not match"),
     USER_QUEUE_NOT_FOUND(HttpStatus.NOT_FOUND, "User queue not found"),
     USER_QUEUE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "User queue already exists"),
+    USER_ALREADY_DELETED(HttpStatus.BAD_REQUEST, "User already deleted"),
 
     // Else
     MAX_UPLOAD_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "Max upload size exceeded"),
