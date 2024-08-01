@@ -42,7 +42,7 @@ class UserEntity(
     var status: UserStatus = UserStatus.ACTIVE,
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
-    val queue: MutableSet<UserQueueEntity> = mutableSetOf(),
+    val queue: MutableList<UserQueueEntity> = mutableListOf(),
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     val recents: MutableList<UserRecentEntity> = mutableListOf(),
