@@ -5,6 +5,7 @@ import com.open3r.openmusic.domain.user.service.UserService
 import com.open3r.openmusic.global.common.dto.response.BaseResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.security.access.prepost.PreAuthorize
@@ -24,7 +25,7 @@ class UserController(
     @Operation(summary = "나 수정")
     @PatchMapping("/me")
     @PreAuthorize("isAuthenticated()")
-    fun updateMe(@RequestBody request: UserUpdateRequest) = BaseResponse(userService.updateMe(request), 200).toEntity()
+    fun updateMe(@RequestBody @Valid request: UserUpdateRequest) = BaseResponse(userService.updateMe(request), 200).toEntity()
 
     @Operation(summary = "현재 재생 중인 노래 조회")
     @GetMapping("/me/now-playing")

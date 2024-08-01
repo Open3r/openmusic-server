@@ -191,7 +191,7 @@ class AuthServiceImpl(
                 provider = UserProvider.GOOGLE,
                 providerId = info.id,
                 avatarUrl = info.picture,
-                password = passwordEncoder.encode(""),
+                password = passwordEncoder.encode("oauth2:google"),
             )
 
             userRepository.save(newUser)
