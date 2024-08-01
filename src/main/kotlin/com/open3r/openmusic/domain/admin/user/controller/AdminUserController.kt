@@ -18,6 +18,11 @@ class AdminUserController(
     @PreAuthorize("hasRole('ADMIN')")
     fun getUsers() = BaseResponse(adminUserService.getUsers(), 200).toEntity()
 
+    @Operation(summary = "삭제된 유저 목록")
+    @GetMapping("/deleted")
+    @PreAuthorize("hasRole('ADMIN')")
+    fun getDeletedUsers() = BaseResponse(adminUserService.getDeletedUsers(), 200).toEntity()
+
     @Operation(summary = "유저 삭제")
     @DeleteMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")

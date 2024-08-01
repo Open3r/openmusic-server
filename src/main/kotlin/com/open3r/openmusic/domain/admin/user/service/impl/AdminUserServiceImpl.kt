@@ -17,7 +17,12 @@ class AdminUserServiceImpl(
     private val userQueryRepository: UserQueryRepository
 ) : AdminUserService {
     @Transactional(readOnly = true)
-    override fun getUsers() = userQueryRepository.findAll().map { UserResponse.of(it) }
+    override fun getUsers() = userQueryRepository.getUsers().map { UserResponse.of(it) }
+
+    @Transactional
+    override fun getDeletedUsers(): List<UserResponse> {
+        return userQueryRepository.getDeletedUsers().map { UserResponse.of(it) }
+    }
 
     @Transactional
     override fun deleteUser(userId: Long) {

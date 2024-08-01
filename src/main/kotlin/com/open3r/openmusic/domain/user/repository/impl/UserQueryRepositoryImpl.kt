@@ -17,9 +17,16 @@ class UserQueryRepositoryImpl(
     private val jpaQueryFactory: JPAQueryFactory
 ) : UserQueryRepository {
     @Transactional
-    override fun findAll(): List<UserEntity> {
+    override fun getUsers(): List<UserEntity> {
         return jpaQueryFactory.selectFrom(userEntity)
             .where(userEntity.status.eq(UserStatus.ACTIVE))
+            .fetch()
+    }
+
+    @Transactional
+    override fun getDeletedUsers(): List<UserEntity> {
+        return jpaQueryFactory.selectFrom(userEntity)
+            .where(userEntity.status.eq(UserStatus.DELETED))
             .fetch()
     }
 
