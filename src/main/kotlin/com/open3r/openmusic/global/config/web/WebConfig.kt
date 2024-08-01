@@ -11,7 +11,7 @@ class WebConfig : WebMvcConfigurer {
     override fun addCorsMappings(registry: CorsRegistry) {
         registry
             .addMapping("/**")
-            .allowedOriginPatterns("https://openmusic.kr")
+            .allowedOriginPatterns("https://openmusic.kr", "https://api.openmusic.kr")
             .allowedMethods("OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE")
             .allowedHeaders("*")
             .allowCredentials(true)
