@@ -34,4 +34,15 @@ class AdminUserServiceImpl(
 
         userRepository.save(user)
     }
+
+    @Transactional
+    override fun restoreUser(userId: Long) {
+        val user = userRepository.findByIdOrNull(userId) ?: throw CustomException(ErrorCode.USER_NOT_FOUND)
+
+        if (user.status == UserStatus.ACTIVE) throw CustomException(ErrorCode.USER_ALREADY_ACTIVE)
+
+        user.status = UserStatus.ACTIVE
+
+        userRepository.save(user)
+    }
 }

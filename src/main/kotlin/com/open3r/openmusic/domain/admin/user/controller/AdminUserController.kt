@@ -27,4 +27,9 @@ class AdminUserController(
     @DeleteMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     fun deleteUser(@PathVariable userId: Long) = BaseResponse(adminUserService.deleteUser(userId), 204).toEntity()
+
+    @Operation(summary = "유저 복구")
+    @PatchMapping("/{userId}/restore")
+    @PreAuthorize("hasRole('ADMIN')")
+    fun restoreUser(@PathVariable userId: Long) = BaseResponse(adminUserService.restoreUser(userId), 200).toEntity()
 }

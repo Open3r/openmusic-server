@@ -6,4 +6,5 @@ interface AdminUserService {
     fun getUsers(): List<UserResponse>
     fun getDeletedUsers(): List<UserResponse>
     fun deleteUser(userId: Long)
+    fun restoreUser(userId: Long)
 }
