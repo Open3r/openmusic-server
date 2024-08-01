@@ -21,6 +21,12 @@ class FileServiceImpl(
 
     override fun uploadFiles(files: List<MultipartFile>): List<FileUploadResponse> {
         return files.map {
+            val type = it.contentType?.substringBefore("/") ?: "file"
+
+            if (type != "image" && type != "audio") {
+                throw IllegalArgumentException("지원하지 않는 파일 형식입니다.")
+            }
+
             val name = "${UUID.randomUUID()}.${it.originalFilename?.substringAfterLast(".")}"
 
             val metadata = ObjectMetadata().apply {

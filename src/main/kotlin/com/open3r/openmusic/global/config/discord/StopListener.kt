@@ -11,7 +11,7 @@ import java.time.Instant
 class StopListener(
     private val jda: JDA,
     private val discordProperties: DiscordProperties
-): ApplicationListener<ContextClosedEvent> {
+) : ApplicationListener<ContextClosedEvent> {
     override fun onApplicationEvent(event: ContextClosedEvent) {
         jda.getTextChannelById(discordProperties.channelId)?.sendMessageEmbeds(
             EmbedBuilder()

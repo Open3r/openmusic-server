@@ -11,7 +11,7 @@ import java.time.Instant
 class StartListener(
     private val jda: JDA,
     private val discordProperties: DiscordProperties
-): ApplicationListener<ApplicationStartedEvent> {
+) : ApplicationListener<ApplicationStartedEvent> {
     override fun onApplicationEvent(event: ApplicationStartedEvent) {
         jda.getTextChannelById(discordProperties.channelId)?.sendMessageEmbeds(
             EmbedBuilder()

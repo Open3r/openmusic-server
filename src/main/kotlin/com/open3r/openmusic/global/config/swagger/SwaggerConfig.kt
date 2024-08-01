@@ -35,7 +35,10 @@ class SwaggerConfig {
                     )
                     .termsOfService("https://open3r.com/terms")
             )
-            .servers(listOf(Server().apply { url = "https://api.openmusic.kr" }))
+            .servers(listOf(
+                Server().apply { url = "https://api.openmusic.kr" },
+                Server().apply { url = "http://localhost:8080" }
+            ))
             .addSecurityItem(SecurityRequirement().addList("Authorization"))
             .components(
                 Components()

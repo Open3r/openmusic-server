@@ -64,6 +64,8 @@ enum class ErrorCode(
     USER_QUEUE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "User queue already exists"),
 
     // Else
-    MAX_UPLOAD_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "Max upload size exceeded")
+    MAX_UPLOAD_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "Max upload size exceeded"),
 
+    // Banner
+    BANNER_NOT_FOUND(HttpStatus.NOT_FOUND, "Banner not found"),
 }

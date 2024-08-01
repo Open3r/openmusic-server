@@ -25,7 +25,8 @@ class UserController(
     @Operation(summary = "나 수정")
     @PatchMapping("/me")
     @PreAuthorize("isAuthenticated()")
-    fun updateMe(@RequestBody @Valid request: UserUpdateRequest) = BaseResponse(userService.updateMe(request), 200).toEntity()
+    fun updateMe(@RequestBody @Valid request: UserUpdateRequest) =
+        BaseResponse(userService.updateMe(request), 200).toEntity()
 
     @Operation(summary = "현재 재생 중인 노래 조회")
     @GetMapping("/me/now-playing")
