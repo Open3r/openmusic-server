@@ -11,6 +11,7 @@ import com.open3r.openmusic.domain.album.repository.AlbumRepository
 import com.open3r.openmusic.domain.album.service.AlbumService
 import com.open3r.openmusic.domain.song.domain.entity.SongEntity
 import com.open3r.openmusic.domain.song.domain.entity.SongLyricsEntity
+import com.open3r.openmusic.domain.song.domain.enums.SongStatus
 import com.open3r.openmusic.domain.song.repository.SongRepository
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
@@ -68,6 +69,7 @@ class AlbumServiceImpl(
                     genre = album.genre,
                     scope = album.scope,
                     artist = user,
+                    status = SongStatus.PENDING
                 )
             )
 

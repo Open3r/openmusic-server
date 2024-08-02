@@ -3,8 +3,11 @@ package com.open3r.openmusic.domain.song.domain.entity
 import com.open3r.openmusic.domain.album.domain.entity.AlbumEntity
 import com.open3r.openmusic.domain.album.domain.enums.AlbumScope
 import com.open3r.openmusic.domain.song.domain.enums.SongGenre
+import com.open3r.openmusic.domain.song.domain.enums.SongStatus
 import com.open3r.openmusic.domain.user.domain.entity.UserEntity
 import com.open3r.openmusic.global.common.domain.entity.BaseEntity
+import com.open3r.openmusic.global.error.CustomException
+import com.open3r.openmusic.global.error.ErrorCode
 import jakarta.persistence.*
 
 @Entity
@@ -27,6 +30,10 @@ class SongEntity(
     val lyrics: MutableList<SongLyricsEntity> = mutableListOf(),
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    var status: SongStatus,
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "scope", nullable = false)
     var scope: AlbumScope,
 
@@ -41,4 +48,16 @@ class SongEntity(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id", nullable = false)
     val artist: UserEntity
-) : BaseEntity()
+) : BaseEntity() {
+    fun approve() {
+        if (status != SongStatus.PENDING) throw CustomException(ErrorCode.SONG_IS_NOT_PENDING)
+
+        status = SongStatus.APPROVED
+    }
+
+    fun reject() {
+        if (status != SongStatus.PENDING) throw CustomException(ErrorCode.SONG_IS_NOT_PENDING)
+
+        status = SongStatus.REJECTED
+    }
+}

@@ -52,6 +52,7 @@ enum class ErrorCode(
     SONG_LIKE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "Song like already exists"),
     SONG_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "Song like not found"),
     SONG_NOT_UPDATABLE(HttpStatus.BAD_REQUEST, "Song is not updatable"),
+    SONG_IS_NOT_PENDING(HttpStatus.BAD_REQUEST, "Song is not pending"),
 
     // User
     USER_GENRE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "User genre already exists"),

@@ -3,6 +3,7 @@ package com.open3r.openmusic.domain.song.dto.response
 import com.open3r.openmusic.domain.album.domain.enums.AlbumScope
 import com.open3r.openmusic.domain.song.domain.entity.SongEntity
 import com.open3r.openmusic.domain.song.domain.enums.SongGenre
+import com.open3r.openmusic.domain.song.domain.enums.SongStatus
 import com.open3r.openmusic.domain.user.domain.entity.UserEntity
 import com.open3r.openmusic.domain.user.dto.response.UserResponse
 import java.time.LocalDateTime
@@ -15,6 +16,7 @@ data class SongResponse(
 //    val likes: List<Long>,
     val liked: Boolean,
     val likeCount: Long,
+    val status: SongStatus,
     val genre: SongGenre,
     val scope: AlbumScope,
     val artist: UserResponse,
@@ -31,6 +33,7 @@ data class SongResponse(
 //            likes = song.likes.map { it.id!! },
             liked = user?.let { song.likes.any { it.user.id == user.id } } ?: false,
             likeCount = song.likes.size.toLong(),
+            status = song.status,
             genre = song.genre,
             scope = song.scope,
             thumbnailUrl = song.album.coverUrl,

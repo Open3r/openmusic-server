@@ -7,7 +7,5 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface SongRepository : JpaRepository<SongEntity, Long> {
-    fun findAllByArtist(artist: UserEntity): List<SongEntity>
     fun findAllByArtist(artist: UserEntity, pageable: Pageable): Page<SongEntity>
-    fun findAllByTitleContainingIgnoreCase(title: String): List<SongEntity>
 }

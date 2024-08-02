@@ -3,6 +3,7 @@ package com.open3r.openmusic.domain.song.service.impl
 import com.open3r.openmusic.domain.song.domain.entity.SongEntity
 import com.open3r.openmusic.domain.song.domain.entity.SongLikeEntity
 import com.open3r.openmusic.domain.song.domain.enums.SongGenre
+import com.open3r.openmusic.domain.song.domain.enums.SongStatus
 import com.open3r.openmusic.domain.song.dto.request.SongUpdateRequest
 import com.open3r.openmusic.domain.song.dto.response.SongLyricsResponse
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
@@ -54,7 +55,7 @@ class SongServiceImpl(
     @Transactional(readOnly = true)
     override fun getMySongs(): List<SongResponse> {
         val user = userSecurity.user
-        val songs = songRepository.findAllByArtist(user)
+        val songs = songQueryRepository.getSongsByArtist(user)
 
         return songs.map { SongResponse.of(it, user) }
     }
@@ -117,9 +118,11 @@ class SongServiceImpl(
         val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
         val user = userSecurity.user
 
-        if (song.artist.id != user.id && user.role != UserRole.ADMIN) throw CustomException(ErrorCode.SONG_NOT_DELETABLE)
+        if (song.artist.id != user.id) throw CustomException(ErrorCode.SONG_NOT_DELETABLE)
 
-        songRepository.delete(song)
+        song.status = SongStatus.DELETED
+
+        songRepository.save(song)
     }
 
     @Transactional

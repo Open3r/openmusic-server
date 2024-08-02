@@ -133,7 +133,7 @@ class UserServiceImpl(
     @Transactional(readOnly = true)
     override fun getMySongs(pageable: Pageable): Page<SongResponse> {
         val user = userSecurity.user
-        val songs = songRepository.findAllByArtist(user, pageable)
+        val songs = songQueryRepository.getMySongs(pageable)
 
         return songs.map { SongResponse.of(it, user) }
     }
@@ -319,7 +319,7 @@ class UserServiceImpl(
     @Transactional(readOnly = true)
     override fun getUserSongs(userId: Long): List<SongResponse> {
         val user = userRepository.findByIdOrNull(userId) ?: throw CustomException(ErrorCode.USER_NOT_FOUND)
-        val songs = songRepository.findAllByArtist(user)
+        val songs = songQueryRepository.getSongsByArtist(user)
 
         return songs.map { SongResponse.of(it, user) }
     }
