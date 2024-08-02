@@ -5,6 +5,7 @@ import com.open3r.openmusic.domain.song.domain.entity.SongEntity
 import com.open3r.openmusic.domain.song.domain.enums.SongGenre
 import com.open3r.openmusic.domain.user.domain.entity.UserEntity
 import com.open3r.openmusic.domain.user.dto.response.UserResponse
+import java.time.LocalDateTime
 
 data class SongResponse(
     val id: Long,
@@ -18,7 +19,9 @@ data class SongResponse(
     val scope: AlbumScope,
     val artist: UserResponse,
     val lyrics: List<SongLyricsResponse>,
-    val album: SongAlbumResponse
+    val album: SongAlbumResponse,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime
 ) {
     companion object {
         fun of(song: SongEntity, user: UserEntity? = null) = SongResponse(
@@ -33,7 +36,9 @@ data class SongResponse(
             thumbnailUrl = song.album.coverUrl,
             artist = UserResponse.of(song.artist),
             lyrics = song.lyrics.map { SongLyricsResponse.of(it) },
-            album = SongAlbumResponse.of(song.album)
+            album = SongAlbumResponse.of(song.album),
+            createdAt = song.createdAt!!,
+            updatedAt = song.updatedAt!!
         )
     }
 }
