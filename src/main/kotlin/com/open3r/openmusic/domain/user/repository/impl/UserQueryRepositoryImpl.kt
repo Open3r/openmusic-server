@@ -31,14 +31,14 @@ class UserQueryRepositoryImpl(
     }
 
     @Transactional
-    override fun searchUsers(keyword: String, pageable: Pageable): Page<UserEntity> {
+    override fun searchUsers(query: String, pageable: Pageable): Page<UserEntity> {
         val count = jpaQueryFactory.select(userEntity.count())
             .from(userEntity)
-            .where(userEntity.status.eq(UserStatus.ACTIVE), userEntity.nickname.containsIgnoreCase(keyword))
+            .where(userEntity.status.eq(UserStatus.ACTIVE), userEntity.nickname.containsIgnoreCase(query))
             .fetchFirst() ?: 0
 
         val users = jpaQueryFactory.selectFrom(userEntity)
-            .where(userEntity.status.eq(UserStatus.ACTIVE), userEntity.nickname.containsIgnoreCase(keyword))
+            .where(userEntity.status.eq(UserStatus.ACTIVE), userEntity.nickname.containsIgnoreCase(query))
             .paginate(pageable)
             .orderBy(userEntity.createdAt.desc())
             .fetch()

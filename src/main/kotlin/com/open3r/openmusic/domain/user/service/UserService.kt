@@ -49,5 +49,5 @@ interface UserService {
     fun getUserSongs(userId: Long): List<SongResponse>
     fun getUserPlaylists(userId: Long): List<PlaylistResponse>
 
-    fun searchUsers(keyword: String, pageable: Pageable): Page<UserResponse>
+    fun searchUsers(query: String, pageable: Pageable): Page<UserResponse>
 }

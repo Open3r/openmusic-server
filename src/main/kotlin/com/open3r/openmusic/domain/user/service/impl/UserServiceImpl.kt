@@ -325,8 +325,8 @@ class UserServiceImpl(
     }
 
     @Transactional(readOnly = true)
-    override fun searchUsers(keyword: String, pageable: Pageable): Page<UserResponse> {
-        val users = userQueryRepository.searchUsers(keyword, pageable)
+    override fun searchUsers(query: String, pageable: Pageable): Page<UserResponse> {
+        val users = userQueryRepository.searchUsers(query, pageable)
 
         return users.map { UserResponse.of(it) }
     }

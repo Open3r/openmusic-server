@@ -158,6 +158,6 @@ class UserController(
 
     @Operation(summary = "유저 검색")
     @GetMapping("/search")
-    fun searchUsers(@RequestParam keyword: String, @PageableDefault pageable: Pageable) =
-        BaseResponse(userService.searchUsers(keyword, pageable), 200).toEntity()
+    fun searchUsers(@RequestParam query: String, @PageableDefault pageable: Pageable) =
+        BaseResponse(userService.searchUsers(query, pageable), 200).toEntity()
 }
