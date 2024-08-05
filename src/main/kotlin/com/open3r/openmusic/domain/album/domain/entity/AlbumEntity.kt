@@ -1,6 +1,7 @@
 package com.open3r.openmusic.domain.album.domain.entity
 
 import com.open3r.openmusic.domain.album.domain.enums.AlbumScope
+import com.open3r.openmusic.domain.album.domain.enums.AlbumStatus
 import com.open3r.openmusic.domain.song.domain.enums.SongGenre
 import com.open3r.openmusic.domain.user.domain.entity.UserEntity
 import com.open3r.openmusic.global.common.domain.entity.BaseEntity
@@ -21,6 +22,9 @@ class AlbumEntity(
 
     @Column(name = "cover_url", nullable = true)
     var coverUrl: String,
+
+    @Column(name = "status", nullable = true)
+    var status: AlbumStatus,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "scope", nullable = true)

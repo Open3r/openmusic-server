@@ -1,9 +1,9 @@
 package com.open3r.openmusic.domain.song.service.impl
 
+import com.open3r.openmusic.domain.album.domain.enums.AlbumStatus
 import com.open3r.openmusic.domain.song.domain.entity.SongEntity
 import com.open3r.openmusic.domain.song.domain.entity.SongLikeEntity
 import com.open3r.openmusic.domain.song.domain.enums.SongGenre
-import com.open3r.openmusic.domain.song.domain.enums.SongStatus
 import com.open3r.openmusic.domain.song.dto.request.SongUpdateRequest
 import com.open3r.openmusic.domain.song.dto.response.SongLyricsResponse
 import com.open3r.openmusic.domain.song.dto.response.SongResponse
@@ -120,7 +120,7 @@ class SongServiceImpl(
 
         if (song.artist.id != user.id) throw CustomException(ErrorCode.SONG_NOT_DELETABLE)
 
-        song.status = SongStatus.DELETED
+        song.status = AlbumStatus.DELETED
 
         songRepository.save(song)
     }

@@ -35,6 +35,7 @@ enum class ErrorCode(
     ALBUM_NOT_UPDATABLE(HttpStatus.BAD_REQUEST, "Album is not updatable"),
     ALBUM_LIKE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "Album like already exists"),
     ALBUM_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "Album like not found"),
+    ALBUM_STATUS_INVALID(HttpStatus.BAD_REQUEST, "Album status is invalid"),
 
     // Playlist
     PLAYLIST_NOT_FOUND(HttpStatus.NOT_FOUND, "Playlist not found"),
