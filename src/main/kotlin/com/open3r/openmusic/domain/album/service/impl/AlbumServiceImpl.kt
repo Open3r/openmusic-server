@@ -3,7 +3,6 @@ package com.open3r.openmusic.domain.album.service.impl
 import com.open3r.openmusic.domain.album.domain.entity.AlbumEntity
 import com.open3r.openmusic.domain.album.domain.entity.AlbumLikeEntity
 import com.open3r.openmusic.domain.album.domain.entity.AlbumSongEntity
-import com.open3r.openmusic.domain.album.domain.enums.AlbumStatus
 import com.open3r.openmusic.domain.album.dto.request.AlbumCreateRequest
 import com.open3r.openmusic.domain.album.dto.request.AlbumUpdateRequest
 import com.open3r.openmusic.domain.album.dto.response.AlbumResponse
@@ -57,7 +56,6 @@ class AlbumServiceImpl(
                 artist = user,
                 genre = request.genre,
                 scope = request.scope,
-                status = AlbumStatus.PENDING
             )
         )
 

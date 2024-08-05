@@ -6,6 +6,7 @@ import com.open3r.openmusic.domain.song.repository.SongRepository
 import com.open3r.openmusic.global.error.CustomException
 import com.open3r.openmusic.global.error.ErrorCode
 import com.open3r.openmusic.global.security.UserSecurity
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -19,7 +20,7 @@ class AdminSongServiceImpl(
 
     @Transactional
     override fun deleteSong(songId: Long) {
-        val song = songRepository.findById(songId).orElseThrow { throw CustomException(ErrorCode.SONG_NOT_FOUND) }
+        val song = songRepository.findByIdOrNull(songId) ?: throw CustomException(ErrorCode.SONG_NOT_FOUND)
 
         songRepository.delete(song)
     }

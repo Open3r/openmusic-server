@@ -24,7 +24,7 @@ class AlbumEntity(
     var coverUrl: String,
 
     @Column(name = "status", nullable = true)
-    var status: AlbumStatus,
+    var status: AlbumStatus = AlbumStatus.ACTIVE,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "scope", nullable = true)

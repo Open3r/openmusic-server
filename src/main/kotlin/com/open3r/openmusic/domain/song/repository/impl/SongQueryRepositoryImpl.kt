@@ -23,14 +23,14 @@ class SongQueryRepositoryImpl(
     @Transactional
     override fun getSongs(pageable: Pageable): Page<SongEntity> {
         val songs = jpaQueryFactory.selectFrom(songEntity)
-            .where(songEntity.scope.eq(AlbumScope.PUBLIC), songEntity.status.eq(AlbumStatus.APPROVED))
+            .where(songEntity.scope.eq(AlbumScope.PUBLIC), songEntity.status.eq(AlbumStatus.ACTIVE))
             .paginate(pageable)
             .orderBy(pageable.sort)
             .fetch()
 
         val count = jpaQueryFactory.select(songEntity.count())
             .from(songEntity)
-            .where(songEntity.scope.eq(AlbumScope.PUBLIC), songEntity.status.eq(AlbumStatus.APPROVED))
+            .where(songEntity.scope.eq(AlbumScope.PUBLIC), songEntity.status.eq(AlbumStatus.ACTIVE))
             .fetchOne() ?: 0
 
         return PageImpl(songs, pageable, count)
@@ -41,14 +41,14 @@ class SongQueryRepositoryImpl(
         val user = userSecurity.user
 
         val songs = jpaQueryFactory.selectFrom(songEntity)
-            .where(songEntity.status.eq(AlbumStatus.APPROVED), songEntity.artist.id.eq(user.id))
+            .where(songEntity.status.eq(AlbumStatus.ACTIVE), songEntity.artist.id.eq(user.id))
             .paginate(pageable)
             .orderBy(pageable.sort)
             .fetch()
 
         val count = jpaQueryFactory.select(songEntity.count())
             .from(songEntity)
-            .where(songEntity.status.eq(AlbumStatus.APPROVED), songEntity.artist.id.eq(user.id))
+            .where(songEntity.status.eq(AlbumStatus.ACTIVE), songEntity.artist.id.eq(user.id))
             .fetchOne() ?: 0
 
         return PageImpl(songs, pageable, count)
@@ -57,14 +57,14 @@ class SongQueryRepositoryImpl(
     @Transactional
     override fun getSongsByArtist(artist: UserEntity): List<SongEntity> {
         return jpaQueryFactory.selectFrom(songEntity)
-            .where(songEntity.status.eq(AlbumStatus.APPROVED), songEntity.artist.id.eq(artist.id))
+            .where(songEntity.status.eq(AlbumStatus.ACTIVE), songEntity.artist.id.eq(artist.id))
             .fetch()
     }
 
     @Transactional
     override fun getRankingSongs(pageable: Pageable): Slice<SongEntity> {
         val songs = jpaQueryFactory.selectFrom(songEntity)
-            .where(songEntity.scope.eq(AlbumScope.PUBLIC), songEntity.status.eq(AlbumStatus.APPROVED))
+            .where(songEntity.scope.eq(AlbumScope.PUBLIC), songEntity.status.eq(AlbumStatus.ACTIVE))
             .offset(pageable.offset)
             .limit(if (pageable.pageSize > 100) 100 else pageable.pageSize.toLong())
             .orderBy(songEntity.likes.size().desc())
@@ -79,7 +79,7 @@ class SongQueryRepositoryImpl(
             .where(
                 songEntity.scope.eq(AlbumScope.PUBLIC),
                 songEntity.genre.eq(genre),
-                songEntity.status.eq(AlbumStatus.APPROVED)
+                songEntity.status.eq(AlbumStatus.ACTIVE)
             )
             .paginate(pageable)
             .orderBy(pageable.sort)
@@ -90,7 +90,7 @@ class SongQueryRepositoryImpl(
             .where(
                 songEntity.scope.eq(AlbumScope.PUBLIC),
                 songEntity.genre.eq(genre),
-                songEntity.status.eq(AlbumStatus.APPROVED)
+                songEntity.status.eq(AlbumStatus.ACTIVE)
             )
             .fetchOne() ?: 0
 
@@ -100,7 +100,7 @@ class SongQueryRepositoryImpl(
     @Transactional
     override fun getLatestSongs(pageable: Pageable): Slice<SongEntity> {
         val songs = jpaQueryFactory.selectFrom(songEntity)
-            .where(songEntity.scope.eq(AlbumScope.PUBLIC), songEntity.status.eq(AlbumStatus.APPROVED))
+            .where(songEntity.scope.eq(AlbumScope.PUBLIC), songEntity.status.eq(AlbumStatus.ACTIVE))
             .paginate(pageable)
             .orderBy(songEntity.createdAt.desc())
             .fetch()
@@ -115,7 +115,7 @@ class SongQueryRepositoryImpl(
             .where(
                 songEntity.scope.eq(AlbumScope.PUBLIC),
                 songEntity.genre.`in`(genres),
-                songEntity.status.eq(AlbumStatus.APPROVED)
+                songEntity.status.eq(AlbumStatus.ACTIVE)
             )
             .fetchOne() ?: 0
 
@@ -123,7 +123,7 @@ class SongQueryRepositoryImpl(
             .where(
                 songEntity.scope.eq(AlbumScope.PUBLIC),
                 songEntity.genre.`in`(genres),
-                songEntity.status.eq(AlbumStatus.APPROVED)
+                songEntity.status.eq(AlbumStatus.ACTIVE)
             )
             .paginate(pageable)
             .fetch()
@@ -137,7 +137,7 @@ class SongQueryRepositoryImpl(
         val songs = jpaQueryFactory.selectFrom(songEntity)
             .where(
                 songEntity.scope.eq(AlbumScope.PUBLIC),
-                songEntity.status.eq(AlbumStatus.APPROVED),
+                songEntity.status.eq(AlbumStatus.ACTIVE),
                 songEntity.title.containsIgnoreCase(query).or(songEntity.artist.nickname.containsIgnoreCase(query)),
             )
             .orderBy(pageable.sort)

@@ -6,8 +6,6 @@ import com.open3r.openmusic.domain.album.domain.enums.AlbumStatus
 import com.open3r.openmusic.domain.song.domain.enums.SongGenre
 import com.open3r.openmusic.domain.user.domain.entity.UserEntity
 import com.open3r.openmusic.global.common.domain.entity.BaseEntity
-import com.open3r.openmusic.global.error.CustomException
-import com.open3r.openmusic.global.error.ErrorCode
 import jakarta.persistence.*
 
 @Entity
