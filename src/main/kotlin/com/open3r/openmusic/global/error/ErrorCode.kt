@@ -13,6 +13,9 @@ enum class ErrorCode(
     FORBIDDEN(HttpStatus.FORBIDDEN, "Forbidden"),
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "Invalid input value"),
 
+    // Report
+    REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "Report not found"),
+
     // Jwt
     EXPIRED_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "Expired access token"),
     INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid access token"),
